@@ -8,6 +8,7 @@
 	</settings> 
 	<layers> 
 		<grid name="walls" gridSize="16" exportAsObjects="true"/>
+		<grid name="optionalWalls" gridSize="16" exportAsObjects="true" color="#FFFF0000"/>
 	</layers> 
 </project>
 

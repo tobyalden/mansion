@@ -148,7 +148,16 @@ class Level extends Entity {
             'graphics/tiles.png',
             walls.width, walls.height, walls.tileWidth, walls.tileHeight
         );
-        tiles.loadFromString(walls.saveToString(',', '\n', '1', '0'));
+        var debugColor = 1;
+        if(levelType == "hallway") {
+            debugColor = 2;
+        }
+        else if(levelType == "shaft") {
+            debugColor = 3;
+        }
+        tiles.loadFromString(
+            walls.saveToString(',', '\n', '${debugColor}', '0')
+        );
         graphic = tiles;
     }
 }
