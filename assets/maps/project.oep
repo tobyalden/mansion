@@ -1,0 +1,16 @@
+<project> 
+	<name>Memory</name> 
+	<settings> 
+		<defaultWidth>160</defaultWidth> 
+		<defaultHeight>160</defaultHeight> 
+		<maxWidth>160</maxWidth> 
+		<maxHeight>160</maxHeight> 
+		<workingDirectory>.</workingDirectory> 
+	</settings> 
+	<layers> 
+		<grid name="rooms" gridSize="16" exportAsObjects="true"/>
+		<grid name="hallways" gridSize="16" exportAsObjects="true" color="#FF00FF00"/>
+		<grid name="shafts" gridSize="16" exportAsObjects="true" color="#FFA020F0"/>
+	</layers> 
+</project>
+

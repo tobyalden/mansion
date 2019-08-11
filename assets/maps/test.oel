@@ -1,0 +1,27 @@
+<level>
+  <width>160</width>
+  <height>160</height>
+  <rooms>
+    <rect x="16" y="0" w="16" h="32"/>
+    <rect x="32" y="48" w="32" h="48"/>
+    <rect x="32" y="112" w="16" h="16"/>
+    <rect x="48" y="0" w="80" h="32"/>
+    <rect x="64" y="64" w="16" h="16"/>
+    <rect x="80" y="112" w="48" h="48"/>
+    <rect x="96" y="48" w="32" h="32"/>
+  </rooms>
+  <hallways>
+    <rect x="0" y="0" w="16" h="32"/>
+    <rect x="32" y="0" w="16" h="32"/>
+    <rect x="48" y="112" w="32" h="16"/>
+    <rect x="64" y="48" w="32" h="16"/>
+    <rect x="64" y="80" w="32" h="16"/>
+    <rect x="80" y="64" w="16" h="16"/>
+  </hallways>
+  <shafts>
+    <rect x="32" y="96" w="16" h="16"/>
+    <rect x="48" y="32" w="16" h="16"/>
+    <rect x="96" y="32" w="16" h="16"/>
+    <rect x="112" y="80" w="16" h="32"/>
+  </shafts>
+</level>

@@ -1,8 +1,8 @@
 package entities;
 
 import haxepunk.*;
-import haxepunk.input.*;
 import haxepunk.graphics.*;
+import haxepunk.input.*;
 import haxepunk.masks.*;
 import haxepunk.math.*;
 
