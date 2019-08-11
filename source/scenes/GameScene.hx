@@ -21,6 +21,7 @@ class GameScene extends Scene
     private var viewport:Viewport;
 
     override public function begin() {
+        Key.define("restart", [Key.R]);
         Key.define("zoomout", [Key.Q]);
         loadMaps(0);
         placeLevels();
@@ -39,14 +40,19 @@ class GameScene extends Scene
             Math.floor((player.centerY) / PLAYFIELD_SIZE)
             * PLAYFIELD_SIZE - 20
         );
+        if(Input.check("restart")) {
+            HXP.scene = new GameScene();
+        }
         if(Input.check("zoomout")) {
-            camera.x = 0;
-            camera.y = 0;
+            camera.x = -1700;
+            camera.y = -200;
             camera.scale = 0.1;
+            player.visible = false;
             viewport.visible = false;
         }
         else {
             camera.scale = 1;
+            player.visible = true;
             viewport.visible = true;
         }
         super.update();
