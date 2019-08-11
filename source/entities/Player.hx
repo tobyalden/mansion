@@ -23,7 +23,6 @@ class Player extends Entity
     private var sprite:Spritemap;
     private var sfx:Map<String, Sfx>;
     private var facing:String;
-    private var bufferSpell:Bool;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -46,12 +45,6 @@ class Player extends Entity
         stunCooldown = new Alarm(STUN_TIME, TweenType.Persist);
         addTween(stunCooldown);
         castCooldown = new Alarm(CAST_COOLDOWN, TweenType.Persist);
-        castCooldown.onComplete.bind(function() {
-            if(bufferSpell) {
-                shoot();
-                bufferSpell = false;
-            }
-        });
         addTween(castCooldown);
         sfx = [
             "stun1" => new Sfx("audio/stun1.wav"),
@@ -59,20 +52,20 @@ class Player extends Entity
             "stun3" => new Sfx("audio/stun3.wav"),
             "roll1" => new Sfx("audio/roll1.wav"),
             "roll2" => new Sfx("audio/roll2.wav"),
-            "roll3" => new Sfx("audio/roll3.wav")
+            "roll3" => new Sfx("audio/roll3.wav"),
+            "cast1" => new Sfx("audio/cast1.wav"),
+            "cast2" => new Sfx("audio/cast2.wav"),
+            "cast3" => new Sfx("audio/cast3.wav"),
+            "cast4" => new Sfx("audio/cast4.wav")
         ];
         facing = "up";
-        bufferSpell = false;
     }
 
     override public function update() {
+        if(Input.check("cast") && canControl()) {
+            castSpell();
+        }
         movement();
-        if(Input.pressed("cast") && canControl()) {
-            shoot();
-        }
-        else if(Input.pressed("cast") && castCooldown.percent > 0.5) {
-            bufferSpell = true;
-        }
         animation();
         super.update();
     }
@@ -91,17 +84,28 @@ class Player extends Entity
             sfx['roll${HXP.choose(1, 2, 3)}'].play();
             rollCooldown.start();
             castCooldown.active = false;
-            bufferSpell = false;
             if(Input.check("left")) {
                 velocity.x = -1;
             }
             else if(Input.check("right")) {
                 velocity.x = 1;
             }
+            else if(facing == "left") {
+                velocity.x = -1;
+            }
+            else if(facing == "right") {
+                velocity.x = 1;
+            }
             if(Input.check("up")) {
                 velocity.y = -1;
             }
             else if(Input.check("down")) {
+                velocity.y = 1;
+            }
+            else if(facing == "up") {
+                velocity.y = -1;
+            }
+            else if(facing == "down") {
                 velocity.y = 1;
             }
         }
@@ -150,7 +154,7 @@ class Player extends Entity
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
     }
 
-    private function shoot() {
+    private function castSpell() {
         velocity = new Vector2();
         var spellVelocity;
         if(facing == "up") {
@@ -168,6 +172,7 @@ class Player extends Entity
         }
         scene.add(new Spell(centerX, centerY, spellVelocity));
         castCooldown.start();
+        sfx['cast${HXP.choose(1, 2, 3, 4)}'].play();
     }
 
     override public function moveCollideX(e:Entity) {
