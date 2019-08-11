@@ -19,6 +19,7 @@ class Spell extends Entity
         super(startX - 4, startY - 4);
         this.velocity = velocity;
         graphic = new Image("graphics/spell.png");
+        mask = new Hitbox(8, 8);
         //sfx = [
             //"stun1" => new Sfx("audio/stun1.wav")
         //];
