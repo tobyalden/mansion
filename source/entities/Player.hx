@@ -3,6 +3,7 @@ package entities;
 import haxepunk.*;
 import haxepunk.input.*;
 import haxepunk.graphics.*;
+import haxepunk.masks.*;
 import haxepunk.math.*;
 
 class Player extends Entity
@@ -11,14 +12,15 @@ class Player extends Entity
 
     private var velocity:Vector2;
 
-    public function new() {
-        super();
+    public function new(startX:Float, startY:Float) {
+        super(startX, startY);
         Key.define("up", [Key.UP, Key.I]);
         Key.define("down", [Key.DOWN, Key.K]);
         Key.define("left", [Key.LEFT, Key.J]);
         Key.define("right", [Key.RIGHT, Key.L]);
         graphic = new Image("graphics/player.png");
         velocity = new Vector2();
+        mask = new Hitbox(16, 16);
     }
 
     override public function update() {
@@ -45,6 +47,7 @@ class Player extends Entity
         else {
             velocity.y = 0;
         }
-        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
+        //moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed);
     }
 }
