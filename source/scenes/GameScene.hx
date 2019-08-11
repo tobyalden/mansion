@@ -14,18 +14,23 @@ class GameScene extends Scene
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
     private var shaftMapBlueprint:Grid;
+    private var startMapBlueprint:Grid;
     private var allBlueprint:Grid;
     private var map:Grid;
     private var allLevels:Array<Level>;
     private var player:Player;
     private var viewport:Viewport;
+    private var start:Level;
 
     override public function begin() {
         Key.define("restart", [Key.R]);
         Key.define("zoomout", [Key.Q]);
         loadMaps(0);
         placeLevels();
-        player = new Player(50, 50);
+        player = new Player(
+            start.x + PLAYFIELD_SIZE / 2 - 8,
+            start.y + PLAYFIELD_SIZE / 2 - 8
+        );
         add(player);
         viewport = new Viewport(camera);
         add(viewport);
@@ -74,6 +79,9 @@ class GameScene extends Scene
         shaftMapBlueprint = new Grid(
             mapWidth, mapHeight, Level.TILE_SIZE, Level.TILE_SIZE
         );
+        startMapBlueprint = new Grid(
+            mapWidth, mapHeight, Level.TILE_SIZE, Level.TILE_SIZE
+        );
         allBlueprint = new Grid(
             mapWidth, mapHeight, Level.TILE_SIZE, Level.TILE_SIZE
         );
@@ -119,6 +127,20 @@ class GameScene extends Scene
                 Std.int(Std.parseInt(r.att.h) / Level.TILE_SIZE)
             );
         }
+        for (r in fastXml.node.start.nodes.rect) {
+            startMapBlueprint.setRect(
+                Std.int(Std.parseInt(r.att.x) / Level.TILE_SIZE),
+                Std.int(Std.parseInt(r.att.y) / Level.TILE_SIZE),
+                Std.int(Std.parseInt(r.att.w) / Level.TILE_SIZE),
+                Std.int(Std.parseInt(r.att.h) / Level.TILE_SIZE)
+            );
+            allBlueprint.setRect(
+                Std.int(Std.parseInt(r.att.x) / Level.TILE_SIZE),
+                Std.int(Std.parseInt(r.att.y) / Level.TILE_SIZE),
+                Std.int(Std.parseInt(r.att.w) / Level.TILE_SIZE),
+                Std.int(Std.parseInt(r.att.h) / Level.TILE_SIZE)
+            );
+        }
     }
 
     private function sealLevel(
@@ -145,6 +167,7 @@ class GameScene extends Scene
         if(
             !roomMapBlueprint.getTile(tileX + checkX, tileY + checkY + 1)
             && !shaftMapBlueprint.getTile(tileX + checkX, tileY + checkY + 1)
+            && !startMapBlueprint.getTile(tileX + checkX, tileY + checkY + 1)
         ) {
             level.fillBottom(checkX);
         }
@@ -152,10 +175,11 @@ class GameScene extends Scene
 
     private function placeLevels() {
         allLevels = new Array<Level>();
-        var levelTypes = ["room", "hallway", "shaft"];
+        var levelTypes = ["room", "hallway", "shaft", "start"];
         var count = 0;
         for(mapBlueprint in [
-            roomMapBlueprint, hallwayMapBlueprint, shaftMapBlueprint
+            roomMapBlueprint, hallwayMapBlueprint, shaftMapBlueprint,
+            startMapBlueprint
         ]) {
             for(tileX in 0...mapBlueprint.columns) {
                 for(tileY in 0...mapBlueprint.rows) {
@@ -197,15 +221,20 @@ class GameScene extends Scene
                                         map.setTile(
                                             tileX + checkX, tileY + checkY
                                         );
-                                        sealLevel(
-                                            level,
-                                            tileX, tileY,
-                                            checkX, checkY
-                                        );
+                                        if(level.levelType != "start") {
+                                            sealLevel(
+                                                level,
+                                                tileX, tileY,
+                                                checkX, checkY
+                                            );
+                                        }
                                     }
                                 }
                                 level.updateGraphic();
                                 add(level);
+                                if(level.levelType == "start") {
+                                    start = level;
+                                }
                                 allLevels.push(level);
                             }
                         }

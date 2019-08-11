@@ -11,6 +11,7 @@
 		<grid name="rooms" gridSize="16" exportAsObjects="true" color="#FF01FDFF"/>
 		<grid name="hallways" gridSize="16" exportAsObjects="true" color="#FF00F900"/>
 		<grid name="shafts" gridSize="16" exportAsObjects="true" color="#FFFF9300"/>
+		<grid name="start" gridSize="16" exportAsObjects="true" color="#FFFC03E8"/>
 	</layers> 
 </project>
 

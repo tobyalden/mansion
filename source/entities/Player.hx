@@ -75,8 +75,7 @@ class Player extends Entity
             }
             velocity.normalize(SPEED);
         }
-        //moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
-        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed);
+        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
     }
 
     private function animation() {

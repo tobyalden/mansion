@@ -25,8 +25,8 @@ class Level extends Entity {
     public static inline var NUMBER_OF_SHAFTS = 3;
 
     public var walls(default, null):Grid;
+    public var levelType(default, null):String;
     private var tiles:Tilemap;
-    private var levelType:String;
 
     public function new(x:Int, y:Int, levelType:String) {
         super(x, y);
@@ -42,17 +42,22 @@ class Level extends Entity {
                 Std.int(Math.floor(Random.random * NUMBER_OF_HALLWAYS))
             }');
         }
-        else {
-            // levelType == "shaft"
+        else if(levelType == "shaft") {
             loadLevel('${
                 Std.int(Math.floor(Random.random * NUMBER_OF_SHAFTS))
             }');
         }
-        if(Random.random < 0.5) {
-            flipHorizontally(walls);
+        else {
+            // levelType == "start"
+            loadLevel('start');
         }
-        if(Random.random < 0.5) {
-            flipVertically(walls);
+        if(levelType != "start") {
+            if(Random.random < 0.5) {
+                flipHorizontally(walls);
+            }
+            if(Random.random < 0.5) {
+                flipVertically(walls);
+            }
         }
         updateGraphic();
         mask = walls;
@@ -178,6 +183,9 @@ class Level extends Entity {
         }
         else if(levelType == "shaft") {
             debugColor = 3;
+        }
+        else if(levelType == "start") {
+            debugColor = 4;
         }
         tiles.loadFromString(
             walls.saveToString(',', '\n', '${debugColor}', '0')

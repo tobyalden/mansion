@@ -40,4 +40,7 @@
     <rect x="128" y="32" w="16" h="32"/>
     <rect x="144" y="80" w="16" h="32"/>
   </shafts>
+  <start>
+    <rect x="80" y="144" w="16" h="16"/>
+  </start>
 </level>
