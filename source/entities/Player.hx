@@ -7,6 +7,8 @@ import haxepunk.masks.*;
 import haxepunk.math.*;
 import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
+import entities.Level;
+import scenes.*;
 
 class Player extends Entity
 {
@@ -26,6 +28,7 @@ class Player extends Entity
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
+        name = "player";
         Key.define("up", [Key.UP, Key.I]);
         Key.define("down", [Key.DOWN, Key.K]);
         Key.define("left", [Key.LEFT, Key.J]);
@@ -59,6 +62,14 @@ class Player extends Entity
             "cast4" => new Sfx("audio/cast4.wav")
         ];
         facing = "up";
+    }
+
+    public function getScreenCoordinates() {
+        var screenCoordinates:IntPair = {
+            x: Math.floor(centerX / GameScene.PLAYFIELD_SIZE),
+            y: Math.floor(centerY / GameScene.PLAYFIELD_SIZE)
+        };
+        return screenCoordinates;
     }
 
     override public function update() {

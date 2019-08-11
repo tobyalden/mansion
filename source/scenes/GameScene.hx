@@ -5,6 +5,7 @@ import haxepunk.graphics.*;
 import haxepunk.input.*;
 import haxepunk.masks.*;
 import entities.*;
+import entities.Level;
 import openfl.Assets;
 
 class GameScene extends Scene
@@ -21,19 +22,36 @@ class GameScene extends Scene
     private var player:Player;
     private var viewport:Viewport;
     private var start:Level;
+    private var openSpots:Array<IntPair>;
 
     override public function begin() {
         Key.define("restart", [Key.R]);
         Key.define("zoomout", [Key.Q]);
         loadMaps(0);
         placeLevels();
+        openSpots = new Array<IntPair>();
+        for(level in allLevels) {
+            openSpots = openSpots.concat(level.openSpots);
+            addMask(
+                level.enemyWalls,
+                "enemywalls",
+                Std.int(level.x) - Level.TILE_SIZE,
+                Std.int(level.y - Level.TILE_SIZE)
+            );
+        }
+        HXP.shuffle(openSpots);
         player = new Player(
             start.x + PLAYFIELD_SIZE / 2 - 8,
             start.y + PLAYFIELD_SIZE / 2 - 8
         );
         add(player);
+        add(new Stalker(player.x + 50, player.y + 50));
         viewport = new Viewport(camera);
         add(viewport);
+    }
+
+    private function getOpenSpot() {
+        return openSpots.pop();
     }
 
     override public function update() {
