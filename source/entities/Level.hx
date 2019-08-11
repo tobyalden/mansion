@@ -51,7 +51,9 @@ class Level extends Entity {
         if(Random.random < 0.5) {
             flipHorizontally(walls);
         }
-        // TODO: Flip horizontally
+        if(Random.random < 0.5) {
+            flipVertically(walls);
+        }
         updateGraphic();
         mask = walls;
         graphic = tiles;
@@ -74,6 +76,28 @@ class Level extends Entity {
                 wallsToFlip.setTile(tileX, tileY, tempRight);
                 wallsToFlip.setTile(
                     wallsToFlip.columns - tileX - 1, tileY, tempLeft
+                );
+            }
+        }
+    }
+
+    public function flipVertically(wallsToFlip:Grid) {
+        for(tileX in 0...wallsToFlip.columns) {
+            for(tileY in 0...Std.int(wallsToFlip.rows / 2)) {
+                var tempTop:Null<Bool> = wallsToFlip.getTile(tileX, tileY);
+                // For some reason getTile() returns null instead of false!
+                if(tempTop == null) {
+                    tempTop = false;
+                }
+                var tempBottom:Null<Bool> = wallsToFlip.getTile(
+                    tileX, wallsToFlip.rows - tileY - 1
+                );
+                if(tempBottom == null) {
+                    tempBottom = false;
+                }
+                wallsToFlip.setTile(tileX, tileY, tempBottom);
+                wallsToFlip.setTile(
+                    tileX, wallsToFlip.rows - tileY - 1, tempTop
                 );
             }
         }
