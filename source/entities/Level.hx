@@ -23,10 +23,12 @@ class Level extends Entity {
     public static inline var NUMBER_OF_ROOMS = 3;
     public static inline var NUMBER_OF_HALLWAYS = 3;
     public static inline var NUMBER_OF_SHAFTS = 3;
+    public static inline var ITEM_BORDER = 4;
 
     public var walls(default, null):Grid;
     public var levelType(default, null):String;
     private var tiles:Tilemap;
+    private var openSpots:Array<IntPair>;
 
     public function new(x:Int, y:Int, levelType:String) {
         super(x, y);
@@ -59,9 +61,48 @@ class Level extends Entity {
                 flipVertically(walls);
             }
         }
-        updateGraphic();
+        openSpots = new Array<IntPair>();
         mask = walls;
         graphic = tiles;
+    }
+
+    public function findOpenSpots() {
+        if(levelType == "start") {
+            return;
+        }
+        for(tileX in 0...walls.columns) {
+            for(tileY in 0...walls.rows) {
+                if(
+                    !getTile(tileX, tileY)
+                    && !getTile(tileX + 1, tileY)
+                    && !getTile(tileX - 1, tileY)
+                    && !getTile(tileX, tileY + 1)
+                    && !getTile(tileX, tileY - 1)
+                    && !getTile(tileX + 1, tileY + 1)
+                    && !getTile(tileX + 1, tileY - 1)
+                    && !getTile(tileX - 1, tileY - 1)
+                    && !getTile(tileX - 1, tileY + 1)
+                    && (tileX % MIN_LEVEL_WIDTH_IN_TILES) > ITEM_BORDER
+                    && (tileY % MIN_LEVEL_HEIGHT_IN_TILES) > ITEM_BORDER
+                    && (tileX % MIN_LEVEL_WIDTH_IN_TILES)
+                    < MIN_LEVEL_WIDTH_IN_TILES - ITEM_BORDER - 1
+                    && (tileY % MIN_LEVEL_HEIGHT_IN_TILES)
+                    < MIN_LEVEL_HEIGHT_IN_TILES - ITEM_BORDER - 1
+                ) {
+                    openSpots.push({x: tileX, y: tileY});
+                }
+            }
+        }
+    }
+
+    private function getTile(tileX:Int, tileY:Int) {
+        if(
+            tileX < 0 || tileY < 0
+            || tileX >= walls.columns || tileY >= walls.rows
+        ) {
+            return false;
+        }
+        return walls.getTile(tileX, tileY);
     }
 
     public function flipHorizontally(wallsToFlip:Grid) {
@@ -190,6 +231,9 @@ class Level extends Entity {
         tiles.loadFromString(
             walls.saveToString(',', '\n', '${debugColor}', '0')
         );
+        for(openSpot in openSpots) {
+            tiles.setTile(openSpot.x, openSpot.y, 5);
+        }
         graphic = tiles;
     }
 }

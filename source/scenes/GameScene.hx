@@ -230,6 +230,7 @@ class GameScene extends Scene
                                         }
                                     }
                                 }
+                                level.findOpenSpots();
                                 level.updateGraphic();
                                 add(level);
                                 if(level.levelType == "start") {
