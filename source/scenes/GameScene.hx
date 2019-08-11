@@ -50,6 +50,14 @@ class GameScene extends Scene
         add(viewport);
     }
 
+    public function getScreenCoordinates(e:Entity) {
+        var screenCoordinates:IntPair = {
+            x: Math.floor(e.centerX / PLAYFIELD_SIZE),
+            y: Math.floor(e.centerY / PLAYFIELD_SIZE)
+        };
+        return screenCoordinates;
+    }
+
     private function getOpenSpot() {
         return openSpots.pop();
     }
