@@ -13,11 +13,15 @@ class Player extends Entity
     public static inline var SPEED = 100;
     public static inline var ROLL_SPEED = 350;
     public static inline var ROLL_TIME = 0.25;
+    public static inline var STUN_TIME = 0.3;
 
     private var velocity:Vector2;
     private var isRolling:Bool;
+    private var isStunned:Bool;
     private var rollCooldown:Alarm;
+    private var stunCooldown:Alarm;
     private var sprite:Spritemap;
+    private var sfx:Map<String, Sfx>;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -29,6 +33,7 @@ class Player extends Entity
         sprite = new Spritemap("graphics/player.png", 16, 16);
         sprite.add("idle", [0]);
         sprite.add("roll", [1]);
+        sprite.add("stun", [2]);
         graphic = sprite;
         velocity = new Vector2();
         mask = new Hitbox(16, 16);
@@ -38,6 +43,19 @@ class Player extends Entity
             isRolling = false;
         });
         addTween(rollCooldown);
+        stunCooldown = new Alarm(STUN_TIME, TweenType.Persist);
+        stunCooldown.onComplete.bind(function() {
+            isStunned = false;
+        });
+        addTween(stunCooldown);
+        sfx = [
+            "stun1" => new Sfx("audio/stun1.wav"),
+            "stun2" => new Sfx("audio/stun2.wav"),
+            "stun3" => new Sfx("audio/stun3.wav"),
+            "roll1" => new Sfx("audio/roll1.wav"),
+            "roll2" => new Sfx("audio/roll2.wav"),
+            "roll3" => new Sfx("audio/roll3.wav")
+        ];
     }
 
     override public function update() {
@@ -47,11 +65,15 @@ class Player extends Entity
     }
 
     private function movement() {
-        if(Input.pressed("roll") && !isRolling) {
+        if(Input.pressed("roll") && !isRolling && !isStunned) {
             isRolling = true;
+            sfx['roll${HXP.choose(1, 2, 3)}'].play();
             rollCooldown.start();
         }
-        if(isRolling) {
+        if(isStunned) {
+            // Do nothing
+        }
+        else if(isRolling) {
             velocity.normalize(ROLL_SPEED);
         }
         else {
@@ -78,8 +100,33 @@ class Player extends Entity
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
     }
 
-    private function animation() {
+    override public function moveCollideX(e:Entity) {
         if(isRolling) {
+            stun();
+        }
+        return true;
+    }
+
+    override public function moveCollideY(e:Entity) {
+        if(isRolling) {
+            stun();
+        }
+        return true;
+    }
+
+    private function stun() {
+        isRolling = false;
+        isStunned = true;
+        velocity = new Vector2();
+        sfx['stun${HXP.choose(1, 2, 3)}'].play();
+        stunCooldown.start();
+    }
+
+    private function animation() {
+        if(isStunned) {
+            sprite.play("stun");
+        }
+        else if(isRolling) {
             sprite.play("roll");
         }
         else {
