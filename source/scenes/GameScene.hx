@@ -11,6 +11,7 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
+    public static inline var NUMBER_OF_ENEMIES = 50;
 
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
@@ -22,14 +23,14 @@ class GameScene extends Scene
     private var player:Player;
     private var viewport:Viewport;
     private var start:Level;
-    private var openSpots:Array<IntPair>;
+    private var openSpots:Array<IntPairWithLevel>;
 
     override public function begin() {
         Key.define("restart", [Key.R]);
         Key.define("zoomout", [Key.Q]);
         loadMaps(0);
         placeLevels();
-        openSpots = new Array<IntPair>();
+        openSpots = new Array<IntPairWithLevel>();
         for(level in allLevels) {
             openSpots = openSpots.concat(level.openSpots);
             addMask(
@@ -45,7 +46,13 @@ class GameScene extends Scene
             start.y + PLAYFIELD_SIZE / 2 - 8
         );
         add(player);
-        add(new Stalker(player.x + 50, player.y + 50));
+        for(i in 0...NUMBER_OF_ENEMIES) {
+            var enemySpot = getOpenSpot();
+            add(new Stalker(
+                enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+            ));
+        }
         viewport = new Viewport(camera);
         add(viewport);
     }

@@ -41,6 +41,8 @@ class Stalker extends Enemy
 
     override private function act() {
         var player = scene.getInstance("player");
+        // TODO: Have them walk towards the player in the other orthagonal
+        // direction if they're blocked on one
         if(centerX > player.centerX) {
             velocity.x = -SPEED;
             velocity.y = 0;
@@ -64,7 +66,7 @@ class Stalker extends Enemy
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
-            ["walls", "enemywalls"]
+            ["walls", "enemywalls", "enemy"]
         );
         sprite.play(facing);
     }

@@ -14,6 +14,12 @@ typedef IntPair = {
     var y:Int;
 }
 
+typedef IntPairWithLevel = {
+    var x:Int;
+    var y:Int;
+    var level:Level;
+}
+
 class Level extends Entity {
     public static inline var TILE_SIZE = 16;
     public static inline var MIN_LEVEL_WIDTH = 320;
@@ -27,7 +33,7 @@ class Level extends Entity {
 
     public var walls(default, null):Grid;
     public var enemyWalls(default, null):Grid;
-    public var openSpots(default, null):Array<IntPair>;
+    public var openSpots(default, null):Array<IntPairWithLevel>;
     public var levelType(default, null):String;
     private var tiles:Tilemap;
 
@@ -62,7 +68,7 @@ class Level extends Entity {
                 flipVertically(walls);
             }
         }
-        openSpots = new Array<IntPair>();
+        openSpots = new Array<IntPairWithLevel>();
         mask = walls;
         graphic = tiles;
     }
@@ -90,7 +96,11 @@ class Level extends Entity {
                     && (tileY % MIN_LEVEL_HEIGHT_IN_TILES)
                     < MIN_LEVEL_HEIGHT_IN_TILES - ITEM_BORDER - 1
                 ) {
-                    openSpots.push({x: tileX, y: tileY});
+                    openSpots.push({
+                        x: tileX,
+                        y: tileY,
+                        level: this
+                    });
                 }
             }
         }
