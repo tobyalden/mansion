@@ -66,10 +66,28 @@ class GameScene extends Scene
     }
 
     private function getOpenSpot() {
-        return openSpots.pop();
+        var spotToReturn = openSpots.pop();
+        for(openSpot in openSpots) {
+            // Remove adjacent open spots
+            if(
+                spotToReturn.level.x == openSpot.level.x
+                && spotToReturn.level.y == openSpot.level.y
+                && (
+                    Math.abs(spotToReturn.x - openSpot.x) <= 1
+                    && Math.abs(spotToReturn.y - openSpot.y) <= 1
+                )
+            ) {
+                openSpots.remove(openSpot);
+            }
+        }
+        return spotToReturn;
     }
 
     override public function update() {
+        if(Input.check("restart")) {
+            HXP.scene = new GameScene();
+        }
+        super.update();
         camera.x = (
             Math.floor((player.centerX) / PLAYFIELD_SIZE)
             * PLAYFIELD_SIZE - 20
@@ -78,9 +96,6 @@ class GameScene extends Scene
             Math.floor((player.centerY) / PLAYFIELD_SIZE)
             * PLAYFIELD_SIZE - 20
         );
-        if(Input.check("restart")) {
-            HXP.scene = new GameScene();
-        }
         if(Input.check("zoomout")) {
             camera.x = -1700;
             camera.y = -200;
@@ -93,7 +108,6 @@ class GameScene extends Scene
             player.visible = true;
             viewport.visible = true;
         }
-        super.update();
     }
 
     private function loadMaps(mapNumber:Int) {

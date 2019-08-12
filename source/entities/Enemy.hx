@@ -48,6 +48,42 @@ class Enemy extends Entity
         );
     }
 
+    public function isOnTopWall() {
+        for(collideType in ["walls", "enemywalls", "enemy"]) {
+            if(collide(collideType, x, y - 1) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function isOnBottomWall() {
+        for(collideType in ["walls", "enemywalls", "enemy"]) {
+            if(collide(collideType, x, y + 1) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function isOnLeftWall() {
+        for(collideType in ["walls", "enemywalls", "enemy"]) {
+            if(collide(collideType, x - 1, y) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function isOnRightWall() {
+        for(collideType in ["walls", "enemywalls", "enemy"]) {
+            if(collide(collideType, x + 1, y) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function takeHit() {
         health -= 1;
         if(health <= 0) {
