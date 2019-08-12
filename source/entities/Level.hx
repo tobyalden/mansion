@@ -32,7 +32,6 @@ class Level extends Entity {
     public static inline var ITEM_BORDER = 4;
 
     public var walls(default, null):Grid;
-    public var enemyWalls(default, null):Grid;
     public var openSpots(default, null):Array<IntPairWithLevel>;
     public var levelType(default, null):String;
     private var tiles:Tilemap;
@@ -190,21 +189,6 @@ class Level extends Entity {
                     Std.int(Std.parseInt(r.att.w) / TILE_SIZE),
                     Std.int(Std.parseInt(r.att.h) / TILE_SIZE)
                 );
-            }
-        }
-        enemyWalls = new Grid(
-            segmentWidth + 2, segmentHeight + 2, TILE_SIZE, TILE_SIZE
-        );
-        for(tileX in 0...enemyWalls.columns) {
-            for(tileY in 0...enemyWalls.rows) {
-                if(
-                    tileX == 0
-                    || tileY == 0
-                    || tileX == enemyWalls.columns - 1
-                    || tileY == enemyWalls.rows - 1
-                ) {
-                    enemyWalls.setTile(tileX, tileY);
-                }
             }
         }
     }

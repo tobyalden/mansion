@@ -16,7 +16,6 @@ class Stalker extends Enemy
     public static inline var SPEED = 50;
 
     private var sprite:Spritemap;
-    private var velocity:Vector2;
     private var facing:String;
 
     public function new(startX:Float, startY:Float) {
@@ -32,7 +31,6 @@ class Stalker extends Enemy
         sprite.add("up_stopped", [6]);
         sprite.play("down_stopped");
         graphic = sprite;
-        velocity = new Vector2();
         mask = new Hitbox(16, 16);
         facing = "down";
         health = 3;

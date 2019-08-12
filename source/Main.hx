@@ -1,4 +1,5 @@
 import haxepunk.*;
+import haxepunk.debug.Console;
 import scenes.*;
 
 class Main extends Engine
@@ -8,6 +9,9 @@ class Main extends Engine
     }
 
     override public function init() {
+#if debug
+        Console.enable();
+#end
         HXP.scene = new GameScene();
     }
 

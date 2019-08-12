@@ -24,6 +24,7 @@ class GameScene extends Scene
     private var viewport:Viewport;
     private var start:Level;
     private var openSpots:Array<IntPairWithLevel>;
+    private var enemyWall:Entity;
 
     override public function begin() {
         Key.define("restart", [Key.R]);
@@ -33,14 +34,9 @@ class GameScene extends Scene
         openSpots = new Array<IntPairWithLevel>();
         for(level in allLevels) {
             openSpots = openSpots.concat(level.openSpots);
-            addMask(
-                level.enemyWalls,
-                "enemywalls",
-                Std.int(level.x) - Level.TILE_SIZE,
-                Std.int(level.y - Level.TILE_SIZE)
-            );
         }
         HXP.shuffle(openSpots);
+        createEnemyWall();
         player = new Player(
             start.x + PLAYFIELD_SIZE / 2 - 8,
             start.y + PLAYFIELD_SIZE / 2 - 8
@@ -48,13 +44,38 @@ class GameScene extends Scene
         add(player);
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
-            add(new Stalker(
+            add(new Seer(
                 enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                 enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
             ));
         }
         viewport = new Viewport(camera);
         add(viewport);
+    }
+
+    private function createEnemyWall() {
+        var enemyWallMask = new Grid(
+            Level.MIN_LEVEL_WIDTH + Level.TILE_SIZE * 2,
+            Level.MIN_LEVEL_HEIGHT + Level.TILE_SIZE * 2,
+            Std.int(Level.TILE_SIZE / 2),
+            Std.int(Level.TILE_SIZE / 2)
+        );
+        for(wallTileX in 0...enemyWallMask.columns) {
+            for(wallTileY in 0...enemyWallMask.rows) {
+                if(
+                    wallTileX <= 2
+                    || wallTileY <= 2
+                    || wallTileX == enemyWallMask.columns - 3
+                    || wallTileY == enemyWallMask.rows - 3
+                  ) {
+                    enemyWallMask.setTile(wallTileX, wallTileY);
+                }
+            }
+        }
+        enemyWall = new Entity(0, 0);
+        enemyWall.mask = enemyWallMask;
+        enemyWall.type = "enemywalls";
+        add(enemyWall);
     }
 
     public function getScreenCoordinates(e:Entity) {
@@ -95,6 +116,14 @@ class GameScene extends Scene
         camera.y = (
             Math.floor((player.centerY) / PLAYFIELD_SIZE)
             * PLAYFIELD_SIZE - 20
+        );
+        enemyWall.x = (
+            Math.floor((player.centerX) / PLAYFIELD_SIZE)
+            * PLAYFIELD_SIZE - Level.TILE_SIZE
+        );
+        enemyWall.y = (
+            Math.floor((player.centerY) / PLAYFIELD_SIZE)
+            * PLAYFIELD_SIZE - Level.TILE_SIZE
         );
         if(Input.check("zoomout")) {
             camera.x = -1700;

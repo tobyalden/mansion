@@ -14,18 +14,32 @@ class Enemy extends Entity
 {
     private var startPosition:Vector2;
     private var health:Int;
+    private var tweens:Array<Tween>;
+    private var velocity:Vector2;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
         type = "enemy";
         startPosition = new Vector2(startX, startY);
         health = 1;
+        tweens = new Array<Tween>();
+        velocity = new Vector2();
+    }
+
+    override public function addTween(tween:Tween, start:Bool = false) {
+        tweens.push(tween);
+        return super.addTween(tween, start);
     }
 
     override public function update() {
         if(!isOnSameScreenAsPlayer()) {
             x = startPosition.x;
             y = startPosition.y;
+            velocity.x = 0;
+            velocity.y = 0;
+            for(tween in tweens) {
+                tween.active = false;
+            }
         }
         else {
             act();
