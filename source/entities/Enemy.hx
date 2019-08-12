@@ -32,6 +32,11 @@ class Enemy extends Entity
         return super.addTween(tween, start);
     }
 
+    private function centerOnTile() {
+        x -= (width - Level.TILE_SIZE) / 2;
+        y -= (height - Level.TILE_SIZE) / 2;
+    }
+
     override public function update() {
         if(startingHealth == null) {
             startingHealth = health;

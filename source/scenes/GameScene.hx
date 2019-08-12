@@ -4,6 +4,7 @@ import haxepunk.*;
 import haxepunk.graphics.*;
 import haxepunk.input.*;
 import haxepunk.masks.*;
+import haxepunk.math.*;
 import entities.*;
 import entities.Level;
 import openfl.Assets;
@@ -44,10 +45,21 @@ class GameScene extends Scene
         add(player);
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
-            add(new Booster(
-                enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-            ));
+            var enemies = [
+                new Stalker(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
+                new Seer(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
+                new Booster(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                )
+            ];
+            add(enemies[Random.randInt(enemies.length)]);
         }
         viewport = new Viewport(camera);
         add(viewport);

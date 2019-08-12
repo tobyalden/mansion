@@ -20,7 +20,9 @@ class Stalker extends Enemy
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
-        sprite = new Spritemap("graphics/stalker.png", 16, 16);
+        mask = new Hitbox(24, 24);
+        centerOnTile();
+        sprite = new Spritemap("graphics/stalker.png", 24, 24);
         sprite.add("down", [0, 1], 6);
         sprite.add("right", [2, 3], 6);
         sprite.add("left", [4, 5], 6);
@@ -31,7 +33,6 @@ class Stalker extends Enemy
         sprite.add("up_stopped", [6]);
         sprite.play("down_stopped");
         graphic = sprite;
-        mask = new Hitbox(16, 16);
         facing = "down";
         health = 3;
     }

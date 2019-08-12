@@ -18,6 +18,7 @@ class Seer extends Enemy
     public static inline var DECCEL = 100;
     public static inline var MAX_SPEED = 72;
     public static inline var SPIT_COOLDOWN = 2;
+    public static inline var SIZE = 24;
 
     private var sprite:Spritemap;
     private var facing:String;
@@ -25,14 +26,15 @@ class Seer extends Enemy
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
-        sprite = new Spritemap("graphics/seer.png", 16, 16);
+        mask = new Hitbox(SIZE, SIZE);
+        centerOnTile();
+        sprite = new Spritemap("graphics/seer.png", SIZE, SIZE);
         sprite.add("down", [0]);
         sprite.add("right", [1]);
         sprite.add("left", [2]);
         sprite.add("up", [3]);
         sprite.play("down");
         graphic = sprite;
-        mask = new Hitbox(16, 16);
         facing = "down";
         health = 5;
         spitTimer = new NumTween(TweenType.PingPong);
@@ -114,7 +116,7 @@ class Seer extends Enemy
             // facing == "right"
             spitVelocity = new Vector2(1, 0);
         }
-        scene.add(new Spit(centerX, centerY, spitVelocity));
+        scene.add(new Spit(this, spitVelocity));
     }
 
     override public function moveCollideX(e:Entity) {

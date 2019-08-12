@@ -7,20 +7,22 @@ import haxepunk.masks.*;
 import haxepunk.math.*;
 import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
+import scenes.*;
 
 class Spit extends Entity
 {
     public static inline var SPEED = 200;
+    public static inline var SIZE = 16;
 
     private var velocity:Vector2;
     private var sfx:Map<String, Sfx>;
 
-    public function new(startX:Float, startY:Float, velocity:Vector2) {
-        super(startX - 4, startY - 4);
+    public function new(spitter:Entity, velocity:Vector2) {
+        super(spitter.centerX - SIZE / 2, spitter.centerY - SIZE / 2);
         this.velocity = velocity;
         type = "hazard";
         graphic = new Image("graphics/spit.png");
-        mask = new Hitbox(8, 8);
+        mask = new Hitbox(SIZE, SIZE);
         sfx = [
             "hitwall1" => new Sfx("audio/hitwall1.wav"),
             "hitwall2" => new Sfx("audio/hitwall2.wav"),
@@ -36,6 +38,9 @@ class Spit extends Entity
             velocity.y * HXP.elapsed,
             ["walls"]
         );
+        if(!isOnSameScreenAsPlayer()) {
+            scene.remove(this);
+        }
         super.update();
     }
 
@@ -53,6 +58,17 @@ class Spit extends Entity
         }
         scene.remove(this);
         return true;
+    }
+
+    public function isOnSameScreenAsPlayer() {
+        var myCoordinates = cast(scene, GameScene).getScreenCoordinates(this);
+        var playerCoordinates = cast(scene, GameScene).getScreenCoordinates(
+            scene.getInstance("player")
+        );
+        return (
+            myCoordinates.x == playerCoordinates.x
+            && myCoordinates.y == playerCoordinates.y
+        );
     }
 }
 

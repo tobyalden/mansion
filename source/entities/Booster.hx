@@ -23,8 +23,10 @@ class Booster extends Enemy {
 
     public function new(x:Float, y:Float) {
         super(x, y);
+        mask = new Hitbox(24, 24);
+        centerOnTile();
         type = "enemy";
-        sprite = new Spritemap("graphics/booster.png", 16, 16);
+        sprite = new Spritemap("graphics/booster.png", 24, 24);
         sprite.add("down", [0]);
         sprite.add("right", [1]);
         sprite.add("left", [2]);
@@ -32,7 +34,6 @@ class Booster extends Enemy {
         sprite.play("down");
         graphic = sprite;
 
-        mask = new Hitbox(16, 16);
         boostTimer = new Alarm(TIME_BETWEEN_BOOSTS, TweenType.Looping);
         boostTimer.onComplete.bind(function() {
             boost();
