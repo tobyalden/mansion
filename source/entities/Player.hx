@@ -13,11 +13,21 @@ import scenes.*;
 class Player extends Entity
 {
     public static inline var SPEED = 100;
+    public static inline var RUN_SPEED = 170;
     public static inline var ROLL_SPEED = 350;
     public static inline var ROLL_TIME = 0.25;
     public static inline var STUN_TIME = 0.3;
     public static inline var CAST_COOLDOWN = 0.4;
 
+    public static inline var MAX_STAMINA = 100;
+    public static inline var STAMINA_RECOVERY_SPEED_MOVING = 25;
+    public static inline var STAMINA_RECOVERY_SPEED_STILL = 50;
+    public static inline var ROLL_COST = 40;
+    public static inline var CAST_COST = 40;
+    public static inline var RUN_COST = 20;
+    public static inline var STAMINA_RECOVERY_DELAY = 0.5;
+
+    public var stamina(default, null):Float;
     private var velocity:Vector2;
     private var rollCooldown:Alarm;
     private var stunCooldown:Alarm;
@@ -25,6 +35,8 @@ class Player extends Entity
     private var sprite:Spritemap;
     private var sfx:Map<String, Sfx>;
     private var facing:String;
+    private var isRunning:Bool;
+    private var staminaRecoveryDelay:Alarm;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -40,6 +52,7 @@ class Player extends Entity
         sprite.add("roll", [1]);
         sprite.add("stun", [2]);
         sprite.add("cast", [3]);
+        sprite.add("run", [4]);
         graphic = sprite;
         velocity = new Vector2();
         mask = new Hitbox(16, 16);
@@ -62,6 +75,12 @@ class Player extends Entity
             "cast4" => new Sfx("audio/cast4.wav")
         ];
         facing = "up";
+        isRunning = false;
+        stamina = MAX_STAMINA;
+        staminaRecoveryDelay = new Alarm(
+            STAMINA_RECOVERY_DELAY, TweenType.Persist
+        );
+        addTween(staminaRecoveryDelay);
     }
 
     public function getScreenCoordinates() {
@@ -73,11 +92,23 @@ class Player extends Entity
     }
 
     override public function update() {
-        if(Input.check("cast") && canControl()) {
+        if(Input.check("cast") && canControl() && stamina >= CAST_COST) {
+            stamina -= CAST_COST;
+            staminaRecoveryDelay.start();
             castSpell();
         }
         movement();
         animation();
+        var staminaRecoverySpeed = (
+            velocity.length == 0 ?
+            STAMINA_RECOVERY_SPEED_STILL : STAMINA_RECOVERY_SPEED_MOVING
+        );
+        if(!isRunning && !staminaRecoveryDelay.active) {
+            stamina = Math.min(
+                stamina + staminaRecoverySpeed * HXP.elapsed,
+                MAX_STAMINA
+            );
+        }
         super.update();
     }
 
@@ -90,7 +121,14 @@ class Player extends Entity
     }
 
     private function movement() {
-        if(Input.pressed("roll") && (canControl() || castCooldown.active)) {
+        if(
+            Input.pressed("roll")
+            && stamina >= ROLL_COST
+            && (canControl() || castCooldown.active)
+        ) {
+            isRunning = true;
+            stamina -= ROLL_COST;
+            staminaRecoveryDelay.start();
             rollCooldown.active = true;
             sfx['roll${HXP.choose(1, 2, 3)}'].play();
             rollCooldown.start();
@@ -160,7 +198,15 @@ class Player extends Entity
             else {
                 velocity.y = 0;
             }
-            velocity.normalize(SPEED);
+            var speed = SPEED;
+            if(!Input.check("roll") || stamina <= 0) {
+                isRunning = false;
+            }
+            if(isRunning) {
+                speed = RUN_SPEED;
+                stamina = Math.max(0, stamina - RUN_COST * HXP.elapsed);
+            }
+            velocity.normalize(speed);
         }
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
     }
@@ -216,6 +262,9 @@ class Player extends Entity
         }
         else if(rollCooldown.active) {
             sprite.play("roll");
+        }
+        else if(isRunning) {
+            sprite.play("run");
         }
         else {
             sprite.play("idle");
