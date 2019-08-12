@@ -7,6 +7,7 @@ import haxepunk.masks.*;
 import haxepunk.math.*;
 import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
+import scenes.*;
 
 class Spell extends Entity
 {
@@ -40,6 +41,9 @@ class Spell extends Entity
             velocity.y * HXP.elapsed,
             ["walls", "enemy"]
         );
+        if(!isOnSameScreenAsPlayer()) {
+            scene.remove(this);
+        }
         super.update();
     }
 
@@ -65,5 +69,16 @@ class Spell extends Entity
         }
         scene.remove(this);
         return true;
+    }
+
+    public function isOnSameScreenAsPlayer() {
+        var myCoordinates = cast(scene, GameScene).getScreenCoordinates(this);
+        var playerCoordinates = cast(scene, GameScene).getScreenCoordinates(
+            scene.getInstance("player")
+        );
+        return (
+            myCoordinates.x == playerCoordinates.x
+            && myCoordinates.y == playerCoordinates.y
+        );
     }
 }

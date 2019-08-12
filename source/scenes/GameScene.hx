@@ -44,7 +44,7 @@ class GameScene extends Scene
         add(player);
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
-            add(new Seer(
+            add(new Booster(
                 enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                 enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
             ));

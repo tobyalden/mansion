@@ -13,6 +13,7 @@ import scenes.*;
 class Enemy extends Entity
 {
     private var startPosition:Vector2;
+    private var startingHealth:Int;
     private var health:Int;
     private var tweens:Array<Tween>;
     private var velocity:Vector2;
@@ -32,11 +33,15 @@ class Enemy extends Entity
     }
 
     override public function update() {
+        if(startingHealth == null) {
+            startingHealth = health;
+        }
         if(!isOnSameScreenAsPlayer()) {
             x = startPosition.x;
             y = startPosition.y;
             velocity.x = 0;
             velocity.y = 0;
+            health = startingHealth;
             for(tween in tweens) {
                 tween.active = false;
             }
