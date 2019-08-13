@@ -46,15 +46,19 @@ class GameScene extends Scene
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
             var enemies = [
-                new Stalker(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
-                new Seer(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
-                new Booster(
+                //new Stalker(
+                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                //),
+                //new Seer(
+                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                //),
+                //new Booster(
+                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                //)
+                new Wizard(
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 )
@@ -63,6 +67,17 @@ class GameScene extends Scene
         }
         viewport = new Viewport(camera);
         add(viewport);
+    }
+
+    public function getLevelFromEntity(e:Entity) {
+        for(level in allLevels) {
+            if(e.collideRect(
+                e.x, e.y, level.x, level.y, level.width, level.height
+            )) {
+                return level;
+            }
+        }
+        return null;
     }
 
     private function createEnemyWall() {

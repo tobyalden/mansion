@@ -32,6 +32,15 @@ class Enemy extends Entity
         return super.addTween(tween, start);
     }
 
+    public function hasActiveTween() {
+        for(tween in tweens) {
+            if(tween.active) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private function centerOnTile() {
         x -= (width - Level.TILE_SIZE) / 2;
         y -= (height - Level.TILE_SIZE) / 2;
@@ -72,38 +81,42 @@ class Enemy extends Entity
         );
     }
 
-    public function isOnTopWall() {
-        for(collideType in ["walls", "enemywalls", "enemy"]) {
-            if(collide(collideType, x, y - 1) != null) {
-                return true;
+    public function collideMultiple(
+        collideTypes:Array<String>, collideX:Float, collideY:Float
+    ) {
+        for(collideType in collideTypes) {
+            var collideResult = collide(collideType, collideX, collideY);
+            if(collideResult != null) {
+                return collideResult;
             }
+        }
+        return null;
+    }
+
+    public function isOnTopWall() {
+        if(collideMultiple(["walls", "enemywalls", "enemy"], x, y - 1) != null) {
+            return true;
         }
         return false;
     }
 
     public function isOnBottomWall() {
-        for(collideType in ["walls", "enemywalls", "enemy"]) {
-            if(collide(collideType, x, y + 1) != null) {
-                return true;
-            }
+        if(collideMultiple(["walls", "enemywalls", "enemy"], x, y + 1) != null) {
+            return true;
         }
         return false;
     }
 
     public function isOnLeftWall() {
-        for(collideType in ["walls", "enemywalls", "enemy"]) {
-            if(collide(collideType, x - 1, y) != null) {
-                return true;
-            }
+        if(collideMultiple(["walls", "enemywalls", "enemy"], x - 1, y) != null) {
+            return true;
         }
         return false;
     }
 
     public function isOnRightWall() {
-        for(collideType in ["walls", "enemywalls", "enemy"]) {
-            if(collide(collideType, x + 1, y) != null) {
-                return true;
-            }
+        if(collideMultiple(["walls", "enemywalls", "enemy"], x + 1, y) != null) {
+            return true;
         }
         return false;
     }
