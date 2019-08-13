@@ -10,6 +10,7 @@ class Viewport extends Entity
     public static inline var STAMINA_BAR_LENGTH = 200;
 
     private var staminaBar:ColoredRect;
+    private var rollMarker:ColoredRect;
 
     public function new(sceneCamera:Camera) {
         super();
@@ -18,6 +19,12 @@ class Viewport extends Entity
         staminaBar.x = 382;
         staminaBar.y = 45;
         addGraphic(staminaBar);
+        rollMarker = new ColoredRect(2, 25, 0xFFFFFF);
+        rollMarker.x = (
+            382 + (Player.ROLL_COST / Player.MAX_STAMINA) * STAMINA_BAR_LENGTH
+        );
+        rollMarker.y = 45;
+        addGraphic(rollMarker);
         layer = -1;
         followCamera = sceneCamera;
     }
