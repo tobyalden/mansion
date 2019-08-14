@@ -34,7 +34,8 @@ class Level extends Entity {
     public var walls(default, null):Grid;
     public var openSpots(default, null):Array<IntPairWithLevel>;
     public var levelType(default, null):String;
-    private var tiles:Tilemap;
+    private var wallTiles:Tilemap;
+    private var groundTiles:Tilemap;
 
     public function new(x:Int, y:Int, levelType:String) {
         super(x, y);
@@ -69,7 +70,6 @@ class Level extends Entity {
         }
         openSpots = new Array<IntPairWithLevel>();
         mask = walls;
-        graphic = tiles;
     }
 
     public function findOpenSpots() {
@@ -105,12 +105,14 @@ class Level extends Entity {
         }
     }
 
-    private function getTile(tileX:Int, tileY:Int) {
+    private function getTile(
+        tileX:Int, tileY:Int, outOfBoundsReturnsTrue:Bool = false
+    ) {
         if(
             tileX < 0 || tileY < 0
             || tileX >= walls.columns || tileY >= walls.rows
         ) {
-            return false;
+            return outOfBoundsReturnsTrue;
         }
         return walls.getTile(tileX, tileY);
     }
@@ -224,27 +226,106 @@ class Level extends Entity {
     }
 
     public function updateGraphic() {
-        tiles = new Tilemap(
-            'graphics/tiles.png',
+        wallTiles = new Tilemap(
+            'graphics/walls2.png',
             walls.width, walls.height, walls.tileWidth, walls.tileHeight
         );
-        var debugColor = 1;
-        if(levelType == "hallway") {
-            debugColor = 2;
-        }
-        else if(levelType == "shaft") {
-            debugColor = 3;
-        }
-        else if(levelType == "start") {
-            debugColor = 4;
-        }
-        tiles.loadFromString(
-            walls.saveToString(',', '\n', '${debugColor}', '0')
+        groundTiles = new Tilemap(
+            'graphics/grass2.png',
+            walls.width, walls.height, walls.tileWidth, walls.tileHeight
         );
-        for(openSpot in openSpots) {
-            tiles.setTile(openSpot.x, openSpot.y, 5);
+        for(tileX in 0...walls.columns) {
+            for(tileY in 0...walls.rows) {
+                if(getTile(tileX, tileY)) {
+                    if(
+                        !getTile(tileX - 1, tileY, true)
+                        && !getTile(tileX, tileY - 1, true)
+                    ) {
+                        wallTiles.setTile(tileX, tileY, 5);
+                    }
+                    else if(
+                        !getTile(tileX + 1, tileY, true)
+                        && !getTile(tileX, tileY - 1, true)
+                    ) {
+                        wallTiles.setTile(tileX, tileY, 7);
+                    }
+                    else if(
+                        !getTile(tileX - 1, tileY, true)
+                        && !getTile(tileX, tileY + 1, true)
+                    ) {
+                        wallTiles.setTile(tileX, tileY, 21);
+                    }
+                    else if(
+                        !getTile(tileX + 1, tileY, true)
+                        && !getTile(tileX, tileY + 1, true)
+                    ) {
+                        wallTiles.setTile(tileX, tileY, 23);
+                    }
+                    else if(!getTile(tileX + 1, tileY, true)) {
+                        wallTiles.setTile(tileX, tileY, 15);
+                    }
+                    else if(!getTile(tileX - 1, tileY, true)) {
+                        wallTiles.setTile(tileX, tileY, 13);
+                    }
+                    else if(!getTile(tileX, tileY + 1, true)) {
+                        wallTiles.setTile(tileX, tileY, 22);
+                    }
+                    else if(!getTile(tileX, tileY - 1, true)) {
+                        wallTiles.setTile(tileX, tileY, 6);
+                    }
+                    else {
+                        wallTiles.setTile(tileX, tileY, 14);
+                    }
+                }
+                if(!getTile(tileX, tileY)) {
+                    if(
+                        getTile(tileX - 1, tileY)
+                        && getTile(tileX, tileY - 1)
+                    ) {
+                        groundTiles.setTile(tileX, tileY, 5);
+                    }
+                    else if(
+                        getTile(tileX + 1, tileY)
+                        && getTile(tileX, tileY - 1)
+                    ) {
+                        groundTiles.setTile(tileX, tileY, 7);
+                    }
+                    else if(
+                        getTile(tileX - 1, tileY)
+                        && getTile(tileX, tileY + 1)
+                    ) {
+                        groundTiles.setTile(tileX, tileY, 21);
+                    }
+                    else if(
+                        getTile(tileX + 1, tileY)
+                        && getTile(tileX, tileY + 1)
+                    ) {
+                        groundTiles.setTile(tileX, tileY, 23);
+                    }
+                    else if(getTile(tileX + 1, tileY)) {
+                        groundTiles.setTile(tileX, tileY, 15);
+                    }
+                    else if(getTile(tileX - 1, tileY)) {
+                        groundTiles.setTile(tileX, tileY, 13);
+                    }
+                    else if(getTile(tileX, tileY + 1)) {
+                        groundTiles.setTile(tileX, tileY, 22);
+                    }
+                    else if(getTile(tileX, tileY - 1)) {
+                        groundTiles.setTile(tileX, tileY, 6);
+                    }
+                    else {
+                        if(Math.random() < 0.15) {
+                            groundTiles.setTile(tileX, tileY, 46);
+                        }
+                        else {
+                            groundTiles.setTile(tileX, tileY, 14);
+                        }
+                    }
+                }
+            }
         }
-        graphic = tiles;
+        addGraphic(wallTiles);
+        addGraphic(groundTiles);
     }
 }
-

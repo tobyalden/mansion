@@ -20,11 +20,8 @@ class Bouncer extends Enemy {
         centerOnTile();
         type = "enemy";
         sprite = new Spritemap("graphics/bouncer.png", 24, 24);
-        sprite.add("down", [0]);
-        sprite.add("right", [1]);
-        sprite.add("left", [2]);
-        sprite.add("up", [3]);
-        sprite.play("down");
+        sprite.add("idle", [0]);
+        sprite.play("idle");
         graphic = sprite;
         health = 3;
         //sfx = [
@@ -46,6 +43,7 @@ class Bouncer extends Enemy {
             velocity.x * HXP.elapsed, velocity.y * HXP.elapsed,
             ["walls", "enemywalls", "enemy"]
         );
+        sprite.flipX = velocity.x < 0;
     }
 
     public override function moveCollideX(e:Entity) {
