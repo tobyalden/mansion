@@ -58,7 +58,7 @@ class GameScene extends Scene
                     //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 //)
-                new Wizard(
+                new Bouncer(
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 )

@@ -13,7 +13,7 @@ import scenes.*;
 class Player extends Entity
 {
     public static inline var SPEED = 100;
-    public static inline var RUN_SPEED = 170;
+    public static inline var RUN_SPEED = 100;
     public static inline var ROLL_SPEED = 350;
     public static inline var ROLL_TIME = 0.25;
     public static inline var STUN_TIME = 0.3;
@@ -22,9 +22,9 @@ class Player extends Entity
     public static inline var MAX_STAMINA = 100;
     public static inline var STAMINA_RECOVERY_SPEED_MOVING = 25;
     public static inline var STAMINA_RECOVERY_SPEED_STILL = 50;
-    public static inline var ROLL_COST = 40;
-    public static inline var CAST_COST = 40;
-    public static inline var RUN_COST = 20;
+    public static inline var ROLL_COST = 0;
+    public static inline var CAST_COST = 0;
+    public static inline var RUN_COST = 0;
     public static inline var STAMINA_RECOVERY_DELAY = 0.5;
 
     public var stamina(default, null):Float;
@@ -40,6 +40,7 @@ class Player extends Entity
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
+        type = "player";
         name = "player";
         Key.define("up", [Key.UP, Key.I]);
         Key.define("down", [Key.DOWN, Key.K]);
