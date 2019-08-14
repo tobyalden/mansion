@@ -32,10 +32,12 @@ class Level extends Entity {
     public static inline var ITEM_BORDER = 4;
 
     public var walls(default, null):Grid;
+    public var pits(default, null):Grid;
     public var openSpots(default, null):Array<IntPairWithLevel>;
     public var levelType(default, null):String;
     private var wallTiles:Tilemap;
     private var groundTiles:Tilemap;
+    private var pitTiles:Tilemap;
 
     public function new(x:Int, y:Int, levelType:String) {
         super(x, y);
@@ -63,9 +65,11 @@ class Level extends Entity {
         if(levelType != "start") {
             if(Random.random < 0.5) {
                 flipHorizontally(walls);
+                flipHorizontally(pits);
             }
             if(Random.random < 0.5) {
                 flipVertically(walls);
+                flipVertically(pits);
             }
         }
         openSpots = new Array<IntPairWithLevel>();
@@ -180,17 +184,28 @@ class Level extends Entity {
         }
 
         // Load optional geometry
+        pits = new Grid(segmentWidth, segmentHeight, TILE_SIZE, TILE_SIZE);
         if(fastXml.hasNode.optionalWalls) {
             for (r in fastXml.node.optionalWalls.nodes.rect) {
                 if(Random.random < 0.5) {
                     continue;
                 }
-                walls.setRect(
-                    Std.int(Std.parseInt(r.att.x) / TILE_SIZE),
-                    Std.int(Std.parseInt(r.att.y) / TILE_SIZE),
-                    Std.int(Std.parseInt(r.att.w) / TILE_SIZE),
-                    Std.int(Std.parseInt(r.att.h) / TILE_SIZE)
-                );
+                if(Random.random < 0.5) {
+                    walls.setRect(
+                        Std.int(Std.parseInt(r.att.x) / TILE_SIZE),
+                        Std.int(Std.parseInt(r.att.y) / TILE_SIZE),
+                        Std.int(Std.parseInt(r.att.w) / TILE_SIZE),
+                        Std.int(Std.parseInt(r.att.h) / TILE_SIZE)
+                    );
+                }
+                else {
+                    pits.setRect(
+                        Std.int(Std.parseInt(r.att.x) / TILE_SIZE),
+                        Std.int(Std.parseInt(r.att.y) / TILE_SIZE),
+                        Std.int(Std.parseInt(r.att.w) / TILE_SIZE),
+                        Std.int(Std.parseInt(r.att.h) / TILE_SIZE)
+                    );
+                }
             }
         }
     }
@@ -234,9 +249,54 @@ class Level extends Entity {
             'graphics/grass2.png',
             walls.width, walls.height, walls.tileWidth, walls.tileHeight
         );
+        pitTiles = new Tilemap(
+            'graphics/pits.png',
+            walls.width, walls.height, walls.tileWidth, walls.tileHeight
+        );
         for(tileX in 0...walls.columns) {
             for(tileY in 0...walls.rows) {
-                if(getTile(tileX, tileY)) {
+                if(pits.getTile(tileX, tileY)) {
+                    if(
+                        !pits.getTile(tileX - 1, tileY)
+                        && !pits.getTile(tileX, tileY - 1)
+                    ) {
+                        pitTiles.setTile(tileX, tileY, 5);
+                    }
+                    else if(
+                        !pits.getTile(tileX + 1, tileY)
+                        && !pits.getTile(tileX, tileY - 1)
+                    ) {
+                        pitTiles.setTile(tileX, tileY, 7);
+                    }
+                    else if(
+                        !pits.getTile(tileX - 1, tileY)
+                        && !pits.getTile(tileX, tileY + 1)
+                    ) {
+                        pitTiles.setTile(tileX, tileY, 21);
+                    }
+                    else if(
+                        !pits.getTile(tileX + 1, tileY)
+                        && !pits.getTile(tileX, tileY + 1)
+                    ) {
+                        pitTiles.setTile(tileX, tileY, 23);
+                    }
+                    else if(!pits.getTile(tileX + 1, tileY)) {
+                        pitTiles.setTile(tileX, tileY, 15);
+                    }
+                    else if(!pits.getTile(tileX - 1, tileY)) {
+                        pitTiles.setTile(tileX, tileY, 13);
+                    }
+                    else if(!pits.getTile(tileX, tileY + 1)) {
+                        pitTiles.setTile(tileX, tileY, 22);
+                    }
+                    else if(!pits.getTile(tileX, tileY - 1)) {
+                        pitTiles.setTile(tileX, tileY, 6);
+                    }
+                    else {
+                        pitTiles.setTile(tileX, tileY, 14);
+                    }
+                }
+                else if(getTile(tileX, tileY)) {
                     if(
                         !getTile(tileX - 1, tileY, true)
                         && !getTile(tileX, tileY - 1, true)
@@ -327,5 +387,6 @@ class Level extends Entity {
         }
         addGraphic(wallTiles);
         addGraphic(groundTiles);
+        addGraphic(pitTiles);
     }
 }
