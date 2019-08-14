@@ -17,6 +17,8 @@ class Wizard extends Enemy
     public static inline var SIZE = 24;
     public static inline var FADE_TIME = 1;
 
+    static private var possiblePoints:Array<Vector2>;
+
     private var sprite:Spritemap;
     private var fadeOutTimer:Alarm;
     private var fadeInTimer:Alarm;
@@ -26,6 +28,16 @@ class Wizard extends Enemy
     // fade out -> teleport -> fade in -> shoot -> fade out
 
     public function new(startX:Float, startY:Float) {
+        if(possiblePoints == null) {
+            possiblePoints = new Array<Vector2>();
+            for(possibleX in 0...Std.int(GameScene.PLAYFIELD_SIZE / 10)) {
+                for(possibleY in 0...Std.int(GameScene.PLAYFIELD_SIZE / 10)) {
+                    possiblePoints.push(
+                        new Vector2(possibleX * 10, possibleY * 10)
+                    );
+                }
+            }
+        }
         super(startX, startY);
         mask = new Hitbox(SIZE, SIZE);
         centerOnTile();
@@ -83,50 +95,42 @@ class Wizard extends Enemy
 
     private function teleport() {
         var player = scene.getInstance("player");
-        var randomPoint = getRandomPoint();
+        HXP.shuffle(possiblePoints);
+        var teleportTo = new Vector2(x, y);
         // First try to find an open spot with a line of sight to the player
         // that isn't too close to where you are currently
-        for(i in 0...1000) {
+        for(possiblePoint in possiblePoints) {
+            var screenCoordinates = cast(
+                scene, GameScene
+            ).getScreenCoordinates(this);
+            var possiblePointOffset = new Vector2(
+                possiblePoint.x
+                + screenCoordinates.x * GameScene.PLAYFIELD_SIZE,
+                possiblePoint.y
+                + screenCoordinates.y * GameScene.PLAYFIELD_SIZE
+            );
             if(
                 collideMultiple(
                     ["enemy", "player", "walls", "enemywalls"],
-                    randomPoint.x, randomPoint.y
-                ) != null
-                || scene.collideLine(
+                    possiblePointOffset.x, possiblePointOffset.y
+                ) == null
+                && scene.collideLine(
                     "walls",
-                    Std.int(centerX), Std.int(centerY),
-                    Std.int(player.centerX), Std.int(player.centerY)
-                ) != null
-                || distanceToPoint(randomPoint.x, randomPoint.y, true) < 75
+                    Std.int(possiblePointOffset.x + width / 2),
+                    Std.int(possiblePointOffset.y + height / 2),
+                    Std.int(player.centerX),
+                    Std.int(player.centerY)
+                ) == null
+                && distanceToPoint(
+                    possiblePointOffset.x, possiblePointOffset.y, true
+                ) > 70
             ) {
-                randomPoint = getRandomPoint();
-            }
-            else {
+                teleportTo = possiblePointOffset;
                 break;
-            } 
-            if(i == 99999) {
-                trace('giving up!');
             }
         }
-        // ...then if you can't, just find an open spot
-        for(i in 0...10000) {
-            if(
-                collideMultiple(
-                    ["enemy", "player", "walls", "enemywalls"],
-                    randomPoint.x, randomPoint.y
-                ) != null
-            ) {
-                randomPoint = getRandomPoint();
-            }
-            else {
-                break;
-            } 
-            if(i == 99999) {
-                trace('giving up again!');
-            }
-        }
-        x = randomPoint.x;
-        y = randomPoint.y;
+        x = teleportTo.x;
+        y = teleportTo.y;
     }
 
     private function getRandomPoint() {
