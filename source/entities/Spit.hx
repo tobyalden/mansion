@@ -11,15 +11,19 @@ import scenes.*;
 
 class Spit extends Entity
 {
-    public static inline var SPEED = 200;
+    public static inline var DEFAULT_SPEED = 200;
     public static inline var SIZE = 16;
 
     private var velocity:Vector2;
     private var sfx:Map<String, Sfx>;
+    private var speed:Int;
 
-    public function new(spitter:Entity, velocity:Vector2) {
+    public function new(
+        spitter:Entity, velocity:Vector2, speed:Int = DEFAULT_SPEED
+    ) {
         super(spitter.centerX - SIZE / 2, spitter.centerY - SIZE / 2);
         this.velocity = velocity;
+        this.speed = speed;
         type = "hazard";
         graphic = new Image("graphics/spit.png");
         mask = new Hitbox(SIZE, SIZE);
@@ -32,7 +36,7 @@ class Spit extends Entity
     }
 
     override public function update() {
-        velocity.normalize(SPEED);
+        velocity.normalize(speed);
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
