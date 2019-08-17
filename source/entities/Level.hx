@@ -92,6 +92,15 @@ class Level extends Entity {
                     && !getTile(tileX + 1, tileY - 1)
                     && !getTile(tileX - 1, tileY - 1)
                     && !getTile(tileX - 1, tileY + 1)
+                    && !pits.getTile(tileX, tileY)
+                    && !pits.getTile(tileX + 1, tileY)
+                    && !pits.getTile(tileX - 1, tileY)
+                    && !pits.getTile(tileX, tileY + 1)
+                    && !pits.getTile(tileX, tileY - 1)
+                    && !pits.getTile(tileX + 1, tileY + 1)
+                    && !pits.getTile(tileX + 1, tileY - 1)
+                    && !pits.getTile(tileX - 1, tileY - 1)
+                    && !pits.getTile(tileX - 1, tileY + 1)
                     && (tileX % MIN_LEVEL_WIDTH_IN_TILES) > ITEM_BORDER
                     && (tileY % MIN_LEVEL_HEIGHT_IN_TILES) > ITEM_BORDER
                     && (tileX % MIN_LEVEL_WIDTH_IN_TILES)

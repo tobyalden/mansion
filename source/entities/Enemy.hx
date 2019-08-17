@@ -51,19 +51,23 @@ class Enemy extends Entity
             startingHealth = health;
         }
         if(!isOnSameScreenAsPlayer()) {
-            x = startPosition.x;
-            y = startPosition.y;
-            velocity.x = 0;
-            velocity.y = 0;
-            health = startingHealth;
-            for(tween in tweens) {
-                tween.active = false;
-            }
+            offscreenReset();
         }
         else {
             act();
         }
         super.update();
+    }
+
+    private function offscreenReset() {
+        x = startPosition.x;
+        y = startPosition.y;
+        velocity.x = 0;
+        velocity.y = 0;
+        health = startingHealth;
+        for(tween in tweens) {
+            tween.active = false;
+        }
     }
 
     private function act() {

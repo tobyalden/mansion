@@ -35,6 +35,7 @@ class GameScene extends Scene
         openSpots = new Array<IntPairWithLevel>();
         for(level in allLevels) {
             openSpots = openSpots.concat(level.openSpots);
+            addMask(level.pits, "pits", Std.int(level.x), Std.int(level.y));
         }
         HXP.shuffle(openSpots);
         createEnemyWall();
@@ -58,7 +59,7 @@ class GameScene extends Scene
                     //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 //)
-                new Bouncer(
+                new Follower(
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 )
