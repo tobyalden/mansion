@@ -12,7 +12,7 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 50;
+    public static inline var NUMBER_OF_ENEMIES = 666;
 
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
@@ -47,24 +47,42 @@ class GameScene extends Scene
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
             var enemies = [
-                //new Stalker(
-                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                //),
-                //new Seer(
-                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                //),
-                //new Booster(
-                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                //)
+                new Stalker(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
+                new Seer(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
+                new Booster(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
                 new Follower(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
+                new Archer(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
+                new Wizard(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
+                new Bouncer(
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 )
             ];
-            add(enemies[Random.randInt(enemies.length)]);
+            var enemy = enemies[Random.randInt(enemies.length)];
+            add(enemy);
+            if(Type.getClass(enemy) == Follower) {
+                for(tail in cast(enemy, Follower).tails) {
+                    add(tail);
+                }
+            }
         }
         viewport = new Viewport(camera);
         add(viewport);

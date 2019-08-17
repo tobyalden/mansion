@@ -12,19 +12,20 @@ import scenes.*;
 
 class Player extends Entity
 {
+    // Should ALL monsters pause on room enter?
     public static inline var SPEED = 100;
-    public static inline var RUN_SPEED = 100;
+    public static inline var RUN_SPEED = 150;
     public static inline var ROLL_SPEED = 350;
     public static inline var ROLL_TIME = 0.25;
     public static inline var STUN_TIME = 0.3;
     public static inline var CAST_COOLDOWN = 0.4;
 
-    public static inline var MAX_STAMINA = 100;
+    public static inline var MAX_STAMINA = 125;
     public static inline var STAMINA_RECOVERY_SPEED_MOVING = 25;
     public static inline var STAMINA_RECOVERY_SPEED_STILL = 50;
-    public static inline var ROLL_COST = 0;
-    public static inline var CAST_COST = 0;
-    public static inline var RUN_COST = 0;
+    public static inline var ROLL_COST = 60;
+    public static inline var CAST_COST = 30;
+    public static inline var RUN_COST = 10;
     public static inline var STAMINA_RECOVERY_DELAY = 0.5;
 
     public var stamina(default, null):Float;
