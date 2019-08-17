@@ -10,21 +10,33 @@ class Viewport extends Entity
     public static inline var STAMINA_BAR_LENGTH = 200;
 
     private var staminaBar:ColoredRect;
-    private var rollMarker:ColoredRect;
+    private var healthBar:Image;
 
     public function new(sceneCamera:Camera) {
         super();
         addGraphic(new Image("graphics/viewport.png"));
+
         staminaBar = new ColoredRect(STAMINA_BAR_LENGTH, 25, 0x008B00);
         staminaBar.x = 382;
-        staminaBar.y = 45;
+        staminaBar.y = 100;
         addGraphic(staminaBar);
-        rollMarker = new ColoredRect(2, 25, 0xFFFFFF);
-        rollMarker.x = (
-            382 + (Player.ROLL_COST / Player.MAX_STAMINA) * STAMINA_BAR_LENGTH
-        );
-        rollMarker.y = 45;
-        addGraphic(rollMarker);
+
+        for(i in 1...Std.int(Math.floor(Player.MAX_STAMINA / Player.CAST_COST))) {
+            var marker = new ColoredRect(2, 25, 0xFFFFFF);
+            marker.x = (
+                staminaBar.x
+                + Player.CAST_COST * i
+                * (STAMINA_BAR_LENGTH / Player.MAX_STAMINA)
+            );
+            marker.y = staminaBar.y;
+            addGraphic(marker);
+        }
+
+        healthBar = new Image("graphics/hearts.png");
+        healthBar.x = 382;
+        healthBar.y = 45;
+        addGraphic(healthBar);
+
         layer = -1;
         followCamera = sceneCamera;
     }
@@ -34,9 +46,7 @@ class Viewport extends Entity
         staminaBar.width = (
             player.stamina / Player.MAX_STAMINA * STAMINA_BAR_LENGTH
         );
-        //staminaBar.color = (
-            //player.stamina >= Player.ROLL_COST ? 0x008B00 : 0x8B0000
-        //);
+        healthBar.clipRect = new Rectangle(0, 0, 25 * player.health, 25);
         super.update();
     }
 }

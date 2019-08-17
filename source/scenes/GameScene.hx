@@ -5,6 +5,8 @@ import haxepunk.graphics.*;
 import haxepunk.input.*;
 import haxepunk.masks.*;
 import haxepunk.math.*;
+import haxepunk.Tween;
+import haxepunk.tweens.misc.*;
 import entities.*;
 import entities.Level;
 import openfl.Assets;
@@ -26,6 +28,7 @@ class GameScene extends Scene
     private var start:Level;
     private var openSpots:Array<IntPairWithLevel>;
     private var enemyWall:Entity;
+    private var curtain:Curtain;
 
     override public function begin() {
         Key.define("restart", [Key.R]);
@@ -86,6 +89,22 @@ class GameScene extends Scene
         }
         viewport = new Viewport(camera);
         add(viewport);
+        curtain = new Curtain(camera);
+        add(curtain);
+        curtain.fadeIn();
+    }
+
+    public function onDeath() {
+        var deathPause = new Alarm(2.5);
+        deathPause.onComplete.bind(function() {
+            curtain.fadeOut();
+            var restartPause = new Alarm(2.5);
+            restartPause.onComplete.bind(function() {
+                HXP.scene = new GameScene();
+            });
+            addTween(restartPause, true);
+        });
+        addTween(deathPause, true);
     }
 
     public function getLevelFromEntity(e:Entity) {

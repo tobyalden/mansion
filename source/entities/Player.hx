@@ -32,7 +32,11 @@ class Player extends Entity
     public static inline var INVINCIBLE_TIME = 1.5;
     public static inline var KNOCKBACK_SPEED = 200;
 
+    public static inline var MAX_HEALTH = 3;
+    public static inline var DEATH_DECCEL = 0.95;
+
     public var stamina(default, null):Float;
+    public var health(default, null):Int;
     private var velocity:Vector2;
     private var rollCooldown:Alarm;
     private var stunCooldown:Alarm;
@@ -50,6 +54,8 @@ class Player extends Entity
     private var flasher:Alarm;
     private var stopFlasher:Alarm;
 
+    private var isDead:Bool;
+
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
         type = "player";
@@ -66,6 +72,7 @@ class Player extends Entity
         sprite.add("stun", [2]);
         sprite.add("cast", [3]);
         sprite.add("run", [4]);
+        sprite.add("dead", [5]);
         graphic = sprite;
         velocity = new Vector2();
         mask = new Hitbox(16, 16);
@@ -99,6 +106,7 @@ class Player extends Entity
         facing = "up";
         isRunning = false;
         stamina = MAX_STAMINA;
+        health = MAX_HEALTH;
         staminaRecoveryDelay = new Alarm(
             STAMINA_RECOVERY_DELAY, TweenType.Persist
         );
@@ -120,6 +128,8 @@ class Player extends Entity
             isFlashing = false;
         });
         addTween(stopFlasher, false);
+
+        isDead = false;
     }
 
     public function getScreenCoordinates() {
@@ -149,7 +159,7 @@ class Player extends Entity
             );
         }
         var enemy = collideMultiple(["enemy", "tail", "hazard"], x, y);
-        if(enemy != null && !invincibleTimer.active) {
+        if(enemy != null && !invincibleTimer.active && !isDead) {
             takeHit(enemy);
         }
         super.update();
@@ -174,11 +184,21 @@ class Player extends Entity
             && !castCooldown.active
             && !castCooldown.active
             && !knockbackTimer.active
+            && !isDead
         );
     }
 
     private function movement() {
-        if(knockbackTimer.active) {
+        if(isDead) {
+            velocity.scale(Math.pow(
+                DEATH_DECCEL, (HXP.elapsed * HXP.assignedFrameRate)
+            ));
+            if(velocity.length < 100 * HXP.elapsed) {
+                velocity.x = 0;
+                velocity.y = 0;
+            }
+        }
+        else if(knockbackTimer.active) {
             // Do nothing
         }
         else if(
@@ -303,7 +323,16 @@ class Player extends Entity
         }
     }
 
+    private function die() {
+        isDead = true;
+        cast(scene, GameScene).onDeath();
+    }
+
     private function takeHit(damageSource:Entity) {
+        health -= 1;
+        if(health <= 0) {
+            die();
+        }
         knockbackTimer.start();
         invincibleTimer.start();
         var awayFromDamage = new Vector2(
@@ -332,7 +361,10 @@ class Player extends Entity
     }
 
     private function animation() {
-        if(castCooldown.active) {
+        if(isDead) {
+            sprite.play("dead");
+        }
+        else if(castCooldown.active) {
             sprite.play("cast");
         }
         else if(stunCooldown.active) {
