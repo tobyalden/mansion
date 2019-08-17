@@ -28,6 +28,10 @@ class Player extends Entity
     public static inline var RUN_COST = 10;
     public static inline var STAMINA_RECOVERY_DELAY = 0.5;
 
+    public static inline var KNOCKBACK_TIME = 0.25;
+    public static inline var INVINCIBLE_TIME = 1.5;
+    public static inline var KNOCKBACK_SPEED = 200;
+
     public var stamina(default, null):Float;
     private var velocity:Vector2;
     private var rollCooldown:Alarm;
@@ -38,6 +42,13 @@ class Player extends Entity
     private var facing:String;
     private var isRunning:Bool;
     private var staminaRecoveryDelay:Alarm;
+
+    private var knockbackTimer:Alarm;
+    private var invincibleTimer:Alarm;
+
+    private var isFlashing:Bool;
+    private var flasher:Alarm;
+    private var stopFlasher:Alarm;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -64,6 +75,12 @@ class Player extends Entity
         addTween(stunCooldown);
         castCooldown = new Alarm(CAST_COOLDOWN, TweenType.Persist);
         addTween(castCooldown);
+
+        knockbackTimer = new Alarm(KNOCKBACK_TIME, TweenType.Persist);
+        addTween(knockbackTimer);
+        invincibleTimer = new Alarm(INVINCIBLE_TIME, TweenType.Persist);
+        addTween(invincibleTimer);
+
         sfx = [
             "stun1" => new Sfx("audio/stun1.wav"),
             "stun2" => new Sfx("audio/stun2.wav"),
@@ -74,7 +91,10 @@ class Player extends Entity
             "cast1" => new Sfx("audio/cast1.wav"),
             "cast2" => new Sfx("audio/cast2.wav"),
             "cast3" => new Sfx("audio/cast3.wav"),
-            "cast4" => new Sfx("audio/cast4.wav")
+            "cast4" => new Sfx("audio/cast4.wav"),
+            "playerhit1" => new Sfx("audio/playerhit1.wav"),
+            "playerhit2" => new Sfx("audio/playerhit2.wav"),
+            "playerhit3" => new Sfx("audio/playerhit3.wav")
         ];
         facing = "up";
         isRunning = false;
@@ -83,6 +103,23 @@ class Player extends Entity
             STAMINA_RECOVERY_DELAY, TweenType.Persist
         );
         addTween(staminaRecoveryDelay);
+
+        isFlashing = false;
+        flasher = new Alarm(0.05, TweenType.Looping);
+        flasher.onComplete.bind(function() {
+            if(isFlashing) {
+                sprite.visible = !sprite.visible;
+                trace('flashin');
+            }
+        });
+        addTween(flasher, true);
+
+        stopFlasher = new Alarm(INVINCIBLE_TIME, TweenType.Persist);
+        stopFlasher.onComplete.bind(function() {
+            sprite.visible = true;
+            isFlashing = false;
+        });
+        addTween(stopFlasher, false);
     }
 
     public function getScreenCoordinates() {
@@ -111,7 +148,23 @@ class Player extends Entity
                 MAX_STAMINA
             );
         }
+        var enemy = collideMultiple(["enemy", "tail", "hazard"], x, y);
+        if(enemy != null && !invincibleTimer.active) {
+            takeHit(enemy);
+        }
         super.update();
+    }
+
+    public function collideMultiple(
+        collideTypes:Array<String>, collideX:Float, collideY:Float
+    ) {
+        for(collideType in collideTypes) {
+            var collideResult = collide(collideType, collideX, collideY);
+            if(collideResult != null) {
+                return collideResult;
+            }
+        }
+        return null;
     }
 
     private function canControl() {
@@ -119,11 +172,16 @@ class Player extends Entity
             !rollCooldown.active
             && !stunCooldown.active
             && !castCooldown.active
+            && !castCooldown.active
+            && !knockbackTimer.active
         );
     }
 
     private function movement() {
-        if(
+        if(knockbackTimer.active) {
+            // Do nothing
+        }
+        else if(
             Input.pressed("roll")
             && stamina >= ROLL_COST
             && (canControl() || castCooldown.active)
@@ -160,7 +218,7 @@ class Player extends Entity
                 velocity.y = 1;
             }
         }
-        if(rollCooldown.active) {
+        else if(rollCooldown.active) {
             velocity.normalize(ROLL_SPEED);
         }
         else if(!canControl()) {
@@ -210,7 +268,11 @@ class Player extends Entity
             }
             velocity.normalize(speed);
         }
-        moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls");
+        moveBy(
+            velocity.x * HXP.elapsed,
+            velocity.y * HXP.elapsed,
+            ["walls"]
+        );
     }
 
     private function castSpell() {
@@ -234,19 +296,33 @@ class Player extends Entity
         sfx['cast${HXP.choose(1, 2, 3, 4)}'].play();
     }
 
-    override public function moveCollideX(e:Entity) {
-        if(rollCooldown.active) {
+    private function hitEntity(e:Entity) {
+        if(e.type == "walls" && rollCooldown.active) {
             stun();
             sfx['stun${HXP.choose(1, 2, 3)}'].play();
         }
+    }
+
+    private function takeHit(damageSource:Entity) {
+        knockbackTimer.start();
+        invincibleTimer.start();
+        var awayFromDamage = new Vector2(
+            centerX - damageSource.centerX, centerY - damageSource.centerY
+        );
+        awayFromDamage.normalize(KNOCKBACK_SPEED);
+        velocity = awayFromDamage;
+        sfx['playerhit${HXP.choose(1, 2, 3)}'].play();
+        isFlashing = true;
+        stopFlasher.start();
+    }
+
+    override public function moveCollideX(e:Entity) {
+        hitEntity(e);
         return true;
     }
 
     override public function moveCollideY(e:Entity) {
-        if(rollCooldown.active) {
-            stun();
-            sfx['stun${HXP.choose(1, 2, 3)}'].play();
-        }
+        hitEntity(e);
         return true;
     }
 
