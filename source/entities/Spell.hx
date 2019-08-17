@@ -39,7 +39,7 @@ class Spell extends Entity
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
-            ["walls", "enemy"]
+            ["walls", "enemy", "tail"]
         );
         if(!isOnSameScreenAsPlayer()) {
             scene.remove(this);
@@ -47,27 +47,28 @@ class Spell extends Entity
         super.update();
     }
 
-    override public function moveCollideX(e:Entity) {
+    private function hitEntity(e:Entity) {
         if(e.type == "enemy") {
             cast(e, Enemy).takeHit();
+            sfx['hit${HXP.choose(1, 2, 3, 4)}'].play();
+        }
+        else if(e.type == "tail") {
+            cast(e, FollowerTail).head.takeHit();
             sfx['hit${HXP.choose(1, 2, 3, 4)}'].play();
         }
         else if(e.type == "walls") {
             sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
         }
         scene.remove(this);
+    }
+
+    override public function moveCollideX(e:Entity) {
+        hitEntity(e);
         return true;
     }
 
     override public function moveCollideY(e:Entity) {
-        if(e.type == "enemy") {
-            cast(e, Enemy).takeHit();
-            sfx['hit${HXP.choose(1, 2, 3, 4)}'].play();
-        }
-        else if(e.type == "walls") {
-            sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
-        }
-        scene.remove(this);
+        hitEntity(e);
         return true;
     }
 
