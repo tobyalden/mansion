@@ -1,7 +1,7 @@
 + knockback
 + health
 + player death
-- pits
++ pits
 - ~5 bosses
 - enemy particles on death
 - music

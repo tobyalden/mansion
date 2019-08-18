@@ -64,9 +64,9 @@ class Follower extends Enemy {
 
     override public function die() {
         for(tail in tails) {
-            scene.remove(tail);
+            cast(tail, FollowerTail).die();
         }
-        scene.remove(this);
+        super.die();
     }
 
     override private function offscreenReset() {

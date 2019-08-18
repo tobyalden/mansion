@@ -20,6 +20,7 @@ class Enemy extends Entity
     private var health:Int;
     private var tweens:Array<Tween>;
     private var velocity:Vector2;
+    private var universalSfx:Map<String, Sfx>;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -28,6 +29,11 @@ class Enemy extends Entity
         health = 1;
         tweens = new Array<Tween>();
         velocity = new Vector2();
+        universalSfx = [
+            "death1" => new Sfx("audio/robotdeath1.wav"),
+            "death2" => new Sfx("audio/robotdeath2.wav"),
+            "death3" => new Sfx("audio/robotdeath3.wav")
+        ];
     }
 
     override public function addTween(tween:Tween, start:Bool = false) {
@@ -137,5 +143,34 @@ class Enemy extends Entity
 
     public function die() {
         scene.remove(this);
+        explode();
+        universalSfx['death${HXP.choose(1, 2, 3)}'].play();
+    }
+
+    private function explode(
+        numExplosions:Int = 2, speed:Float = 600, goQuickly:Bool = true,
+        goSlowly:Bool = false
+    ) {
+        var directions = new Array<Vector2>();
+        for(i in 0...numExplosions) {
+            var angle = (2/numExplosions) * i;
+            directions.push(new Vector2(Math.cos(angle), Math.sin(angle)));
+            directions.push(new Vector2(-Math.cos(angle), Math.sin(angle)));
+            directions.push(new Vector2(Math.cos(angle), -Math.sin(angle)));
+            directions.push(new Vector2(-Math.cos(angle), -Math.sin(angle)));
+        }
+        var count = 0;
+        for(direction in directions) {
+            direction.scale(speed * Math.random());
+            direction.normalize(
+                Math.max(0.1 + 0.2 * Math.random(), direction.length)
+            );
+            var explosion = new DeathParticle(
+                centerX, centerY, directions[count], goQuickly, goSlowly
+            );
+            explosion.layer = -99;
+            scene.add(explosion);
+            count++;
+        }
     }
 }
