@@ -96,7 +96,7 @@ class Seer extends Enemy
         moveBy(
             velocity.x * HXP.elapsed * spitTimer.percent,
             velocity.y * HXP.elapsed * spitTimer.percent,
-            ["walls", "enemywalls", "enemy"]
+            Enemy.airSolids
         );
         animation();
     }

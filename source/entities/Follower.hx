@@ -109,7 +109,7 @@ class Follower extends Enemy {
         moveBy(
             velocity.x * HXP.elapsed * initialSpeedMultiplier,
             velocity.y * HXP.elapsed * initialSpeedMultiplier,
-            ["walls", "enemywalls", "enemy", "pits"]
+            Enemy.groundSolids
         );
         sprite.flipX = velocity.x < 0;
     }

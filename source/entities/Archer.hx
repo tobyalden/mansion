@@ -140,7 +140,7 @@ class Archer extends Enemy
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
-            ["walls", "enemywalls", "enemy"]
+            Enemy.groundSolids
         );
         if(velocity.length == 0) {
             if(isOnTopWall()) {

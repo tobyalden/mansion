@@ -1,6 +1,6 @@
 + knockback
-- health
-- player death
++ health
++ player death
 - pits
 - ~5 bosses
 - enemy particles on death

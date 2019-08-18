@@ -84,7 +84,7 @@ class Booster extends Enemy {
 
         moveBy(
             velocity.x * HXP.elapsed, velocity.y * HXP.elapsed,
-            ["walls", "enemywalls", "enemy"]
+            Enemy.airSolids
         );
         animation();
         super.update();
