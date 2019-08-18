@@ -14,7 +14,8 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 75;
+    //public static inline var NUMBER_OF_ENEMIES = 75;
+    public static inline var NUMBER_OF_ENEMIES = 0;
 
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
@@ -174,6 +175,7 @@ class GameScene extends Scene
             HXP.scene = new GameScene();
         }
         super.update();
+        var oldCamera = new Vector2(camera.x, camera.y);
         camera.x = (
             Math.floor((player.centerX) / PLAYFIELD_SIZE)
             * PLAYFIELD_SIZE - 20
@@ -182,6 +184,26 @@ class GameScene extends Scene
             Math.floor((player.centerY) / PLAYFIELD_SIZE)
             * PLAYFIELD_SIZE - 20
         );
+        if(camera.x < oldCamera.x) {
+            player.setLastSafeSpot(
+                new Vector2(player.x - Level.TILE_SIZE, player.y)
+            );
+        }
+        else if(camera.x > oldCamera.x) {
+            player.setLastSafeSpot(
+                new Vector2(player.x + Level.TILE_SIZE, player.y)
+            );
+        }
+        else if(camera.y < oldCamera.y) {
+            player.setLastSafeSpot(
+                new Vector2(player.x, player.y - Level.TILE_SIZE)
+            );
+        }
+        else if(camera.y > oldCamera.y) {
+            player.setLastSafeSpot(
+                new Vector2(player.x, player.y + Level.TILE_SIZE)
+            );
+        }
         enemyWall.x = (
             Math.floor((player.centerX) / PLAYFIELD_SIZE)
             * PLAYFIELD_SIZE - Level.TILE_SIZE

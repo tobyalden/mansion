@@ -55,7 +55,10 @@ class Player extends Entity
     private var stopFlasher:Alarm;
 
     private var isDead:Bool;
+    private var isFalling:Bool;
+    private var boundingBox:Hitbox;
     private var hurtBox:Hitbox;
+    private var lastSafeSpot:Vector2;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -74,10 +77,11 @@ class Player extends Entity
         sprite.add("cast", [3]);
         sprite.add("run", [4]);
         sprite.add("dead", [5]);
+        sprite.add("fall", [6, 7, 8, 9], 12, false);
         graphic = sprite;
         velocity = new Vector2();
         var allMasks = new Masklist();
-        var boundingBox = new Hitbox(16, 16);
+        boundingBox = new Hitbox(16, 16);
         hurtBox = new Hitbox(8, 8);
         hurtBox.x = -4;
         hurtBox.y = -4;
@@ -139,6 +143,13 @@ class Player extends Entity
         addTween(stopFlasher, false);
 
         isDead = false;
+        isFalling = false;
+
+        lastSafeSpot = new Vector2(x, y);
+    }
+
+    public function setLastSafeSpot(newSafeSpot:Vector2) {
+        lastSafeSpot = newSafeSpot;
     }
 
     public function getScreenCoordinates() {
@@ -161,18 +172,32 @@ class Player extends Entity
             velocity.length == 0 ?
             STAMINA_RECOVERY_SPEED_STILL : STAMINA_RECOVERY_SPEED_MOVING
         );
-        if(!isRunning && !staminaRecoveryDelay.active) {
+        if(!isRunning && !isFalling && !staminaRecoveryDelay.active) {
             stamina = Math.min(
                 stamina + staminaRecoverySpeed * HXP.elapsed,
                 MAX_STAMINA
             );
         }
         var enemy = collideMultiple(["enemy", "tail", "hazard"], x, y);
-        if(enemy != null && !invincibleTimer.active && !isDead) {
+        if(enemy != null && !invincibleTimer.active && !isDead && !isFalling) {
             if(hurtBox.collide(enemy.mask)) {
                 takeHit(enemy);
             }
         }
+
+        var pit = collide("pits", x, y);
+        if(pit != null && !isFalling) {
+            if(
+                pit.collidePoint(pit.x, pit.y, centerX, centerY)
+                && pit.collidePoint(pit.x + 6, pit.y, centerX, centerY)
+                && pit.collidePoint(pit.x - 6, pit.y, centerX, centerY)
+                && pit.collidePoint(pit.x, pit.y + 6, centerX, centerY)
+                && pit.collidePoint(pit.x, pit.y - 6, centerX, centerY)
+            ) {
+                fallIntoPit();
+            }
+        }
+
         super.update();
     }
 
@@ -196,6 +221,7 @@ class Player extends Entity
             && !castCooldown.active
             && !knockbackTimer.active
             && !isDead
+            && !isFalling
         );
     }
 
@@ -209,7 +235,7 @@ class Player extends Entity
                 velocity.y = 0;
             }
         }
-        else if(knockbackTimer.active) {
+        else if(knockbackTimer.active || isFalling) {
             // Do nothing
         }
         else if(
@@ -339,6 +365,34 @@ class Player extends Entity
         cast(scene, GameScene).onDeath();
     }
 
+    private function fallIntoPit() {
+        isFalling = true;
+        velocity = new Vector2();
+        sprite.play("fall");
+        if(health > 1) {
+            var resetTimer = new Alarm(1);
+            resetTimer.onComplete.bind(function() {
+                x = lastSafeSpot.x;
+                y = lastSafeSpot.y;
+                knockbackTimer.start();
+                invincibleTimer.start();
+                stopFlasher.start();
+                isFlashing = true;
+                isFalling = false;
+                health -= 1;
+            });
+            addTween(resetTimer, true);
+        }
+        else {
+            var resetTimer = new Alarm(1);
+            resetTimer.onComplete.bind(function() {
+                health -= 1;
+                die();
+            });
+            addTween(resetTimer, true);
+        }
+    }
+
     private function takeHit(damageSource:Entity) {
         health -= 1;
         if(health <= 0) {
@@ -372,7 +426,10 @@ class Player extends Entity
     }
 
     private function animation() {
-        if(isDead) {
+        if(isFalling) {
+            // Do nothing
+        }
+        else if(isDead) {
             sprite.play("dead");
         }
         else if(castCooldown.active) {
