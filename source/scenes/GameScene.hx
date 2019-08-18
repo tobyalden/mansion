@@ -14,8 +14,7 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    //public static inline var NUMBER_OF_ENEMIES = 75;
-    public static inline var NUMBER_OF_ENEMIES = 0;
+    public static inline var NUMBER_OF_ENEMIES = 75;
 
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;

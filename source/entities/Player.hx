@@ -114,7 +114,8 @@ class Player extends Entity
             "cast4" => new Sfx("audio/cast4.wav"),
             "playerhit1" => new Sfx("audio/playerhit1.wav"),
             "playerhit2" => new Sfx("audio/playerhit2.wav"),
-            "playerhit3" => new Sfx("audio/playerhit3.wav")
+            "playerhit3" => new Sfx("audio/playerhit3.wav"),
+            "fall" => new Sfx("audio/fall.wav")
         ];
         facing = "up";
         isRunning = false;
@@ -186,7 +187,7 @@ class Player extends Entity
         }
 
         var pit = collide("pits", x, y);
-        if(pit != null && !isFalling) {
+        if(pit != null && !isFalling && !rollCooldown.active) {
             if(
                 pit.collidePoint(pit.x, pit.y, centerX, centerY)
                 && pit.collidePoint(pit.x + 6, pit.y, centerX, centerY)
@@ -369,6 +370,7 @@ class Player extends Entity
         isFalling = true;
         velocity = new Vector2();
         sprite.play("fall");
+        sfx['fall'].play();
         if(health > 1) {
             var resetTimer = new Alarm(1);
             resetTimer.onComplete.bind(function() {
