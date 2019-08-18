@@ -55,6 +55,7 @@ class Player extends Entity
     private var stopFlasher:Alarm;
 
     private var isDead:Bool;
+    private var hurtBox:Hitbox;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -75,7 +76,15 @@ class Player extends Entity
         sprite.add("dead", [5]);
         graphic = sprite;
         velocity = new Vector2();
-        mask = new Hitbox(16, 16);
+        var allMasks = new Masklist();
+        var boundingBox = new Hitbox(16, 16);
+        hurtBox = new Hitbox(8, 8);
+        hurtBox.x = -4;
+        hurtBox.y = -4;
+        allMasks.add(boundingBox);
+        allMasks.add(hurtBox);
+        mask = allMasks;
+
         rollCooldown = new Alarm(ROLL_TIME, TweenType.Persist);
         addTween(rollCooldown);
         stunCooldown = new Alarm(STUN_TIME, TweenType.Persist);
@@ -160,7 +169,9 @@ class Player extends Entity
         }
         var enemy = collideMultiple(["enemy", "tail", "hazard"], x, y);
         if(enemy != null && !invincibleTimer.active && !isDead) {
-            takeHit(enemy);
+            if(hurtBox.collide(enemy.mask)) {
+                takeHit(enemy);
+            }
         }
         super.update();
     }
