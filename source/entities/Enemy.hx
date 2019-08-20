@@ -12,6 +12,8 @@ import scenes.*;
 
 class Enemy extends Entity
 {
+    public static inline var PAUSE_ON_ROOM_ENTER = 1;
+
     static public var groundSolids = [
         "walls", "lock", "unlock", "enemy", "pits"
     ];
@@ -70,7 +72,9 @@ class Enemy extends Entity
         }
         else {
             age += HXP.elapsed;
-            act();
+            if(age >= PAUSE_ON_ROOM_ENTER) {
+                act();
+            }
         }
         super.update();
     }
