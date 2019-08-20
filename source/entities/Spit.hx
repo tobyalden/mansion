@@ -52,16 +52,16 @@ class Spit extends Entity
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
-            ["walls", "player"]
+            ["walls", "player", "lock"]
         );
-        if(!isOnSameLevelAsPlayer()) {
+        if(!cast(scene, GameScene).isEntityOnscreen(this)) {
             scene.remove(this);
         }
         super.update();
     }
 
     private function collideEntity(e:Entity) {
-        if(e.type == "walls") {
+        if(e.type == "walls" || e.type == "lock") {
             //sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
             scene.remove(this);
         }
@@ -90,16 +90,4 @@ class Spit extends Entity
             == gameScene.getLevelFromEntity(this)
         );
     }
-
-    public function isOnSameScreenAsPlayer() {
-        var myCoordinates = cast(scene, GameScene).getScreenCoordinates(this);
-        var playerCoordinates = cast(scene, GameScene).getScreenCoordinates(
-            scene.getInstance("player")
-        );
-        return (
-            myCoordinates.x == playerCoordinates.x
-            && myCoordinates.y == playerCoordinates.y
-        );
-    }
 }
-

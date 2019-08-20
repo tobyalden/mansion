@@ -53,6 +53,13 @@ class Follower extends Enemy {
         //];
     }
 
+    override public function resetPosition() {
+        super.resetPosition();
+        for(tail in tails) {
+            tail.moveTo(x + 3, y + 3);
+        }
+    }
+
     private function recordLocation() {
         var newLocation = new Vector2(x, y);
         locationHistory.push(newLocation);

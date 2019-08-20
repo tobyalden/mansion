@@ -65,6 +65,15 @@ class Enemy extends Entity
         startPosition.y = y;
     }
 
+    private function hasLineOfSightOnPlayer() {
+        var player = scene.getInstance("player");
+        return scene.collideLine(
+            "walls",
+            Std.int(centerX), Std.int(centerY),
+            Std.int(player.centerX), Std.int(player.centerY)
+        ) == null;
+    }
+
     override public function update() {
         if(startingHealth == null) {
             startingHealth = health;
@@ -105,17 +114,6 @@ class Enemy extends Entity
         return (
             gameScene.getLevelFromPlayer()
             == gameScene.getLevelFromEntity(this)
-        );
-    }
-
-    public function isOnSameScreenAsPlayer() {
-        var myCoordinates = cast(scene, GameScene).getScreenCoordinates(this);
-        var playerCoordinates = cast(scene, GameScene).getScreenCoordinates(
-            scene.getInstance("player")
-        );
-        return (
-            myCoordinates.x == playerCoordinates.x
-            && myCoordinates.y == playerCoordinates.y
         );
     }
 

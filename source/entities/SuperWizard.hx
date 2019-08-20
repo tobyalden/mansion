@@ -38,14 +38,17 @@ class SuperWizard extends Enemy
     private var rippleShotInterval:Alarm;
     private var spoutShotInterval:Alarm;
 
-    private var linearTest:LinearMotion;
+    private var phaseRelocater:LinearMotion;
     private var phaseLocations:Map<String, Vector2>;
     private var phase:String;
+
+    private var zigZag:LinearMotion;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
         mask = new Hitbox(SIZE, SIZE);
         centerOnTile();
+        y -= 95;
         sprite = new Spritemap("graphics/superwizard.png", SIZE, SIZE);
         sprite.add("idle", [0]);
         sprite.play("idle");
@@ -80,40 +83,45 @@ class SuperWizard extends Enemy
             "rippleAndSpout" => new Vector2(x - 95, y - 95)
         ];
 
-        linearTest = new LinearMotion();
-        addTween(linearTest);
+        phaseRelocater = new LinearMotion();
+        addTween(phaseRelocater);
         phase = "rippleAndSpout";
+
+        //zigZag = new LinearPath();
+        //zigZag.addPoint(x - 95, y);
+        //zigZag.addPoint(x + 95, y);
+        //addTween(zigZag);
     }
 
     override private function act() {
         //if(!spiralShotInterval.active) {
             //spiralShotInterval.start();
         //}
-        //if(!linearTest.active) {
-            //linearTest.start();
+        //if(!phaseRelocater.active) {
+            //phaseRelocater.start();
         //}
         //else {
         //}
-        if(!atPhaseLocation()) {
-            if(!linearTest.active) {
-                linearTest.setMotion(
-                    x, y,
-                    phaseLocations[phase].x, phaseLocations[phase].y,
-                    2,
-                    Ease.sineInOut
-                );
-                linearTest.start();
-            }
-            moveTo(linearTest.x, linearTest.y);
-        }
-        else {
-            if(!rippleShotInterval.active) {
-                rippleShotInterval.start();
-            }
-            if(!spoutShotInterval.active) {
-                spoutShotInterval.start();
-            }
-        }
+        //if(!atPhaseLocation()) {
+            //if(!phaseRelocater.active) {
+                //phaseRelocater.setMotion(
+                    //x, y,
+                    //phaseLocations[phase].x, phaseLocations[phase].y,
+                    //2,
+                    //Ease.sineInOut
+                //);
+                //phaseRelocater.start();
+            //}
+            //moveTo(phaseRelocater.x, phaseRelocater.y);
+        //}
+        //else {
+            //if(!rippleShotInterval.active) {
+                //rippleShotInterval.start();
+            //}
+            //if(!spoutShotInterval.active) {
+                //spoutShotInterval.start();
+            //}
+        //}
     }
 
     private function atPhaseLocation() {

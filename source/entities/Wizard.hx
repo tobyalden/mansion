@@ -62,7 +62,12 @@ class Wizard extends Enemy
 
         preShootTimer = new Alarm(FADE_TIME, TweenType.Persist);
         preShootTimer.onComplete.bind(function() {
-            spit();
+            if(
+                cast(scene, GameScene).isEntityOnscreen(this)
+                && hasLineOfSightOnPlayer()
+            ) {
+                spit();
+            }
             postShootTimer.start();
         });
         addTween(preShootTimer);

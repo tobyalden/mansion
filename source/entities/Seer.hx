@@ -40,7 +40,11 @@ class Seer extends Enemy
         spitTimer = new NumTween(TweenType.PingPong);
         spitTimer.tween(0, 1, SPIT_COOLDOWN, Ease.sineInOut);
         spitTimer.onComplete.bind(function() {
-            if(spitTimer.forward) {
+            if(
+                spitTimer.forward
+                && cast(scene, GameScene).isEntityOnscreen(this)
+                && hasLineOfSightOnPlayer()
+            ) {
                 spit();
             }
         });

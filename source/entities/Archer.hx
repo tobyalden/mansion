@@ -88,27 +88,32 @@ class Archer extends Enemy
             return;
         }
 
-        if(Math.abs(centerX - player.centerX) < width / 2) {
-            if(centerY > player.centerY) {
-                facing = "up";
+        if(
+            cast(scene, GameScene).isEntityOnscreen(this)
+            && hasLineOfSightOnPlayer()
+        ) {
+            if(Math.abs(centerX - player.centerX) < width / 2) {
+                if(centerY > player.centerY) {
+                    facing = "up";
+                }
+                else if(centerY < player.centerY) {
+                    facing = "down";
+                }
+                spitWindup.start();
+                sfx['arrowdraw'].play();
+                return;
             }
-            else if(centerY < player.centerY) {
-                facing = "down";
+            else if(Math.abs(centerY - player.centerY) < height / 2) {
+                if(centerX > player.centerX) {
+                    facing = "left";
+                }
+                else if(centerX < player.centerX) {
+                    facing = "right";
+                }
+                spitWindup.start();
+                sfx['arrowdraw'].play();
+                return;
             }
-            spitWindup.start();
-            sfx['arrowdraw'].play();
-            return;
-        }
-        else if(Math.abs(centerY - player.centerY) < height / 2) {
-            if(centerX > player.centerX) {
-                facing = "left";
-            }
-            else if(centerX < player.centerX) {
-                facing = "right";
-            }
-            spitWindup.start();
-            sfx['arrowdraw'].play();
-            return;
         }
 
         if(centerY > player.centerY && !isOnTopWall()) {

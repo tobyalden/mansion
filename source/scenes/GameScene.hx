@@ -20,9 +20,10 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 100;
+    public static inline var NUMBER_OF_ENEMIES = 50;
     public static inline var CAMERA_PAN_TIME = 1;
-    public static inline var LOCK_CHANCE = 0.5;
+    //public static inline var LOCK_CHANCE = 0.5;
+    public static inline var LOCK_CHANCE = 0;
 
     public var isLevelLocked(default, null):Bool;
     private var roomMapBlueprint:Grid;
@@ -43,12 +44,23 @@ class GameScene extends Scene
     private var cameraPanner:LinearMotion;
     private var playerPusher:LinearMotion;
     private var allEnemies:Array<Entity>;
+    private var onScreenBox:Entity;
 
     public function setIsLevelLocked(newIsLevelLocked:Bool)  {
         isLevelLocked = newIsLevelLocked;
     }
 
     override public function begin() {
+        var onScreenBoxSprite = new ColoredRect(
+            PLAYFIELD_SIZE, PLAYFIELD_SIZE, 0xFF0000
+        );
+        onScreenBoxSprite.alpha = 0;
+        onScreenBox = new Entity(
+            0, 0, onScreenBoxSprite, new Hitbox(PLAYFIELD_SIZE, PLAYFIELD_SIZE)
+        );
+        onScreenBox.layer = -999999;
+        add(onScreenBox);
+
         Key.define("restart", [Key.R]);
         Key.define("zoomout", [Key.Q]);
         isLevelLocked = false;
@@ -74,22 +86,22 @@ class GameScene extends Scene
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
             var enemies = [
-                new Stalker(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
+                //new Stalker(
+                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                //),
                 new Seer(
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 ),
-                new Booster(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
-                new Follower(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
+                //new Booster(
+                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                //),
+                //new Follower(
+                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                //),
                 new Archer(
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
@@ -98,10 +110,10 @@ class GameScene extends Scene
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 ),
-                new Bouncer(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                )
+                //new Bouncer(
+                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                //)
             ];
             var enemy = enemies[Random.randInt(enemies.length)];
             add(enemy);
@@ -146,6 +158,10 @@ class GameScene extends Scene
             addTween(restartPause, true);
         });
         addTween(deathPause, true);
+    }
+
+    public function isEntityOnscreen(e:Entity) {
+        return e.collideWith(onScreenBox, e.x, e.y) != null;
     }
 
     public function getLevelFromPlayer() {
@@ -230,9 +246,10 @@ class GameScene extends Scene
         if(Input.check("restart")) {
             HXP.scene = new GameScene();
         }
-        player.active = !cameraPanner.active;
-        for(enemy in allEnemies) {
-            enemy.active = !cameraPanner.active;
+        var allEntities = new Array<Entity>();
+        getAll(allEntities);
+        for(entity in allEntities) {
+            entity.active = !cameraPanner.active;
         }
         super.update();
         var oldScreenX = currentScreenX;
@@ -317,6 +334,8 @@ class GameScene extends Scene
             player.visible = true;
             viewport.visible = true;
         }
+        onScreenBox.x = camera.x + 20;
+        onScreenBox.y = camera.y + 20;
     }
 
     private function loadMaps(mapNumber:Int) {

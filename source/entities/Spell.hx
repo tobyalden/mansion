@@ -39,20 +39,12 @@ class Spell extends Entity
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
-            ["walls", "enemy", "tail"]
+            ["walls", "enemy", "tail", "lock"]
         );
-        if(!isOnSameLevelAsPlayer()) {
+        if(!cast(scene, GameScene).isEntityOnscreen(this)) {
             scene.remove(this);
         }
         super.update();
-    }
-
-    public function isOnSameLevelAsPlayer() {
-        var gameScene = cast(scene, GameScene);
-        return (
-            gameScene.getLevelFromPlayer()
-            == gameScene.getLevelFromEntity(this)
-        );
     }
 
     private function hitEntity(e:Entity) {
@@ -64,7 +56,7 @@ class Spell extends Entity
             cast(e, FollowerTail).head.takeHit();
             sfx['hit${HXP.choose(1, 2, 3, 4)}'].play();
         }
-        else if(e.type == "walls") {
+        else if(e.type == "walls" || e.type == "lock") {
             sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
         }
         scene.remove(this);
@@ -78,16 +70,5 @@ class Spell extends Entity
     override public function moveCollideY(e:Entity) {
         hitEntity(e);
         return true;
-    }
-
-    public function isOnSameScreenAsPlayer() {
-        var myCoordinates = cast(scene, GameScene).getScreenCoordinates(this);
-        var playerCoordinates = cast(scene, GameScene).getScreenCoordinates(
-            scene.getInstance("player")
-        );
-        return (
-            myCoordinates.x == playerCoordinates.x
-            && myCoordinates.y == playerCoordinates.y
-        );
     }
 }
