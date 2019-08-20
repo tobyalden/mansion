@@ -11,10 +11,15 @@ import entities.*;
 import entities.Level;
 import openfl.Assets;
 
+// TODO: Add scrolling for individual levels bigger than 1x1
+// TODO: Maybe doors lock on room enter 50% of the time?
+// TODO: In roguelike mode, enemies are reshuffled in addition to being
+// respawned normally when resting at bonfire
+
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 40;
+    public static inline var NUMBER_OF_ENEMIES = 50;
 
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
@@ -27,8 +32,9 @@ class GameScene extends Scene
     private var viewport:Viewport;
     private var start:Level;
     private var openSpots:Array<IntPairWithLevel>;
-    private var enemyWall:Entity;
     private var curtain:Curtain;
+    private var currentScreenX:Int;
+    private var currentScreenY:Int;
 
     override public function begin() {
         Key.define("restart", [Key.R]);
@@ -42,7 +48,6 @@ class GameScene extends Scene
             add(new LockWalls(level.x, level.y, level));
         }
         HXP.shuffle(openSpots);
-        createEnemyWall();
         player = new Player(
             start.x + PLAYFIELD_SIZE / 2 - 8 + 100,
             start.y + PLAYFIELD_SIZE / 2 - 8 + 100
@@ -98,6 +103,8 @@ class GameScene extends Scene
         curtain = new Curtain(camera);
         //add(curtain);
         curtain.fadeIn();
+        currentScreenX = Math.floor((player.centerX) / PLAYFIELD_SIZE);
+        currentScreenY = Math.floor((player.centerY) / PLAYFIELD_SIZE);
     }
 
     public function onDeath() {
@@ -113,6 +120,20 @@ class GameScene extends Scene
         addTween(deathPause, true);
     }
 
+    public function getLevelFromPlayer() {
+        for(level in allLevels) {
+            if(
+                player.centerX >= level.x
+                && player.centerX < level.x + level.width
+                && player.centerY >= level.y
+                && player.centerY < level.y + level.height
+            ) {
+                return level;
+            }
+        }
+        return null;
+    }
+
     public function getLevelFromEntity(e:Entity) {
         for(level in allLevels) {
             if(e.collideRect(
@@ -122,31 +143,6 @@ class GameScene extends Scene
             }
         }
         return null;
-    }
-
-    private function createEnemyWall() {
-        var enemyWallMask = new Grid(
-            Level.MIN_LEVEL_WIDTH + Level.TILE_SIZE * 2,
-            Level.MIN_LEVEL_HEIGHT + Level.TILE_SIZE * 2,
-            Std.int(Level.TILE_SIZE / 2),
-            Std.int(Level.TILE_SIZE / 2)
-        );
-        for(wallTileX in 0...enemyWallMask.columns) {
-            for(wallTileY in 0...enemyWallMask.rows) {
-                if(
-                    wallTileX <= 2
-                    || wallTileY <= 2
-                    || wallTileX == enemyWallMask.columns - 3
-                    || wallTileY == enemyWallMask.rows - 3
-                  ) {
-                    enemyWallMask.setTile(wallTileX, wallTileY);
-                }
-            }
-        }
-        enemyWall = new Entity(0, 0);
-        enemyWall.mask = enemyWallMask;
-        enemyWall.type = "enemywalls";
-        add(enemyWall);
     }
 
     public function getScreenCoordinates(e:Entity) {
@@ -175,48 +171,63 @@ class GameScene extends Scene
         return spotToReturn;
     }
 
+
+    private function bindCameraToLevel(
+        currentScreenX:Int, currentScreenY:Int
+    ) {
+        var level = getLevelFromPlayer();
+        var staticCameraX = currentScreenX * PLAYFIELD_SIZE;
+        var staticCameraY = currentScreenY * PLAYFIELD_SIZE;
+        if(level.width == PLAYFIELD_SIZE && level.height == PLAYFIELD_SIZE) {
+            camera.x = staticCameraX;
+            camera.y = staticCameraY;
+        }
+        else {
+            camera.x = MathUtil.clamp(
+                player.centerX - PLAYFIELD_SIZE / 2,
+                level.x,
+                level.x + level.width - PLAYFIELD_SIZE
+            );
+            camera.y = MathUtil.clamp(
+                player.centerY - PLAYFIELD_SIZE / 2,
+                level.y,
+                level.y + level.height - PLAYFIELD_SIZE
+            );
+        }
+        camera.x -= 20;
+        camera.y -= 20;
+    }
+
     override public function update() {
         if(Input.check("restart")) {
             HXP.scene = new GameScene();
         }
         super.update();
-        var oldCamera = new Vector2(camera.x, camera.y);
-        camera.x = (
-            Math.floor((player.centerX) / PLAYFIELD_SIZE)
-            * PLAYFIELD_SIZE - 20
-        );
-        camera.y = (
-            Math.floor((player.centerY) / PLAYFIELD_SIZE)
-            * PLAYFIELD_SIZE - 20
-        );
-        if(camera.x < oldCamera.x) {
+        var oldScreenX = currentScreenX;
+        var oldScreenY = currentScreenY;
+        currentScreenX = Math.floor((player.centerX) / PLAYFIELD_SIZE);
+        currentScreenY = Math.floor((player.centerY) / PLAYFIELD_SIZE);
+        bindCameraToLevel(currentScreenX, currentScreenY);
+        if(currentScreenX < oldScreenX) {
             player.setLastSafeSpot(
                 new Vector2(player.x - Level.TILE_SIZE, player.y)
             );
         }
-        else if(camera.x > oldCamera.x) {
+        else if(currentScreenX > oldScreenX) {
             player.setLastSafeSpot(
                 new Vector2(player.x + Level.TILE_SIZE, player.y)
             );
         }
-        else if(camera.y < oldCamera.y) {
+        else if(currentScreenY < oldScreenY) {
             player.setLastSafeSpot(
                 new Vector2(player.x, player.y - Level.TILE_SIZE)
             );
         }
-        else if(camera.y > oldCamera.y) {
+        else if(currentScreenY > oldScreenY) {
             player.setLastSafeSpot(
                 new Vector2(player.x, player.y + Level.TILE_SIZE)
             );
         }
-        enemyWall.x = (
-            Math.floor((player.centerX) / PLAYFIELD_SIZE)
-            * PLAYFIELD_SIZE - Level.TILE_SIZE
-        );
-        enemyWall.y = (
-            Math.floor((player.centerY) / PLAYFIELD_SIZE)
-            * PLAYFIELD_SIZE - Level.TILE_SIZE
-        );
         if(Input.check("zoomout")) {
             camera.x = -1700;
             camera.y = -200;

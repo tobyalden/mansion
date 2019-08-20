@@ -232,14 +232,14 @@ class Level extends Entity {
             }
         }
 
-        lockWalls = new Grid(segmentWidth, segmentHeight, TILE_SIZE, TILE_SIZE);
-        for(tileX in 0...walls.columns) {
-            for(tileY in 0...walls.rows) {
+        lockWalls = new Grid(segmentWidth, segmentHeight, 8, 8);
+        for(tileX in 0...lockWalls.columns) {
+            for(tileY in 0...lockWalls.rows) {
                 if(
                     tileX == 0
                     || tileY == 0
-                    || tileX == walls.columns - 1
-                    || tileY == walls.rows - 1
+                    || tileX == lockWalls.columns - 1
+                    || tileY == lockWalls.rows - 1
                 ) {
                     lockWalls.setTile(tileX, tileY);
                 }
@@ -292,14 +292,20 @@ class Level extends Entity {
         );
         lockTiles = new Tilemap(
             'graphics/lockwalls.png',
-            walls.width, walls.height, walls.tileWidth, walls.tileHeight
+            lockWalls.width, lockWalls.height,
+            lockWalls.tileWidth, lockWalls.tileHeight
         );
-        for(tileX in 0...walls.columns) {
-            for(tileY in 0...walls.rows) {
+
+        for(tileX in 0...lockWalls.columns) {
+            for(tileY in 0...lockWalls.rows) {
                 if(lockWalls.getTile(tileX, tileY)) {
                     lockTiles.setTile(tileX, tileY, 0);
                 }
+            }
+        }
 
+        for(tileX in 0...walls.columns) {
+            for(tileY in 0...walls.rows) {
                 if(pits.getTile(tileX, tileY)) {
                     if(
                         !pits.getTile(tileX - 1, tileY)

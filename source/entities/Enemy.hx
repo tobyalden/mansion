@@ -12,8 +12,10 @@ import scenes.*;
 
 class Enemy extends Entity
 {
-    static public var groundSolids = ["walls", "enemywalls", "enemy", "pits"];
-    static public var airSolids = ["walls", "enemywalls", "enemy"];
+    static public var groundSolids = [
+        "walls", "lock", "unlock", "enemy", "pits"
+    ];
+    static public var airSolids = ["walls", "lock", "unlock", "enemy"];
 
     public var isDead(default, null):Bool;
     private var startPosition:Vector2;
