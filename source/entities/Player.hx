@@ -39,6 +39,8 @@ class Player extends Entity
     public static inline var MAX_HEALTH = 3;
     public static inline var DEATH_DECCEL = 0.95;
 
+    public static inline var PITFALL_RESET_TIME = 1;
+
     public var stamina(default, null):Float;
     public var health(default, null):Int;
     private var velocity:Vector2;
@@ -399,10 +401,26 @@ class Player extends Entity
         sprite.play("fall");
         sfx['fall'].play();
         if(health > 1) {
-            var resetTimer = new Alarm(1);
+            var currentLevel = cast(scene, GameScene).currentLevel;
+            var resetTimer = new Alarm(PITFALL_RESET_TIME);
             resetTimer.onComplete.bind(function() {
                 x = lastSafeSpot.x;
                 y = lastSafeSpot.y;
+                var cameraDestinationX = MathUtil.clamp(
+                    centerX - GameScene.PLAYFIELD_SIZE / 2,
+                    currentLevel.x,
+                    currentLevel.x + currentLevel.width
+                    - GameScene.PLAYFIELD_SIZE
+                );
+                var cameraDestinationY = MathUtil.clamp(
+                    centerY - GameScene.PLAYFIELD_SIZE / 2,
+                    currentLevel.y,
+                    currentLevel.y + currentLevel.height
+                    - GameScene.PLAYFIELD_SIZE
+                );
+                cast(scene, GameScene).panCamera(
+                    cameraDestinationX, cameraDestinationY, PITFALL_RESET_TIME
+                );
                 knockbackTimer.start();
                 invincibleTimer.start();
                 stopFlasher.start();
@@ -413,7 +431,7 @@ class Player extends Entity
             addTween(resetTimer, true);
         }
         else {
-            var resetTimer = new Alarm(1);
+            var resetTimer = new Alarm(PITFALL_RESET_TIME);
             resetTimer.onComplete.bind(function() {
                 health -= 1;
                 die();

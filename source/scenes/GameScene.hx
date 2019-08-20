@@ -26,6 +26,7 @@ class GameScene extends Scene
     public static inline var LOCK_CHANCE = 0;
 
     public var isLevelLocked(default, null):Bool;
+    public var currentLevel(default, null):Level;
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
     private var shaftMapBlueprint:Grid;
@@ -40,7 +41,6 @@ class GameScene extends Scene
     private var curtain:Curtain;
     private var currentScreenX:Int;
     private var currentScreenY:Int;
-    private var currentLevel:Level;
     private var cameraPanner:LinearMotion;
     private var playerPusher:LinearMotion;
     private var allEnemies:Array<Entity>;
@@ -242,6 +242,22 @@ class GameScene extends Scene
         camera.y -= 20;
     }
 
+    public function panCamera(
+        cameraDestinationX:Float,
+        cameraDestinationY:Float,
+        panTime:Float = CAMERA_PAN_TIME
+    ) {
+        cameraDestinationX -= 20;
+        cameraDestinationY -= 20;
+        cameraPanner.setMotion(
+            camera.x, camera.y,
+            cameraDestinationX, cameraDestinationY,
+            panTime,
+            Ease.sineInOut
+        );
+        cameraPanner.start();
+    }
+
     override public function update() {
         if(Input.check("restart")) {
             HXP.scene = new GameScene();
@@ -270,15 +286,7 @@ class GameScene extends Scene
                 currentLevel.y,
                 currentLevel.y + currentLevel.height - PLAYFIELD_SIZE
             );
-            cameraDestinationX -= 20;
-            cameraDestinationY -= 20;
-            cameraPanner.setMotion(
-                camera.x, camera.y,
-                cameraDestinationX, cameraDestinationY,
-                CAMERA_PAN_TIME,
-                Ease.sineInOut
-            );
-            cameraPanner.start();
+            panCamera(cameraDestinationX, cameraDestinationY);
 
             var playerDestinationX = player.x;
             var playerDestinationY = player.y;
