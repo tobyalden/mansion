@@ -15,6 +15,7 @@ class Enemy extends Entity
     static public var groundSolids = ["walls", "enemywalls", "enemy", "pits"];
     static public var airSolids = ["walls", "enemywalls", "enemy"];
 
+    public var isDead(default, null):Bool;
     private var startPosition:Vector2;
     private var startingHealth:Int;
     private var health:Int;
@@ -36,6 +37,7 @@ class Enemy extends Entity
             "death3" => new Sfx("audio/robotdeath3.wav")
         ];
         age = 0;
+        isDead = false;
     }
 
     override public function addTween(tween:Tween, start:Bool = false) {
@@ -146,6 +148,7 @@ class Enemy extends Entity
     }
 
     public function die() {
+        isDead = true;
         scene.remove(this);
         explode();
         universalSfx['death${HXP.choose(1, 2, 3)}'].play();

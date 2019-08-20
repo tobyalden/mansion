@@ -31,10 +31,13 @@ class Level extends Entity {
     public static inline var NUMBER_OF_SHAFTS = 3;
     public static inline var ITEM_BORDER = 4;
 
+    public var lockWalls(default, null):Grid;
+    public var lockTiles(default, null):Tilemap;
     public var walls(default, null):Grid;
     public var pits(default, null):Grid;
     public var openSpots(default, null):Array<IntPairWithLevel>;
     public var levelType(default, null):String;
+    public var enemies(default, null):Array<Enemy>;
     private var wallTiles:Tilemap;
     private var groundTiles:Tilemap;
     private var pitTiles:Tilemap;
@@ -74,6 +77,17 @@ class Level extends Entity {
         }
         openSpots = new Array<IntPairWithLevel>();
         mask = walls;
+        enemies = new Array<Enemy>();
+    }
+
+    public function getAliveEnemyCount() {
+        var count = 0;
+        for(enemy in enemies) {
+            if(!enemy.isDead) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public function findOpenSpots() {
@@ -217,6 +231,20 @@ class Level extends Entity {
                 }
             }
         }
+
+        lockWalls = new Grid(segmentWidth, segmentHeight, TILE_SIZE, TILE_SIZE);
+        for(tileX in 0...walls.columns) {
+            for(tileY in 0...walls.rows) {
+                if(
+                    tileX == 0
+                    || tileY == 0
+                    || tileX == walls.columns - 1
+                    || tileY == walls.rows - 1
+                ) {
+                    lockWalls.setTile(tileX, tileY);
+                }
+            }
+        }
     }
 
     public function fillLeft(offsetY:Int) {
@@ -262,8 +290,16 @@ class Level extends Entity {
             'graphics/pits.png',
             walls.width, walls.height, walls.tileWidth, walls.tileHeight
         );
+        lockTiles = new Tilemap(
+            'graphics/lockwalls.png',
+            walls.width, walls.height, walls.tileWidth, walls.tileHeight
+        );
         for(tileX in 0...walls.columns) {
             for(tileY in 0...walls.rows) {
+                if(lockWalls.getTile(tileX, tileY)) {
+                    lockTiles.setTile(tileX, tileY, 0);
+                }
+
                 if(pits.getTile(tileX, tileY)) {
                     if(
                         !pits.getTile(tileX - 1, tileY)

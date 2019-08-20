@@ -352,7 +352,7 @@ class Player extends Entity
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
-            ["walls"]
+            ["walls", "lock"]
         );
     }
 

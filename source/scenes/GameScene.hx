@@ -39,6 +39,7 @@ class GameScene extends Scene
         for(level in allLevels) {
             openSpots = openSpots.concat(level.openSpots);
             addMask(level.pits, "pits", Std.int(level.x), Std.int(level.y));
+            add(new LockWalls(level.x, level.y, level));
         }
         HXP.shuffle(openSpots);
         createEnemyWall();
@@ -47,10 +48,10 @@ class GameScene extends Scene
             start.y + PLAYFIELD_SIZE / 2 - 8 + 100
         );
         add(player);
-        add(new SuperWizard(
-            start.x + PLAYFIELD_SIZE / 2 - 8,
-            start.y + PLAYFIELD_SIZE / 2 - 8
-        ));
+        //add(new SuperWizard(
+            //start.x + PLAYFIELD_SIZE / 2 - 8,
+            //start.y + PLAYFIELD_SIZE / 2 - 8
+        //));
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
             var enemies = [
@@ -85,6 +86,7 @@ class GameScene extends Scene
             ];
             var enemy = enemies[Random.randInt(enemies.length)];
             add(enemy);
+            enemySpot.level.enemies.push(enemy);
             if(Type.getClass(enemy) == Follower) {
                 for(tail in cast(enemy, Follower).tails) {
                     add(tail);
