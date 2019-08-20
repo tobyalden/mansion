@@ -41,10 +41,18 @@ class Spell extends Entity
             velocity.y * HXP.elapsed,
             ["walls", "enemy", "tail"]
         );
-        if(!isOnSameScreenAsPlayer()) {
+        if(!isOnSameLevelAsPlayer()) {
             scene.remove(this);
         }
         super.update();
+    }
+
+    public function isOnSameLevelAsPlayer() {
+        var gameScene = cast(scene, GameScene);
+        return (
+            gameScene.getLevelFromPlayer()
+            == gameScene.getLevelFromEntity(this)
+        );
     }
 
     private function hitEntity(e:Entity) {

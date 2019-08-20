@@ -54,7 +54,7 @@ class Spit extends Entity
             velocity.y * HXP.elapsed,
             ["walls", "player"]
         );
-        if(!isOnSameScreenAsPlayer()) {
+        if(!isOnSameLevelAsPlayer()) {
             scene.remove(this);
         }
         super.update();
@@ -81,6 +81,14 @@ class Spit extends Entity
 
     override public function moveCollideY(e:Entity) {
         return collideEntity(e);
+    }
+
+    public function isOnSameLevelAsPlayer() {
+        var gameScene = cast(scene, GameScene);
+        return (
+            gameScene.getLevelFromPlayer()
+            == gameScene.getLevelFromEntity(this)
+        );
     }
 
     public function isOnSameScreenAsPlayer() {

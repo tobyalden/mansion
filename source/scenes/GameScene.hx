@@ -7,11 +7,12 @@ import haxepunk.masks.*;
 import haxepunk.math.*;
 import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
+import haxepunk.tweens.motion.*;
+import haxepunk.utils.*;
 import entities.*;
 import entities.Level;
 import openfl.Assets;
 
-// TODO: Add scrolling for individual levels bigger than 1x1
 // TODO: Maybe doors lock on room enter 50% of the time?
 // TODO: In roguelike mode, enemies are reshuffled in addition to being
 // respawned normally when resting at bonfire
@@ -19,7 +20,8 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 50;
+    public static inline var NUMBER_OF_ENEMIES = 0;
+    public static inline var CAMERA_PAN_TIME = 1;
 
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
@@ -35,6 +37,10 @@ class GameScene extends Scene
     private var curtain:Curtain;
     private var currentScreenX:Int;
     private var currentScreenY:Int;
+    private var currentLevel:Level;
+    private var cameraPanner:LinearMotion;
+    private var playerPusher:LinearMotion;
+    private var allEnemies:Array<Entity>;
 
     override public function begin() {
         Key.define("restart", [Key.R]);
@@ -57,6 +63,7 @@ class GameScene extends Scene
             //start.x + PLAYFIELD_SIZE / 2 - 8,
             //start.y + PLAYFIELD_SIZE / 2 - 8
         //));
+        allEnemies = new Array<Entity>();
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
             var enemies = [
@@ -91,6 +98,7 @@ class GameScene extends Scene
             ];
             var enemy = enemies[Random.randInt(enemies.length)];
             add(enemy);
+            allEnemies.push(enemy);
             enemySpot.level.enemies.push(enemy);
             if(Type.getClass(enemy) == Follower) {
                 for(tail in cast(enemy, Follower).tails) {
@@ -105,6 +113,14 @@ class GameScene extends Scene
         curtain.fadeIn();
         currentScreenX = Math.floor((player.centerX) / PLAYFIELD_SIZE);
         currentScreenY = Math.floor((player.centerY) / PLAYFIELD_SIZE);
+        currentLevel = start;
+        cameraPanner = new LinearMotion();
+        addTween(cameraPanner);
+        playerPusher = new LinearMotion();
+        playerPusher.onComplete.bind(function() {
+            player.cancelRoll();
+        });
+        addTween(playerPusher);
     }
 
     public function onDeath() {
@@ -202,31 +218,79 @@ class GameScene extends Scene
         if(Input.check("restart")) {
             HXP.scene = new GameScene();
         }
+        player.active = !cameraPanner.active;
+        for(enemy in allEnemies) {
+            enemy.active = !cameraPanner.active;
+        }
         super.update();
         var oldScreenX = currentScreenX;
         var oldScreenY = currentScreenY;
+        var oldLevel = currentLevel;
         currentScreenX = Math.floor((player.centerX) / PLAYFIELD_SIZE);
         currentScreenY = Math.floor((player.centerY) / PLAYFIELD_SIZE);
-        bindCameraToLevel(currentScreenX, currentScreenY);
-        if(currentScreenX < oldScreenX) {
-            player.setLastSafeSpot(
-                new Vector2(player.x - Level.TILE_SIZE, player.y)
+        currentLevel = getLevelFromPlayer();
+        if(currentLevel != oldLevel) {
+            var cameraDestinationX = MathUtil.clamp(
+                player.centerX - PLAYFIELD_SIZE / 2,
+                currentLevel.x,
+                currentLevel.x + currentLevel.width - PLAYFIELD_SIZE
             );
+            var cameraDestinationY = MathUtil.clamp(
+                player.centerY - PLAYFIELD_SIZE / 2,
+                currentLevel.y,
+                currentLevel.y + currentLevel.height - PLAYFIELD_SIZE
+            );
+            cameraDestinationX -= 20;
+            cameraDestinationY -= 20;
+            cameraPanner.setMotion(
+                camera.x, camera.y,
+                cameraDestinationX, cameraDestinationY,
+                CAMERA_PAN_TIME,
+                Ease.sineInOut
+            );
+            cameraPanner.start();
+
+            var playerDestinationX = player.x;
+            var playerDestinationY = player.y;
+            if(currentScreenX < oldScreenX) {
+                player.setLastSafeSpot(
+                    new Vector2(player.x - Level.TILE_SIZE, player.y)
+                );
+                playerDestinationX -= Level.TILE_SIZE;
+            }
+            else if(currentScreenX > oldScreenX) {
+                player.setLastSafeSpot(
+                    new Vector2(player.x + Level.TILE_SIZE, player.y)
+                );
+                playerDestinationX += Level.TILE_SIZE;
+            }
+            else if(currentScreenY < oldScreenY) {
+                player.setLastSafeSpot(
+                    new Vector2(player.x, player.y - Level.TILE_SIZE)
+                );
+                playerDestinationY -= Level.TILE_SIZE;
+            }
+            else if(currentScreenY > oldScreenY) {
+                player.setLastSafeSpot(
+                    new Vector2(player.x, player.y + Level.TILE_SIZE)
+                );
+                playerDestinationY += Level.TILE_SIZE;
+            }
+            playerPusher.setMotion(
+                player.x, player.y,
+                playerDestinationX, playerDestinationY,
+                CAMERA_PAN_TIME,
+                Ease.sineInOut
+            );
+            playerPusher.start();
         }
-        else if(currentScreenX > oldScreenX) {
-            player.setLastSafeSpot(
-                new Vector2(player.x + Level.TILE_SIZE, player.y)
-            );
+        if(cameraPanner.active) {
+            camera.x = cameraPanner.x;
+            camera.y = cameraPanner.y;
+            player.moveTo(playerPusher.x, playerPusher.y);
         }
-        else if(currentScreenY < oldScreenY) {
-            player.setLastSafeSpot(
-                new Vector2(player.x, player.y - Level.TILE_SIZE)
-            );
-        }
-        else if(currentScreenY > oldScreenY) {
-            player.setLastSafeSpot(
-                new Vector2(player.x, player.y + Level.TILE_SIZE)
-            );
+        else {
+            bindCameraToLevel(currentScreenX, currentScreenY);
         }
         if(Input.check("zoomout")) {
             camera.x = -1700;

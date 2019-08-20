@@ -65,7 +65,7 @@ class Enemy extends Entity
         if(startingHealth == null) {
             startingHealth = health;
         }
-        if(!isOnSameScreenAsPlayer()) {
+        if(!isOnSameLevelAsPlayer()) {
             offscreenReset();
         }
         else {
@@ -89,6 +89,14 @@ class Enemy extends Entity
 
     private function act() {
         // Override in subclasses and add enemy logic here
+    }
+
+    public function isOnSameLevelAsPlayer() {
+        var gameScene = cast(scene, GameScene);
+        return (
+            gameScene.getLevelFromPlayer()
+            == gameScene.getLevelFromEntity(this)
+        );
     }
 
     public function isOnSameScreenAsPlayer() {

@@ -146,6 +146,10 @@ class Player extends Entity
         lastSafeSpot = new Vector2(x, y);
     }
 
+    public function cancelRoll() {
+        rollCooldown.active = false;
+    }
+
     public function setLastSafeSpot(newSafeSpot:Vector2) {
         lastSafeSpot = newSafeSpot;
     }
