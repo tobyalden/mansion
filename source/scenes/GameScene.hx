@@ -14,7 +14,7 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 50;
+    public static inline var NUMBER_OF_ENEMIES = 40;
 
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
@@ -43,10 +43,14 @@ class GameScene extends Scene
         HXP.shuffle(openSpots);
         createEnemyWall();
         player = new Player(
-            start.x + PLAYFIELD_SIZE / 2 - 8,
-            start.y + PLAYFIELD_SIZE / 2 - 8
+            start.x + PLAYFIELD_SIZE / 2 - 8 + 100,
+            start.y + PLAYFIELD_SIZE / 2 - 8 + 100
         );
         add(player);
+        add(new SuperWizard(
+            start.x + PLAYFIELD_SIZE / 2 - 8,
+            start.y + PLAYFIELD_SIZE / 2 - 8
+        ));
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
             var enemies = [
@@ -90,7 +94,7 @@ class GameScene extends Scene
         viewport = new Viewport(camera);
         add(viewport);
         curtain = new Curtain(camera);
-        add(curtain);
+        //add(curtain);
         curtain.fadeIn();
     }
 

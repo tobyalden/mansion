@@ -21,6 +21,7 @@ class Enemy extends Entity
     private var tweens:Array<Tween>;
     private var velocity:Vector2;
     private var universalSfx:Map<String, Sfx>;
+    private var age:Float;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -34,6 +35,7 @@ class Enemy extends Entity
             "death2" => new Sfx("audio/robotdeath2.wav"),
             "death3" => new Sfx("audio/robotdeath3.wav")
         ];
+        age = 0;
     }
 
     override public function addTween(tween:Tween, start:Bool = false) {
@@ -63,12 +65,14 @@ class Enemy extends Entity
             offscreenReset();
         }
         else {
+            age += HXP.elapsed;
             act();
         }
         super.update();
     }
 
     private function offscreenReset() {
+        age = 0;
         x = startPosition.x;
         y = startPosition.y;
         velocity.x = 0;
@@ -145,6 +149,31 @@ class Enemy extends Entity
         scene.remove(this);
         explode();
         universalSfx['death${HXP.choose(1, 2, 3)}'].play();
+    }
+
+    public function getSpreadAngles(numAngles:Int, maxSpread:Float) {
+        var spreadAngles = new Array<Float>();
+        var startAngle = -maxSpread / 2;
+        var angleIncrement = maxSpread / (numAngles - 1);
+        for(i in 0...numAngles) {
+            spreadAngles.push(startAngle + angleIncrement * i);
+        }
+        return spreadAngles;
+    }
+
+    public function getSprayAngles(numAngles:Int, maxSpread:Float) {
+        var sprayAngles = new Array<Float>();
+        for(i in 0...numAngles) {
+            sprayAngles.push(-maxSpread / 2 + Random.random * maxSpread);
+        }
+        return sprayAngles;
+    }
+
+    public function getAngleTowardsPlayer() {
+        var player = scene.getInstance("player");
+        return (
+            Math.atan2(player.centerY - centerY, player.centerX - centerX)
+        );
     }
 
     private function explode(

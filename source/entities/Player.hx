@@ -14,7 +14,8 @@ class Player extends Entity
 {
     // Should ALL monsters pause on room enter?
     public static inline var SPEED = 100;
-    public static inline var RUN_SPEED = 150;
+    //public static inline var RUN_SPEED = 150;
+    public static inline var RUN_SPEED = 100;
     public static inline var ROLL_SPEED = 350;
     public static inline var ROLL_TIME = 0.25;
     public static inline var STUN_TIME = 0.3;
@@ -23,9 +24,12 @@ class Player extends Entity
     public static inline var MAX_STAMINA = 125;
     public static inline var STAMINA_RECOVERY_SPEED_MOVING = 25;
     public static inline var STAMINA_RECOVERY_SPEED_STILL = 50;
-    public static inline var ROLL_COST = 60;
-    public static inline var CAST_COST = 30;
-    public static inline var RUN_COST = 10;
+    //public static inline var ROLL_COST = 60;
+    //public static inline var CAST_COST = 30;
+    //public static inline var RUN_COST = 10;
+    public static inline var ROLL_COST = 0;
+    public static inline var CAST_COST = 0;
+    public static inline var RUN_COST = 0;
     public static inline var STAMINA_RECOVERY_DELAY = 0.5;
 
     public static inline var KNOCKBACK_TIME = 0.25;
@@ -57,7 +61,6 @@ class Player extends Entity
     private var isDead:Bool;
     private var isFalling:Bool;
     private var boundingBox:Hitbox;
-    private var hurtBox:Hitbox;
     private var lastSafeSpot:Vector2;
 
     public function new(startX:Float, startY:Float) {
@@ -80,14 +83,8 @@ class Player extends Entity
         sprite.add("fall", [6, 7, 8, 9], 12, false);
         graphic = sprite;
         velocity = new Vector2();
-        var allMasks = new Masklist();
         boundingBox = new Hitbox(16, 16);
-        hurtBox = new Hitbox(8, 8);
-        hurtBox.x = -4;
-        hurtBox.y = -4;
-        allMasks.add(boundingBox);
-        allMasks.add(hurtBox);
-        mask = allMasks;
+        mask = boundingBox;
 
         rollCooldown = new Alarm(ROLL_TIME, TweenType.Persist);
         addTween(rollCooldown);
@@ -179,9 +176,14 @@ class Player extends Entity
                 MAX_STAMINA
             );
         }
-        var enemy = collideMultiple(["enemy", "tail", "hazard"], x, y);
+        var collideTypes = (
+            rollCooldown.active && !stunCooldown.active ?
+            ["enemy", "tail"] : ["enemy", "tail", "hazard"]
+        );
+        trace(collideTypes);
+        var enemy = collideMultiple(collideTypes, x, y);
         if(enemy != null && !invincibleTimer.active && !isDead && !isFalling) {
-            if(hurtBox.collide(enemy.mask)) {
+            if(enemy.collideRect(enemy.x, enemy.y, x + 4, y + 4, 8, 8)) {
                 takeHit(enemy);
             }
         }
@@ -200,6 +202,15 @@ class Player extends Entity
         }
 
         super.update();
+    }
+
+    public function canBeHitBySpit() {
+        return (
+            !invincibleTimer.active
+            && !isDead
+            && !isFalling
+            && (!rollCooldown.active || stunCooldown.active)
+        );
     }
 
     public function collideMultiple(
@@ -395,7 +406,7 @@ class Player extends Entity
         }
     }
 
-    private function takeHit(damageSource:Entity) {
+    public function takeHit(damageSource:Entity) {
         health -= 1;
         if(health <= 0) {
             die();

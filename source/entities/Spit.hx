@@ -12,7 +12,7 @@ import scenes.*;
 class Spit extends Entity
 {
     public static inline var DEFAULT_SPEED = 200;
-    public static inline var SIZE = 16;
+    public static inline var SIZE = 8;
 
     private var velocity:Vector2;
     private var sfx:Map<String, Sfx>;
@@ -25,8 +25,10 @@ class Spit extends Entity
         this.velocity = velocity;
         this.speed = speed;
         type = "hazard";
-        graphic = new Image("graphics/spit.png");
         mask = new Hitbox(SIZE, SIZE);
+        graphic = new Image("graphics/spit.png");
+        graphic.x = -4;
+        graphic.y = -4;
         sfx = [
             "hitwall1" => new Sfx("audio/hitwall1.wav"),
             "hitwall2" => new Sfx("audio/hitwall2.wav"),
@@ -40,7 +42,7 @@ class Spit extends Entity
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
-            ["walls"]
+            ["walls", "player"]
         );
         if(!isOnSameScreenAsPlayer()) {
             scene.remove(this);
@@ -48,20 +50,27 @@ class Spit extends Entity
         super.update();
     }
 
-    override public function moveCollideX(e:Entity) {
+    private function collideEntity(e:Entity) {
         if(e.type == "walls") {
-            sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
+            //sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
+            scene.remove(this);
         }
-        scene.remove(this);
+        else if(e.type == "player") {
+            var player = cast(e, Player);
+            if(player.canBeHitBySpit()) {
+                player.takeHit(this);
+            }
+            return false;
+        }
         return true;
     }
 
+    override public function moveCollideX(e:Entity) {
+        return collideEntity(e);
+    }
+
     override public function moveCollideY(e:Entity) {
-        if(e.type == "walls") {
-            sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
-        }
-        scene.remove(this);
-        return true;
+        return collideEntity(e);
     }
 
     public function isOnSameScreenAsPlayer() {
