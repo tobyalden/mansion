@@ -289,6 +289,18 @@ class Player extends Entity
         }
         else if(rollCooldown.active) {
             velocity.normalize(ROLL_SPEED);
+            if(Input.check("left")) {
+                facing = "left";
+            }
+            else if(Input.check("right")) {
+                facing = "right";
+            }
+            if(Input.check("up")) {
+                facing = "up";
+            }
+            else if(Input.check("down")) {
+                facing = "down";
+            }
         }
         else if(!canControl()) {
             if(Input.check("left")) {
