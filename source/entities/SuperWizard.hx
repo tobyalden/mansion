@@ -25,12 +25,12 @@ class SuperWizard extends Enemy
     public static inline var RIPPLE_SHOT_SPEED = 100;
     public static inline var RIPPLE_SHOT_SPREAD = 15;
     //public static inline var RIPPLE_SHOT_INTERVAL = 1.75;
-    public static inline var RIPPLE_SHOT_INTERVAL = 2.5;
+    public static inline var RIPPLE_SHOT_INTERVAL = 2.7;
     public static inline var RIPPLE_BULLETS_PER_SHOT = 100;
 
     public static inline var SPOUT_SHOT_SPEED = 150;
     //public static inline var SPOUT_SHOT_INTERVAL = 0.05;
-    public static inline var SPOUT_SHOT_INTERVAL = 0.8;
+    public static inline var SPOUT_SHOT_INTERVAL = 1.5;
 
     private var sprite:Spritemap;
     private var spiralShotInterval:Alarm;
@@ -77,12 +77,12 @@ class SuperWizard extends Enemy
 
         phaseLocations = [
             "spiral" => new Vector2(x, y),
-            "orbs" => new Vector2(x, y - 95)
+            "rippleAndSpout" => new Vector2(x - 95, y - 95)
         ];
 
         linearTest = new LinearMotion();
         addTween(linearTest);
-        phase = "orbs";
+        phase = "rippleAndSpout";
     }
 
     override private function act() {
@@ -140,7 +140,7 @@ class SuperWizard extends Enemy
         var shotVector = new Vector2(
             Math.cos(shotAngle), Math.sin(shotAngle)
         );
-        scene.add(new Spit(this, shotVector, SPOUT_SHOT_SPEED));
+        scene.add(new Spit(this, shotVector, SPOUT_SHOT_SPEED, true));
     }
 
     private function rippleShot() {

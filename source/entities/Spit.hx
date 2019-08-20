@@ -13,22 +13,32 @@ class Spit extends Entity
 {
     public static inline var DEFAULT_SPEED = 200;
     public static inline var SIZE = 8;
+    public static inline var BIG_SIZE = 24;
 
     private var velocity:Vector2;
     private var sfx:Map<String, Sfx>;
     private var speed:Int;
+    private var sprite:Image;
 
     public function new(
-        spitter:Entity, velocity:Vector2, speed:Int = DEFAULT_SPEED
+        spitter:Entity, velocity:Vector2, speed:Int = DEFAULT_SPEED,
+        isBig:Bool = false
     ) {
-        super(spitter.centerX - SIZE / 2, spitter.centerY - SIZE / 2);
+        var size = isBig ? BIG_SIZE : SIZE;
+        super(spitter.centerX - size / 2, spitter.centerY - size / 2);
         this.velocity = velocity;
         this.speed = speed;
         type = "hazard";
-        mask = new Hitbox(SIZE, SIZE);
-        graphic = new Image("graphics/spit.png");
-        graphic.x = -4;
-        graphic.y = -4;
+        mask = new Hitbox(size, size);
+        if(isBig) {
+            sprite = new Image("graphics/bigspit.png");
+        }
+        else {
+            sprite = new Image("graphics/spit.png");
+        }
+        sprite.x = -(sprite.width - size) / 2;
+        sprite.y = -(sprite.height - size) / 2;
+        graphic = sprite;
         sfx = [
             "hitwall1" => new Sfx("audio/hitwall1.wav"),
             "hitwall2" => new Sfx("audio/hitwall2.wav"),
