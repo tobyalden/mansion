@@ -30,6 +30,7 @@ class LockWalls extends Entity {
             collideWith(player, x, y) == null
             && level.getAliveEnemyCount() > 0
             && cast(scene, GameScene).getLevelFromEntity(player) == level
+            && cast(scene, GameScene).isLevelLocked
         ) {
             sprite.alpha = 1;
             type = "lock";

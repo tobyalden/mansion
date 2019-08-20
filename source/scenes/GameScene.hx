@@ -20,9 +20,11 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 0;
+    public static inline var NUMBER_OF_ENEMIES = 100;
     public static inline var CAMERA_PAN_TIME = 1;
+    public static inline var LOCK_CHANCE = 0.5;
 
+    public var isLevelLocked(default, null):Bool;
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
     private var shaftMapBlueprint:Grid;
@@ -42,9 +44,14 @@ class GameScene extends Scene
     private var playerPusher:LinearMotion;
     private var allEnemies:Array<Entity>;
 
+    public function setIsLevelLocked(newIsLevelLocked:Bool)  {
+        isLevelLocked = newIsLevelLocked;
+    }
+
     override public function begin() {
         Key.define("restart", [Key.R]);
         Key.define("zoomout", [Key.Q]);
+        isLevelLocked = false;
         loadMaps(0);
         placeLevels();
         openSpots = new Array<IntPairWithLevel>();
@@ -115,6 +122,11 @@ class GameScene extends Scene
         currentScreenY = Math.floor((player.centerY) / PLAYFIELD_SIZE);
         currentLevel = start;
         cameraPanner = new LinearMotion();
+        cameraPanner.onComplete.bind(function() {
+            for(enemy in allEnemies) {
+                cast(enemy, Enemy).resetPosition();
+            }
+        });
         addTween(cameraPanner);
         playerPusher = new LinearMotion();
         playerPusher.onComplete.bind(function() {
@@ -230,6 +242,7 @@ class GameScene extends Scene
         currentScreenY = Math.floor((player.centerY) / PLAYFIELD_SIZE);
         currentLevel = getLevelFromPlayer();
         if(currentLevel != oldLevel) {
+            isLevelLocked = Math.random() <= LOCK_CHANCE;
             var cameraDestinationX = MathUtil.clamp(
                 player.centerX - PLAYFIELD_SIZE / 2,
                 currentLevel.x,

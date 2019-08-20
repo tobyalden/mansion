@@ -61,6 +61,8 @@ class Enemy extends Entity
     private function centerOnTile() {
         x -= (width - Level.TILE_SIZE) / 2;
         y -= (height - Level.TILE_SIZE) / 2;
+        startPosition.x = x;
+        startPosition.y = y;
     }
 
     override public function update() {
@@ -81,14 +83,17 @@ class Enemy extends Entity
 
     private function offscreenReset() {
         age = 0;
-        x = startPosition.x;
-        y = startPosition.y;
         velocity.x = 0;
         velocity.y = 0;
         health = startingHealth;
         for(tween in tweens) {
             tween.active = false;
         }
+    }
+
+    public function resetPosition() {
+        x = startPosition.x;
+        y = startPosition.y;
     }
 
     private function act() {
