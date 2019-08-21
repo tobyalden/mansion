@@ -17,11 +17,11 @@ class Spit extends Entity
 
     private var velocity:Vector2;
     private var sfx:Map<String, Sfx>;
-    private var speed:Int;
+    private var speed:Float;
     private var sprite:Image;
 
     public function new(
-        spitter:Entity, velocity:Vector2, speed:Int = DEFAULT_SPEED,
+        spitter:Entity, velocity:Vector2, speed:Float = DEFAULT_SPEED,
         isBig:Bool = false
     ) {
         var size = isBig ? BIG_SIZE : SIZE;

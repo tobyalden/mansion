@@ -20,7 +20,7 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 50;
+    public static inline var NUMBER_OF_ENEMIES = 0;
     public static inline var CAMERA_PAN_TIME = 1;
     //public static inline var LOCK_CHANCE = 0.5;
     public static inline var LOCK_CHANCE = 0;
@@ -78,10 +78,10 @@ class GameScene extends Scene
             start.y + PLAYFIELD_SIZE / 2 - 8 + 100
         );
         add(player);
-        //add(new SuperWizard(
-            //start.x + PLAYFIELD_SIZE / 2 - 8,
-            //start.y + PLAYFIELD_SIZE / 2 - 8
-        //));
+        add(new SuperWizard(
+            start.x + PLAYFIELD_SIZE / 2 - 8,
+            start.y + PLAYFIELD_SIZE / 2 - 8
+        ));
         allEnemies = new Array<Entity>();
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();

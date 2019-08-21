@@ -32,23 +32,33 @@ class SuperWizard extends Enemy
     //public static inline var SPOUT_SHOT_INTERVAL = 0.05;
     public static inline var SPOUT_SHOT_INTERVAL = 1.5;
 
+    public static inline var ZIG_ZAG_COUNT = 5;
+    public static inline var ZIG_ZAG_TIME = 3;
+    //public static inline var ZIG_ZAG_SPEED = 3;
+    public static inline var ZIG_ZAG_SHOT_INTERVAL = 0.75;
+    //public static inline var ZIG_ZAG_SHOT_INTERVAL = 0.5;
+    public static inline var ZIG_ZAG_SHOT_SPEED = 100;
+    //public static inline var ZIG_ZAG_SHOT_SPEED = 150;
+
     private var sprite:Spritemap;
     private var spiralShotInterval:Alarm;
 
     private var rippleShotInterval:Alarm;
+
     private var spoutShotInterval:Alarm;
+
+    private var zigZag:LinearPath;
+    private var zigZagShotInterval:Alarm;
 
     private var phaseRelocater:LinearMotion;
     private var phaseLocations:Map<String, Vector2>;
     private var phase:String;
 
-    private var zigZag:LinearMotion;
-
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
+        y -= 95;
         mask = new Hitbox(SIZE, SIZE);
         centerOnTile();
-        y -= 95;
         sprite = new Spritemap("graphics/superwizard.png", SIZE, SIZE);
         sprite.add("idle", [0]);
         sprite.play("idle");
@@ -77,20 +87,32 @@ class SuperWizard extends Enemy
             spoutShot();
         });
         addTween(spoutShotInterval);
+        zigZagShotInterval = new Alarm(
+            ZIG_ZAG_SHOT_INTERVAL, TweenType.Looping
+        );
+        zigZagShotInterval.onComplete.bind(function() {
+            zigZagShot();
+        });
+        addTween(zigZagShotInterval);
 
         phaseLocations = [
             "spiral" => new Vector2(x, y),
-            "rippleAndSpout" => new Vector2(x - 95, y - 95)
+            "rippleAndSpout" => new Vector2(x - 95, y - 95),
+            "zigZag" => new Vector2(x, y - 95)
         ];
 
         phaseRelocater = new LinearMotion();
         addTween(phaseRelocater);
         phase = "rippleAndSpout";
 
-        //zigZag = new LinearPath();
-        //zigZag.addPoint(x - 95, y);
-        //zigZag.addPoint(x + 95, y);
-        //addTween(zigZag);
+        zigZag = new LinearPath(TweenType.Looping);
+        zigZag.addPoint(x, y);
+        for(i in 0...ZIG_ZAG_COUNT) {
+            zigZag.addPoint(x - 95, y);
+            zigZag.addPoint(x + 95, y);
+        }
+        zigZag.addPoint(x, y);
+        addTween(zigZag);
     }
 
     override private function act() {
@@ -122,6 +144,16 @@ class SuperWizard extends Enemy
                 //spoutShotInterval.start();
             //}
         //}
+        if(!zigZag.active) {
+            zigZag.setMotion(ZIG_ZAG_COUNT * ZIG_ZAG_TIME, Ease.sineInOut);
+            zigZag.start();
+            zigZagShotInterval.start();
+            zigZagShot();
+        }
+        else {
+            moveTo(zigZag.x, zigZag.y);
+        }
+        trace('at ${x}, ${y}, zigZag is ${zigZag.x}, ${zigZag.y}');
     }
 
     private function atPhaseLocation() {
@@ -162,5 +194,14 @@ class SuperWizard extends Enemy
             );
             scene.add(new Spit(this, shotVector, RIPPLE_SHOT_SPEED));
         }
+    }
+
+    private function zigZagShot() {
+        var shotAngle = getAngleTowardsPlayer();
+        var shotVector = new Vector2(
+            Math.cos(shotAngle), Math.sin(shotAngle)
+        );
+        shotVector.x += (Math.random() - 0.5) / 1.5;
+        scene.add(new Spit(this, shotVector, ZIG_ZAG_SHOT_SPEED, true));
     }
 }
