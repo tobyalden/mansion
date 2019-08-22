@@ -130,7 +130,6 @@ class Player extends Entity
         flasher.onComplete.bind(function() {
             if(isFlashing) {
                 sprite.visible = !sprite.visible;
-                trace('flashin');
             }
         });
         addTween(flasher, true);
@@ -186,7 +185,6 @@ class Player extends Entity
             rollCooldown.active && !stunCooldown.active ?
             ["enemy", "tail"] : ["enemy", "tail", "hazard"]
         );
-        trace(collideTypes);
         var enemy = collideMultiple(collideTypes, x, y);
         if(enemy != null && !invincibleTimer.active && !isDead && !isFalling) {
             if(enemy.collideRect(enemy.x, enemy.y, x + 4, y + 4, 8, 8)) {

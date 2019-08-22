@@ -79,8 +79,8 @@ class GameScene extends Scene
         );
         add(player);
         var boss = new SuperWizard(
-            start.x + PLAYFIELD_SIZE / 2 - 8,
-            start.y + PLAYFIELD_SIZE / 2 - 8
+            start.x + PLAYFIELD_SIZE / 2,
+            start.y + PLAYFIELD_SIZE / 2
         );
         add(boss);
         add(boss.laser);

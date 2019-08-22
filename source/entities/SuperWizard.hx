@@ -32,13 +32,16 @@ class SuperWizard extends Enemy
     //public static inline var SPOUT_SHOT_INTERVAL = 0.05;
     public static inline var SPOUT_SHOT_INTERVAL = 1.5;
 
-    public static inline var ZIG_ZAG_COUNT = 5;
+    public static inline var ZIG_ZAG_COUNT = 3;
     public static inline var ZIG_ZAG_TIME = 2.5;
     //public static inline var ZIG_ZAG_SPEED = 3;
     public static inline var ZIG_ZAG_SHOT_INTERVAL = 0.75;
     //public static inline var ZIG_ZAG_SHOT_INTERVAL = 0.5;
     public static inline var ZIG_ZAG_SHOT_SPEED = 100;
     //public static inline var ZIG_ZAG_SHOT_SPEED = 150;
+
+    public static inline var PHASE_TRANSITION_TIME = 2;
+    public static inline var PHASE_DURATION = 15;
 
     public var laser(default, null):SuperWizardLaser;
 
@@ -52,16 +55,23 @@ class SuperWizard extends Enemy
     private var preLaser:Alarm;
     private var preZigZag:Alarm;
     private var zigZag:LinearPath;
+    private var postZigZag:Alarm;
 
     private var phaseRelocater:LinearMotion;
     private var phaseLocations:Map<String, Vector2>;
-    private var phase:String;
+    private var currentPhase:String;
+    private var betweenPhases:Bool;
+    private var phaseTimer:Alarm;
+
+    private var screenCenter:Vector2;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
-        y -= 95;
         mask = new Hitbox(SIZE, SIZE);
-        centerOnTile();
+        x -= width / 2;
+        y -= height / 2;
+        screenCenter = new Vector2(x, y);
+        y -= 50;
         sprite = new Spritemap("graphics/superwizard.png", SIZE, SIZE);
         sprite.add("idle", [0]);
         sprite.play("idle");
@@ -94,14 +104,15 @@ class SuperWizard extends Enemy
         addTween(spoutShotInterval);
 
         phaseLocations = [
-            "spiral" => new Vector2(x, y),
-            "rippleAndSpout" => new Vector2(x - 95, y - 95),
-            "zigZag" => new Vector2(x, y - 95)
+            "spiral" => new Vector2(screenCenter.x, screenCenter.y),
+            "rippleAndSpout" => new Vector2(
+                screenCenter.x - 95, screenCenter.y - 95
+            ),
+            "zigZag" => new Vector2(screenCenter.x, screenCenter.y - 95)
         ];
 
         phaseRelocater = new LinearMotion();
         addTween(phaseRelocater);
-        phase = "rippleAndSpout";
 
         preLaser = new Alarm(SuperWizardLaser.WARM_UP_TIME);
         preLaser.onComplete.bind(function() {
@@ -116,57 +127,100 @@ class SuperWizard extends Enemy
         });
         addTween(preZigZag);
 
-
-        zigZag = new LinearPath(TweenType.Looping);
-        zigZag.addPoint(x, y);
+        zigZag = new LinearPath(TweenType.Persist);
+        zigZag.onComplete.bind(function() {
+            laser.turnOff();
+            postZigZag.start();
+        });
+        zigZag.addPoint(screenCenter.x, screenCenter.y - 95);
         for(i in 0...ZIG_ZAG_COUNT) {
-            zigZag.addPoint(x - 120, y);
-            zigZag.addPoint(x + 120, y);
+            zigZag.addPoint(screenCenter.x - 120, screenCenter.y - 95);
+            zigZag.addPoint(screenCenter.x + 120, screenCenter.y - 95);
         }
-        zigZag.addPoint(x, y);
+        zigZag.addPoint(screenCenter.x, screenCenter.y - 95);
         addTween(zigZag);
+
+        postZigZag = new Alarm(SuperWizardLaser.TURN_OFF_TIME * 2);
+        postZigZag.onComplete.bind(function() {
+            advancePhase();
+        });
+        addTween(postZigZag);
+
+        currentPhase = HXP.choose("spiral", "rippleAndSpout", "zigZag");
+        betweenPhases = true;
+        phaseTimer = new Alarm(PHASE_DURATION);
+        phaseTimer.onComplete.bind(function() {
+            advancePhase();
+        });
+        addTween(phaseTimer);
+    }
+
+    private function advancePhase() {
+        var allPhases = new Array<String>();
+        for(phaseName in phaseLocations.keys()) {
+            allPhases.push(phaseName);
+        }
+        allPhases.remove(currentPhase);
+        currentPhase = allPhases[
+            Std.int(Math.floor(Math.random() * allPhases.length))
+        ];
+        betweenPhases = true;
+        for(tween in tweens) {
+            tween.active = false;
+        }
     }
 
     override private function act() {
-        //if(!spiralShotInterval.active) {
-            //spiralShotInterval.start();
-        //}
-        //if(!phaseRelocater.active) {
-            //phaseRelocater.start();
-        //}
-        //else {
-        //}
-        //if(!atPhaseLocation()) {
-            //if(!phaseRelocater.active) {
-                //phaseRelocater.setMotion(
-                    //x, y,
-                    //phaseLocations[phase].x, phaseLocations[phase].y,
-                    //2,
-                    //Ease.sineInOut
-                //);
-                //phaseRelocater.start();
-            //}
-            //moveTo(phaseRelocater.x, phaseRelocater.y);
-        //}
-        //else {
-            //if(!rippleShotInterval.active) {
-                //rippleShotInterval.start();
-            //}
-            //if(!spoutShotInterval.active) {
-                //spoutShotInterval.start();
-            //}
-        //}
-        if(!preLaser.active && !preZigZag.active && !zigZag.active) {
-            preLaser.start();
-            laser.turnOn();
+        if(betweenPhases) {
+            if(atPhaseLocation()) {
+                betweenPhases = false;
+            }
+            else {
+                if(!phaseRelocater.active) {
+                    phaseRelocater.setMotion(
+                        x, y,
+                        phaseLocations[currentPhase].x,
+                        phaseLocations[currentPhase].y,
+                        PHASE_TRANSITION_TIME,
+                        Ease.sineInOut
+                    );
+                    phaseRelocater.start();
+                }
+                moveTo(phaseRelocater.x, phaseRelocater.y);
+            }
         }
-        else if(zigZag.active && zigZag.x != 0) {
-            moveTo(zigZag.x, zigZag.y);
+        else if(currentPhase == "spiral") {
+            if(!spiralShotInterval.active) {
+                spiralShotInterval.start();
+                phaseTimer.start();
+            }
+        }
+        else if(currentPhase == "rippleAndSpout") {
+            if(!rippleShotInterval.active) {
+                rippleShotInterval.start();
+                spoutShotInterval.start();
+                phaseTimer.start();
+            }
+        }
+        else if(currentPhase == "zigZag") {
+            if(
+                !preLaser.active && !preZigZag.active
+                && !zigZag.active && !postZigZag.active
+            ) {
+                preLaser.start();
+                laser.turnOn();
+            }
+            else if(zigZag.active && zigZag.x != 0) {
+                moveTo(zigZag.x, zigZag.y);
+            }
         }
     }
 
     private function atPhaseLocation() {
-        return x == phaseLocations[phase].x && y == phaseLocations[phase].y;
+        return (
+            x == phaseLocations[currentPhase].x
+            && y == phaseLocations[currentPhase].y
+        );
     }
 
     private function spiralShot() {

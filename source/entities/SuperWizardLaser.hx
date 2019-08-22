@@ -10,10 +10,12 @@ import scenes.*;
 
 class SuperWizardLaser extends Entity {
     public static inline var WARM_UP_TIME = 1;
+    public static inline var TURN_OFF_TIME = 0.6;
 
     private var wizard:SuperWizard;
     private var sprite:Spritemap;
     private var warmUpTimer:Alarm;
+    private var turnOffTimer:Alarm;
 
     public function new(wizard:SuperWizard) {
         super();
@@ -31,14 +33,24 @@ class SuperWizardLaser extends Entity {
         warmUpTimer.onComplete.bind(function() {
             sprite.play("on");
             collidable = true;
-            trace('im on');
         });
         addTween(warmUpTimer);
+        turnOffTimer = new Alarm(TURN_OFF_TIME);
+        turnOffTimer.onComplete.bind(function() {
+            sprite.play("off");
+        });
+        addTween(turnOffTimer);
     }
 
     public function turnOn() {
         sprite.play("warmingup");
         warmUpTimer.start(); 
+    }
+
+    public function turnOff() {
+        collidable = false;
+        sprite.play("warmingup");
+        turnOffTimer.start();
     }
 
     override public function update() {
