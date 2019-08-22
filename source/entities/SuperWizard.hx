@@ -43,6 +43,8 @@ class SuperWizard extends Enemy
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var PHASE_DURATION = 15;
 
+    public static inline var STARTING_HEALTH = 100;
+
     public var laser(default, null):SuperWizardLaser;
 
     private var sprite:Spritemap;
@@ -67,6 +69,7 @@ class SuperWizard extends Enemy
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
+        name = "superwizard";
         mask = new Hitbox(SIZE, SIZE);
         x -= width / 2;
         y -= height / 2;
@@ -76,7 +79,7 @@ class SuperWizard extends Enemy
         sprite.add("idle", [0]);
         sprite.play("idle");
         graphic = sprite;
-        health = 100;
+        health = STARTING_HEALTH;
 
         laser = new SuperWizardLaser(this);
 

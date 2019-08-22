@@ -20,9 +20,9 @@ class Enemy extends Entity
     static public var airSolids = ["walls", "lock", "unlock", "enemy"];
 
     public var isDead(default, null):Bool;
+    public var health(default, null):Int;
     private var startPosition:Vector2;
     private var startingHealth:Int;
-    private var health:Int;
     private var tweens:Array<Tween>;
     private var velocity:Vector2;
     private var universalSfx:Map<String, Sfx>;
