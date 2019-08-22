@@ -78,10 +78,12 @@ class GameScene extends Scene
             start.y + PLAYFIELD_SIZE / 2 - 8 + 100
         );
         add(player);
-        add(new SuperWizard(
+        var boss = new SuperWizard(
             start.x + PLAYFIELD_SIZE / 2 - 8,
             start.y + PLAYFIELD_SIZE / 2 - 8
-        ));
+        );
+        add(boss);
+        add(boss.laser);
         allEnemies = new Array<Entity>();
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
