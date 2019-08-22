@@ -26,7 +26,7 @@ class SuperWizard extends Enemy
     public static inline var RIPPLE_SHOT_SPREAD = 15;
     //public static inline var RIPPLE_SHOT_INTERVAL = 1.75;
     public static inline var RIPPLE_SHOT_INTERVAL = 2.7;
-    public static inline var RIPPLE_BULLETS_PER_SHOT = 100;
+    public static inline var RIPPLE_BULLETS_PER_SHOT = 200;
 
     public static inline var SPOUT_SHOT_SPEED = 150;
     //public static inline var SPOUT_SHOT_INTERVAL = 0.05;
@@ -103,13 +103,7 @@ class SuperWizard extends Enemy
         });
         addTween(spoutShotInterval);
 
-        phaseLocations = [
-            "spiral" => new Vector2(screenCenter.x, screenCenter.y),
-            "rippleAndSpout" => new Vector2(
-                screenCenter.x - 95, screenCenter.y - 95
-            ),
-            "zigZag" => new Vector2(screenCenter.x, screenCenter.y - 95)
-        ];
+        setNewPhaseLocations();
 
         phaseRelocater = new LinearMotion();
         addTween(phaseRelocater);
@@ -127,19 +121,6 @@ class SuperWizard extends Enemy
         });
         addTween(preZigZag);
 
-        zigZag = new LinearPath(TweenType.Persist);
-        zigZag.onComplete.bind(function() {
-            laser.turnOff();
-            postZigZag.start();
-        });
-        zigZag.addPoint(screenCenter.x, screenCenter.y - 95);
-        for(i in 0...ZIG_ZAG_COUNT) {
-            zigZag.addPoint(screenCenter.x - 120, screenCenter.y - 95);
-            zigZag.addPoint(screenCenter.x + 120, screenCenter.y - 95);
-        }
-        zigZag.addPoint(screenCenter.x, screenCenter.y - 95);
-        addTween(zigZag);
-
         postZigZag = new Alarm(SuperWizardLaser.TURN_OFF_TIME * 2);
         postZigZag.onComplete.bind(function() {
             advancePhase();
@@ -155,7 +136,40 @@ class SuperWizard extends Enemy
         addTween(phaseTimer);
     }
 
+    private function setNewPhaseLocations() {
+        phaseLocations = [
+            "spiral" => new Vector2(screenCenter.x, screenCenter.y),
+            "rippleAndSpout" => new Vector2(
+                screenCenter.x + 95 * HXP.choose(1, -1),
+                screenCenter.y + 95 * HXP.choose(1, -1)
+            ),
+            "zigZag" => new Vector2(screenCenter.x, screenCenter.y - 95)
+        ];
+
+        zigZag = new LinearPath(TweenType.Persist);
+        zigZag.onComplete.bind(function() {
+            laser.turnOff();
+            postZigZag.start();
+        });
+        zigZag.addPoint(screenCenter.x, screenCenter.y - 95);
+        if(Math.random() > 0.5) {
+            for(i in 0...ZIG_ZAG_COUNT) {
+                zigZag.addPoint(screenCenter.x - 120, screenCenter.y - 95);
+                zigZag.addPoint(screenCenter.x + 120, screenCenter.y - 95);
+            }
+        }
+        else {
+            for(i in 0...ZIG_ZAG_COUNT) {
+                zigZag.addPoint(screenCenter.x + 120, screenCenter.y - 95);
+                zigZag.addPoint(screenCenter.x - 120, screenCenter.y - 95);
+            }
+        }
+        zigZag.addPoint(screenCenter.x, screenCenter.y - 95);
+        addTween(zigZag);
+    }
+
     private function advancePhase() {
+        setNewPhaseLocations();
         var allPhases = new Array<String>();
         for(phaseName in phaseLocations.keys()) {
             allPhases.push(phaseName);
@@ -200,6 +214,7 @@ class SuperWizard extends Enemy
                 rippleShotInterval.start();
                 spoutShotInterval.start();
                 phaseTimer.start();
+                rippleShot();
             }
         }
         else if(currentPhase == "zigZag") {
@@ -248,7 +263,7 @@ class SuperWizard extends Enemy
 
     private function rippleShot() {
         var spreadAngles = getSpreadAngles(
-            RIPPLE_BULLETS_PER_SHOT, Math.PI * 2 / 1.25
+            RIPPLE_BULLETS_PER_SHOT, Math.PI * 2
         );
         for(i in 0...RIPPLE_BULLETS_PER_SHOT) {
             var shotAngle = spreadAngles[i] + Math.PI / 2;
