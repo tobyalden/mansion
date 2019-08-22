@@ -24,12 +24,10 @@ class SuperWizard extends Enemy
 
     public static inline var RIPPLE_SHOT_SPEED = 100;
     public static inline var RIPPLE_SHOT_SPREAD = 15;
-    //public static inline var RIPPLE_SHOT_INTERVAL = 1.75;
     public static inline var RIPPLE_SHOT_INTERVAL = 2.7;
     public static inline var RIPPLE_BULLETS_PER_SHOT = 200;
 
     public static inline var SPOUT_SHOT_SPEED = 150;
-    //public static inline var SPOUT_SHOT_INTERVAL = 0.05;
     public static inline var SPOUT_SHOT_INTERVAL = 1.5;
 
     public static inline var ZIG_ZAG_COUNT = 3;
@@ -40,24 +38,34 @@ class SuperWizard extends Enemy
     public static inline var ZIG_ZAG_SHOT_SPEED = 100;
     //public static inline var ZIG_ZAG_SHOT_SPEED = 150;
 
+    public static inline var PRE_ENRAGE_TIME = 2;
+    public static inline var ENRAGE_RIPPLE_INTERVAL = 1.75;
+    public static inline var ENRAGE_SPOUT_INTERVAL = 0.05;
+    public static inline var ENRAGE_PHASE_DURATION = 10;
+
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var PHASE_DURATION = 15;
 
-    public static inline var STARTING_HEALTH = 100;
+    //public static inline var STARTING_HEALTH = 100;
+    public static inline var STARTING_HEALTH = 10;
 
     public var laser(default, null):SuperWizardLaser;
 
     private var sprite:Spritemap;
+
     private var spiralShotInterval:Alarm;
 
     private var rippleShotInterval:Alarm;
-
     private var spoutShotInterval:Alarm;
 
     private var preLaser:Alarm;
     private var preZigZag:Alarm;
     private var zigZag:LinearPath;
     private var postZigZag:Alarm;
+
+    private var preEnrage:Alarm;
+    private var enrageRippleInterval:Alarm;
+    private var enrageSpoutInterval:Alarm;
 
     private var phaseRelocater:LinearMotion;
     private var phaseLocations:Map<String, Vector2>;
@@ -66,6 +74,12 @@ class SuperWizard extends Enemy
     private var phaseTimer:Alarm;
 
     private var screenCenter:Vector2;
+    private var isEnraged:Bool;
+    private var enrageNextPhase:Bool;
+
+    private var sfx:Map<String, Sfx>;
+
+    // TODO: Destroy all bullets on death
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -106,7 +120,7 @@ class SuperWizard extends Enemy
         });
         addTween(spoutShotInterval);
 
-        setNewPhaseLocations();
+        generatePhaseLocations();
 
         phaseRelocater = new LinearMotion();
         addTween(phaseRelocater);
@@ -130,6 +144,30 @@ class SuperWizard extends Enemy
         });
         addTween(postZigZag);
 
+        preEnrage = new Alarm(PRE_ENRAGE_TIME);
+        preEnrage.onComplete.bind(function() {
+            enrageRippleInterval.start();
+            enrageSpoutInterval.start();
+            // TODO: This makes all the phases after this shorter.
+            // Is that desired?
+            phaseTimer.reset(ENRAGE_PHASE_DURATION);
+        });
+        addTween(preEnrage);
+        enrageRippleInterval = new Alarm(
+            ENRAGE_RIPPLE_INTERVAL, TweenType.Looping
+        );
+        enrageRippleInterval.onComplete.bind(function() {
+            rippleShot();
+        });
+        addTween(enrageRippleInterval);
+        enrageSpoutInterval = new Alarm(
+            ENRAGE_SPOUT_INTERVAL, TweenType.Looping
+        );
+        enrageSpoutInterval.onComplete.bind(function() {
+            spoutShot(false);
+        });
+        addTween(enrageSpoutInterval);
+
         currentPhase = HXP.choose("spiral", "rippleAndSpout", "zigZag");
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
@@ -137,16 +175,24 @@ class SuperWizard extends Enemy
             advancePhase();
         });
         addTween(phaseTimer);
+
+        isEnraged = false;
+        enrageNextPhase = false;
+
+        sfx = [
+            "enrage" => new Sfx("audio/enrage.wav")
+        ];
     }
 
-    private function setNewPhaseLocations() {
+    private function generatePhaseLocations() {
         phaseLocations = [
             "spiral" => new Vector2(screenCenter.x, screenCenter.y),
             "rippleAndSpout" => new Vector2(
                 screenCenter.x + 95 * HXP.choose(1, -1),
                 screenCenter.y + 95 * HXP.choose(1, -1)
             ),
-            "zigZag" => new Vector2(screenCenter.x, screenCenter.y - 95)
+            "zigZag" => new Vector2(screenCenter.x, screenCenter.y - 95),
+            "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95)
         ];
 
         zigZag = new LinearPath(TweenType.Persist);
@@ -172,15 +218,23 @@ class SuperWizard extends Enemy
     }
 
     private function advancePhase() {
-        setNewPhaseLocations();
-        var allPhases = new Array<String>();
-        for(phaseName in phaseLocations.keys()) {
-            allPhases.push(phaseName);
+        generatePhaseLocations();
+        if(enrageNextPhase) {
+            isEnraged = true;
+            enrageNextPhase = false;
+            currentPhase = "enrage";
         }
-        allPhases.remove(currentPhase);
-        currentPhase = allPhases[
-            Std.int(Math.floor(Math.random() * allPhases.length))
-        ];
+        else {
+            var allPhases = new Array<String>();
+            for(phaseName in phaseLocations.keys()) {
+                allPhases.push(phaseName);
+            }
+            allPhases.remove(currentPhase);
+            allPhases.remove("enrage");
+            currentPhase = allPhases[
+                Std.int(Math.floor(Math.random() * allPhases.length))
+            ];
+        }
         betweenPhases = true;
         for(tween in tweens) {
             tween.active = false;
@@ -188,6 +242,11 @@ class SuperWizard extends Enemy
     }
 
     override private function act() {
+        if(health <= STARTING_HEALTH / 4) {
+            if(!isEnraged) {
+                enrageNextPhase = true;
+            }
+        }
         if(betweenPhases) {
             if(atPhaseLocation()) {
                 betweenPhases = false;
@@ -232,6 +291,16 @@ class SuperWizard extends Enemy
                 moveTo(zigZag.x, zigZag.y);
             }
         }
+        else if(currentPhase == "enrage") {
+            if(
+                !preEnrage.active
+                && !enrageRippleInterval.active
+                && !enrageSpoutInterval.active
+            ) {
+                preEnrage.start();
+                sfx["enrage"].play();
+            }
+        }
     }
 
     private function atPhaseLocation() {
@@ -256,12 +325,12 @@ class SuperWizard extends Enemy
         }
     }
 
-    private function spoutShot() {
+    private function spoutShot(isBig:Bool = true) {
         var shotAngle = getAngleTowardsPlayer();
         var shotVector = new Vector2(
             Math.cos(shotAngle), Math.sin(shotAngle)
         );
-        scene.add(new Spit(this, shotVector, SPOUT_SHOT_SPEED, true));
+        scene.add(new Spit(this, shotVector, SPOUT_SHOT_SPEED, isBig));
     }
 
     private function rippleShot() {
