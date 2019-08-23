@@ -29,6 +29,7 @@ class Enemy extends Entity
     private var universalSfx:Map<String, Sfx>;
     private var age:Float;
     private var stunTimer:Alarm;
+    private var isBoss:Bool;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -46,6 +47,7 @@ class Enemy extends Entity
         isDead = false;
         stunTimer = new Alarm(STUN_TIME, TweenType.Persist);
         addTween(stunTimer);
+        isBoss = false;
     }
 
     override public function addTween(tween:Tween, start:Bool = false) {
@@ -87,7 +89,7 @@ class Enemy extends Entity
             offscreenReset();
         }
         else {
-            if(stunTimer.active) {
+            if(stunTimer.active && !isBoss) {
                 // Do nothing
             }
             else {
@@ -168,11 +170,11 @@ class Enemy extends Entity
     }
 
     public function takeHit(damageSource:Entity) {
+        stunTimer.start();
         health -= 1;
         if(health <= 0) {
             die();
         }
-        stunTimer.start();
     }
 
     public function die() {
@@ -235,7 +237,7 @@ class Enemy extends Entity
     }
 
     override public function updateTweens(elapsed:Float) {
-        if(stunTimer.active) {
+        if(stunTimer.active && !isBoss) {
             stunTimer.update(elapsed);
             return;
         }

@@ -87,6 +87,7 @@ class SuperWizard extends Enemy
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
         name = "superwizard";
+        isBoss = true;
         mask = new Hitbox(SIZE, SIZE);
         x -= width / 2;
         y -= height / 2;
