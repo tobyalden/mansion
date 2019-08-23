@@ -78,6 +78,7 @@ class GameScene extends Scene
             start.y + PLAYFIELD_SIZE / 2 - 8 + 100
         );
         add(player);
+        //add(player.sword);
         var boss = new SuperWizard(
             start.x + PLAYFIELD_SIZE / 2,
             start.y + PLAYFIELD_SIZE / 2

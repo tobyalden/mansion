@@ -43,13 +43,14 @@ class Player extends Entity
 
     public var stamina(default, null):Float;
     public var health(default, null):Int;
+    public var sword(default, null):Sword;
+    public var facing(default, null):String;
     private var velocity:Vector2;
     private var rollCooldown:Alarm;
     private var stunCooldown:Alarm;
     private var castCooldown:Alarm;
     private var sprite:Spritemap;
     private var sfx:Map<String, Sfx>;
-    private var facing:String;
     private var isRunning:Bool;
     private var staminaRecoveryDelay:Alarm;
 
@@ -67,6 +68,7 @@ class Player extends Entity
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
+        sword = new Sword(this);
         type = "player";
         name = "player";
         Key.define("up", [Key.UP, Key.I]);
@@ -75,6 +77,7 @@ class Player extends Entity
         Key.define("right", [Key.RIGHT, Key.L]);
         Key.define("roll", [Key.Z]);
         Key.define("cast", [Key.X]);
+        Key.define("sword", [Key.C]);
         sprite = new Spritemap("graphics/player.png", 16, 16);
         sprite.add("idle", [0]);
         sprite.add("roll", [1]);
@@ -164,6 +167,9 @@ class Player extends Entity
     }
 
     override public function update() {
+        if(Input.pressed("sword")) {
+            sword.swing();
+        }
         if(Input.check("cast") && canControl() && stamina >= CAST_COST) {
             stamina -= CAST_COST;
             staminaRecoveryDelay.start();
