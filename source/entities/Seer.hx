@@ -51,10 +51,6 @@ class Seer extends Enemy
         addTween(spitTimer, true);
     }
 
-    override public function update() {
-        super.update();
-    }
-
     override private function act() {
         if(!spitTimer.active) {
             spitTimer.start();

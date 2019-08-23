@@ -65,7 +65,7 @@ class Booster extends Enemy {
         sfx['boost${HXP.choose(1, 2, 3)}'].play();
     }
 
-    override public function update() {
+    override public function act() {
         if(!boostTimer.active && !startBoosting.active) {
             startBoosting.start();
         }
@@ -87,7 +87,6 @@ class Booster extends Enemy {
             Enemy.airSolids
         );
         animation();
-        super.update();
     }
 
     private function animation() {

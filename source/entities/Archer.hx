@@ -57,11 +57,6 @@ class Archer extends Enemy
         ];
     }
 
-
-    override public function update() {
-        super.update();
-    }
-
     private function spit() {
         var spitVelocity;
         if(facing == "up") {

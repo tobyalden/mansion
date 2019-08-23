@@ -37,11 +37,6 @@ class Stalker extends Enemy
         health = 3;
     }
 
-
-    override public function update() {
-        super.update();
-    }
-
     override private function act() {
         var player = scene.getInstance("player");
         if(centerY > player.centerY && !isOnTopWall()) {

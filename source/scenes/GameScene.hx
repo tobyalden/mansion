@@ -20,10 +20,10 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 0;
+    public static inline var NUMBER_OF_ENEMIES = 50;
     public static inline var CAMERA_PAN_TIME = 1;
-    //public static inline var LOCK_CHANCE = 0.5;
-    public static inline var LOCK_CHANCE = 0;
+    public static inline var LOCK_CHANCE = 1;
+    //public static inline var LOCK_CHANCE = 0;
 
     public var isLevelLocked(default, null):Bool;
     public var currentLevel(default, null):Level;
@@ -82,28 +82,28 @@ class GameScene extends Scene
             start.x + PLAYFIELD_SIZE / 2,
             start.y + PLAYFIELD_SIZE / 2
         );
-        add(boss);
-        add(boss.laser);
+        //add(boss);
+        //add(boss.laser);
         allEnemies = new Array<Entity>();
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
             var enemies = [
-                //new Stalker(
-                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                //),
+                new Stalker(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
                 new Seer(
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 ),
-                //new Booster(
-                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                //),
-                //new Follower(
-                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                //),
+                new Booster(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
+                new Follower(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                ),
                 new Archer(
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
@@ -112,10 +112,10 @@ class GameScene extends Scene
                     enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
                     enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
                 ),
-                //new Bouncer(
-                    //enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    //enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                //)
+                new Bouncer(
+                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                )
             ];
             var enemy = enemies[Random.randInt(enemies.length)];
             add(enemy);

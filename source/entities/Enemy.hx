@@ -13,6 +13,7 @@ import scenes.*;
 class Enemy extends Entity
 {
     public static inline var PAUSE_ON_ROOM_ENTER = 1;
+    public static inline var STUN_TIME = 0.15;
 
     static public var groundSolids = [
         "walls", "lock", "unlock", "enemy", "pits"
@@ -27,6 +28,7 @@ class Enemy extends Entity
     private var velocity:Vector2;
     private var universalSfx:Map<String, Sfx>;
     private var age:Float;
+    private var stunTimer:Alarm;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -42,6 +44,8 @@ class Enemy extends Entity
         ];
         age = 0;
         isDead = false;
+        stunTimer = new Alarm(STUN_TIME, TweenType.Persist);
+        addTween(stunTimer);
     }
 
     override public function addTween(tween:Tween, start:Bool = false) {
@@ -75,6 +79,7 @@ class Enemy extends Entity
     }
 
     override public function update() {
+        graphic.color = stunTimer.active ? 0x000000 : 0xFFFFFF;
         if(startingHealth == null) {
             startingHealth = health;
         }
@@ -82,9 +87,14 @@ class Enemy extends Entity
             offscreenReset();
         }
         else {
-            age += HXP.elapsed;
-            if(age >= PAUSE_ON_ROOM_ENTER) {
-                act();
+            if(stunTimer.active) {
+                // Do nothing
+            }
+            else {
+                age += HXP.elapsed;
+                if(age >= PAUSE_ON_ROOM_ENTER) {
+                    act();
+                }
             }
         }
         super.update();
@@ -157,11 +167,12 @@ class Enemy extends Entity
         return false;
     }
 
-    public function takeHit() {
+    public function takeHit(damageSource:Entity) {
         health -= 1;
         if(health <= 0) {
             die();
         }
+        stunTimer.start();
     }
 
     public function die() {
@@ -222,4 +233,14 @@ class Enemy extends Entity
             count++;
         }
     }
+
+    override public function updateTweens(elapsed:Float) {
+        if(stunTimer.active) {
+            stunTimer.update(elapsed);
+            return;
+        }
+        else {
+            super.updateTweens(elapsed);
+        }
+	}
 }

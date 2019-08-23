@@ -13,7 +13,7 @@ class Spell extends Entity
 {
     public static inline var SPEED = 400;
 
-    private var velocity:Vector2;
+    public var velocity(default, null):Vector2;
     private var sfx:Map<String, Sfx>;
 
     public function new(startX:Float, startY:Float, velocity:Vector2) {
@@ -49,11 +49,11 @@ class Spell extends Entity
 
     private function hitEntity(e:Entity) {
         if(e.type == "enemy") {
-            cast(e, Enemy).takeHit();
+            cast(e, Enemy).takeHit(this);
             sfx['hit${HXP.choose(1, 2, 3, 4)}'].play();
         }
         else if(e.type == "tail") {
-            cast(e, FollowerTail).head.takeHit();
+            cast(e, FollowerTail).head.takeHit(this);
             sfx['hit${HXP.choose(1, 2, 3, 4)}'].play();
         }
         else if(e.type == "walls" || e.type == "lock") {

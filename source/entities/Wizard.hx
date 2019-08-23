@@ -79,10 +79,6 @@ class Wizard extends Enemy
         addTween(postShootTimer);
     }
 
-    override public function update() {
-        super.update();
-    }
-
     override private function act() {
         if(!hasActiveTween()) {
             fadeOutTimer.start();
