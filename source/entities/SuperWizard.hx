@@ -43,6 +43,7 @@ class SuperWizard extends Enemy
     public static inline var ENRAGE_SPOUT_INTERVAL = 0.05;
     public static inline var ENRAGE_PHASE_DURATION = 10;
 
+    public static inline var PRE_PHASE_ADVANCE_TIME = 2;
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var PHASE_DURATION = 15;
 
@@ -72,6 +73,7 @@ class SuperWizard extends Enemy
     private var currentPhase:String;
     private var betweenPhases:Bool;
     private var phaseTimer:Alarm;
+    private var preAdvancePhaseTimer:Alarm;
 
     private var screenCenter:Vector2;
     private var isEnraged:Bool;
@@ -140,7 +142,7 @@ class SuperWizard extends Enemy
 
         postZigZag = new Alarm(SuperWizardLaser.TURN_OFF_TIME * 2);
         postZigZag.onComplete.bind(function() {
-            advancePhase();
+            preAdvancePhase();
         });
         addTween(postZigZag);
 
@@ -172,9 +174,15 @@ class SuperWizard extends Enemy
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
-            advancePhase();
+            preAdvancePhase();
         });
         addTween(phaseTimer);
+
+        preAdvancePhaseTimer = new Alarm(PRE_PHASE_ADVANCE_TIME);
+        preAdvancePhaseTimer.onComplete.bind(function() {
+            advancePhase();
+        });
+        addTween(preAdvancePhaseTimer);
 
         isEnraged = false;
         enrageNextPhase = false;
@@ -217,6 +225,14 @@ class SuperWizard extends Enemy
         addTween(zigZag);
     }
 
+    private function preAdvancePhase() {
+        betweenPhases = true;
+        for(tween in tweens) {
+            tween.active = false;
+        }
+        preAdvancePhaseTimer.start();
+    }
+
     private function advancePhase() {
         generatePhaseLocations();
         if(enrageNextPhase) {
@@ -235,10 +251,6 @@ class SuperWizard extends Enemy
                 Std.int(Math.floor(Math.random() * allPhases.length))
             ];
         }
-        betweenPhases = true;
-        for(tween in tweens) {
-            tween.active = false;
-        }
     }
 
     override private function act() {
@@ -248,7 +260,10 @@ class SuperWizard extends Enemy
             }
         }
         if(betweenPhases) {
-            if(atPhaseLocation()) {
+            if(preAdvancePhaseTimer.active) {
+                // Do nothing
+            }
+            else if(atPhaseLocation()) {
                 betweenPhases = false;
             }
             else {
