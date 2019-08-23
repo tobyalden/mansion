@@ -60,10 +60,14 @@ class Spit extends Entity
         super.update();
     }
 
+    public function destroy() {
+        scene.remove(this);
+    }
+
     private function collideEntity(e:Entity) {
         if(e.type == "walls" || e.type == "lock") {
             //sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
-            scene.remove(this);
+            destroy();
         }
         else if(e.type == "player") {
             var player = cast(e, Player);

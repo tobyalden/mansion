@@ -17,7 +17,7 @@ class SuperWizard extends Enemy
 {
     public static inline var SIZE = 80;
 
-    public static inline var SPIRAL_SHOT_SPEED = 50;
+    public static inline var SPIRAL_SHOT_SPEED = 62.5;
     public static inline var SPIRAL_TURN_RATE = 4;
     public static inline var SPIRAL_BULLETS_PER_SHOT = 2;
     public static inline var SPIRAL_SHOT_INTERVAL = 0.05;
@@ -25,36 +25,39 @@ class SuperWizard extends Enemy
     public static inline var RIPPLE_SHOT_SPEED = 100;
     public static inline var RIPPLE_SHOT_SPREAD = 15;
     public static inline var RIPPLE_SHOT_INTERVAL = 2.7;
+    public static inline var ENRAGED_RIPPLE_SHOT_INTERVAL = 1.8;
     public static inline var RIPPLE_BULLETS_PER_SHOT = 200;
 
     public static inline var SPOUT_SHOT_SPEED = 150;
     public static inline var SPOUT_SHOT_INTERVAL = 1.5;
+    public static inline var ENRAGED_SPOUT_SHOT_INTERVAL = 1;
 
     public static inline var ZIG_ZAG_COUNT = 3;
+    public static inline var ENRAGED_ZIG_ZAG_COUNT = 6;
     public static inline var ZIG_ZAG_TIME = 2.5;
-    //public static inline var ZIG_ZAG_SPEED = 3;
+    public static inline var ENRAGED_ZIG_ZAG_TIME = 1.8;
     public static inline var ZIG_ZAG_SHOT_INTERVAL = 0.75;
-    //public static inline var ZIG_ZAG_SHOT_INTERVAL = 0.5;
     public static inline var ZIG_ZAG_SHOT_SPEED = 100;
-    //public static inline var ZIG_ZAG_SHOT_SPEED = 150;
 
     public static inline var PRE_ENRAGE_TIME = 2;
     public static inline var ENRAGE_RIPPLE_INTERVAL = 1.75;
     public static inline var ENRAGE_SPOUT_INTERVAL = 0.05;
-    public static inline var ENRAGE_PHASE_DURATION = 10;
 
     public static inline var PRE_PHASE_ADVANCE_TIME = 2;
     public static inline var PHASE_TRANSITION_TIME = 2;
-    public static inline var PHASE_DURATION = 15;
+    public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
+    public static inline var PHASE_DURATION = 12.5;
+    public static inline var ENRAGE_PHASE_DURATION = 10;
 
-    //public static inline var STARTING_HEALTH = 100;
-    public static inline var STARTING_HEALTH = 10;
+    public static inline var STARTING_HEALTH = 100;
+    public static inline var ENRAGE_THRESHOLD = 40;
 
     public var laser(default, null):SuperWizardLaser;
 
     private var sprite:Spritemap;
 
     private var spiralShotInterval:Alarm;
+    private var spiralShotStartAngle:Float;
 
     private var rippleShotInterval:Alarm;
     private var spoutShotInterval:Alarm;
@@ -81,8 +84,6 @@ class SuperWizard extends Enemy
 
     private var sfx:Map<String, Sfx>;
 
-    // TODO: Destroy all bullets on death
-
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
         name = "superwizard";
@@ -106,6 +107,7 @@ class SuperWizard extends Enemy
             spiralShot();
         });
         addTween(spiralShotInterval);
+        spiralShotStartAngle = 0;
 
         rippleShotInterval = new Alarm(
             RIPPLE_SHOT_INTERVAL, TweenType.Looping
@@ -122,6 +124,9 @@ class SuperWizard extends Enemy
         });
         addTween(spoutShotInterval);
 
+        isEnraged = false;
+        enrageNextPhase = false;
+
         generatePhaseLocations();
 
         phaseRelocater = new LinearMotion();
@@ -132,13 +137,6 @@ class SuperWizard extends Enemy
             preZigZag.start();
         });
         addTween(preLaser);
-
-        preZigZag = new Alarm(SuperWizardLaser.WARM_UP_TIME);
-        preZigZag.onComplete.bind(function() {
-            zigZag.setMotion(ZIG_ZAG_COUNT * ZIG_ZAG_TIME, Ease.sineInOut);
-            zigZag.start();
-        });
-        addTween(preZigZag);
 
         postZigZag = new Alarm(SuperWizardLaser.TURN_OFF_TIME * 2);
         postZigZag.onComplete.bind(function() {
@@ -151,7 +149,7 @@ class SuperWizard extends Enemy
             enrageRippleInterval.start();
             enrageSpoutInterval.start();
             // TODO: This makes all the phases after this shorter.
-            // Is that desired?
+            // Is that desired? Probably, but good to note.
             phaseTimer.reset(ENRAGE_PHASE_DURATION);
         });
         addTween(preEnrage);
@@ -184,9 +182,6 @@ class SuperWizard extends Enemy
         });
         addTween(preAdvancePhaseTimer);
 
-        isEnraged = false;
-        enrageNextPhase = false;
-
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
         ];
@@ -209,20 +204,29 @@ class SuperWizard extends Enemy
             postZigZag.start();
         });
         zigZag.addPoint(screenCenter.x, screenCenter.y - 95);
+        var zigZagCount = isEnraged ? ENRAGED_ZIG_ZAG_COUNT : ZIG_ZAG_COUNT;
+        var zigZagTime = isEnraged ? ENRAGED_ZIG_ZAG_TIME : ZIG_ZAG_TIME;
         if(Math.random() > 0.5) {
-            for(i in 0...ZIG_ZAG_COUNT) {
+            for(i in 0...zigZagCount) {
                 zigZag.addPoint(screenCenter.x - 120, screenCenter.y - 95);
                 zigZag.addPoint(screenCenter.x + 120, screenCenter.y - 95);
             }
         }
         else {
-            for(i in 0...ZIG_ZAG_COUNT) {
+            for(i in 0...zigZagCount) {
                 zigZag.addPoint(screenCenter.x + 120, screenCenter.y - 95);
                 zigZag.addPoint(screenCenter.x - 120, screenCenter.y - 95);
             }
         }
         zigZag.addPoint(screenCenter.x, screenCenter.y - 95);
         addTween(zigZag);
+
+        preZigZag = new Alarm(SuperWizardLaser.WARM_UP_TIME);
+        preZigZag.onComplete.bind(function() {
+            zigZag.setMotion(zigZagCount * zigZagTime, Ease.sineInOut);
+            zigZag.start();
+        });
+        addTween(preZigZag);
     }
 
     private function preAdvancePhase() {
@@ -254,7 +258,7 @@ class SuperWizard extends Enemy
     }
 
     override private function act() {
-        if(health <= STARTING_HEALTH / 4) {
+        if(health <= ENRAGE_THRESHOLD) {
             if(!isEnraged) {
                 enrageNextPhase = true;
             }
@@ -272,7 +276,11 @@ class SuperWizard extends Enemy
                         x, y,
                         phaseLocations[currentPhase].x,
                         phaseLocations[currentPhase].y,
-                        PHASE_TRANSITION_TIME,
+                        (
+                            isEnraged ?
+                            ENRAGED_PHASE_TRANSITION_TIME
+                            : PHASE_TRANSITION_TIME
+                        ),
                         Ease.sineInOut
                     );
                     phaseRelocater.start();
@@ -283,13 +291,23 @@ class SuperWizard extends Enemy
         else if(currentPhase == "spiral") {
             if(!spiralShotInterval.active) {
                 spiralShotInterval.start();
+                spiralShotStartAngle = getAngleTowardsPlayer();
+                age = Math.PI * 1.5;
                 phaseTimer.start();
             }
         }
         else if(currentPhase == "rippleAndSpout") {
             if(!rippleShotInterval.active) {
-                rippleShotInterval.start();
-                spoutShotInterval.start();
+                rippleShotInterval.reset(
+                    isEnraged ?
+                    ENRAGED_RIPPLE_SHOT_INTERVAL
+                    : RIPPLE_SHOT_INTERVAL
+                );
+                spoutShotInterval.reset(
+                    isEnraged ?
+                    ENRAGED_SPOUT_SHOT_INTERVAL
+                    : SPOUT_SHOT_INTERVAL
+                );
                 phaseTimer.start();
                 rippleShot();
             }
@@ -326,12 +344,16 @@ class SuperWizard extends Enemy
     }
 
     private function spiralShot() {
-        for(i in 0...SPIRAL_BULLETS_PER_SHOT) {
+        var numBullets = (
+            isEnraged ? SPIRAL_BULLETS_PER_SHOT + 1 : SPIRAL_BULLETS_PER_SHOT
+        );
+        for(i in 0...numBullets) {
             var spreadAngles = getSpreadAngles(
-                SPIRAL_BULLETS_PER_SHOT + 1, Math.PI * 2
+                numBullets + 1, Math.PI * 2
             );
             var shotAngle = (
-                Math.cos(age / 3) * SPIRAL_TURN_RATE + spreadAngles[i]
+                spiralShotStartAngle
+                + Math.cos(age / 3) * SPIRAL_TURN_RATE + spreadAngles[i]
             );
             var shotVector = new Vector2(
                 Math.cos(shotAngle), Math.sin(shotAngle)
@@ -359,5 +381,19 @@ class SuperWizard extends Enemy
             );
             scene.add(new Spit(this, shotVector, RIPPLE_SHOT_SPEED));
         }
+    }
+
+    override function die() {
+        var hazards = new Array<Entity>();
+        scene.getType("hazard", hazards);
+        for(hazard in hazards) {
+            if(Type.getClass(hazard) == Spit) {
+                cast(hazard, Spit).destroy();
+            }
+            else {
+                scene.remove(hazard);
+            }
+        }
+        super.die();
     }
 }
