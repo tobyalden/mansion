@@ -14,7 +14,9 @@ class Ring extends Entity {
     public static inline var MIN_TOSS_TIME = 1.5;
     public static inline var MAX_TOSS_TIME = 2;
     public static inline var CHASE_ACCEL = 350;
+    public static inline var CHASE_DECCEL = 100;
     public static inline var MAX_CHASE_SPEED = 150;
+    public static inline var RETURN_TIME = 2;
 
     public var isChasing(default, null):Bool;
     private var ringMaster:RingMaster;
@@ -22,6 +24,8 @@ class Ring extends Entity {
     private var tosser:CubicMotion;
     private var velocity:Vector2;
     private var chaseTarget:Entity;
+    private var isReturning:Bool;
+    private var returnTween:LinearMotion;
 
     public function new(ringMaster:RingMaster) {
         super();
@@ -32,12 +36,17 @@ class Ring extends Entity {
         sprite.play("idle");
         graphic = sprite;
         mask = new Circle(20);
-        collidable = false;
         tosser = new CubicMotion();
         addTween(tosser);
         isChasing = false;
         velocity = new Vector2();
         chaseTarget = null;
+        isReturning = false;
+        returnTween = new LinearMotion();
+        returnTween.onComplete.bind(function() {
+            isReturning = false;
+        });
+        addTween(returnTween);
     }
 
     private function getCurveControlPoint(target:Entity, flip:Bool) {
@@ -117,11 +126,42 @@ class Ring extends Entity {
         }
     }
 
+    public function returnToRingMaster() {
+        isChasing = false;
+        isReturning = true;
+    }
+
     override public function update() {
-        if(isChasing) {
+        if(isReturning) {
+            if(velocity.length > 0) {
+                velocity.x = MathUtil.approach(
+                    velocity.x, 0, HXP.elapsed * CHASE_DECCEL
+                );
+                velocity.y = MathUtil.approach(
+                    velocity.y, 0, HXP.elapsed * CHASE_DECCEL
+                );
+                moveBy(
+                    velocity.x * HXP.elapsed, velocity.y * HXP.elapsed
+                );
+            }
+            else {
+                if(!returnTween.active) {
+                    returnTween.setMotion(
+                        x, y,
+                        ringMaster.centerX - width / 2,
+                        ringMaster.centerY - height / 2,
+                        RETURN_TIME,
+                        Ease.sineInOut
+                    );
+                    returnTween.start();
+                }
+                moveTo(returnTween.x, returnTween.y);
+            }
+        }
+        else if(isChasing) {
             setChaseVelocity();
             moveBy(
-                velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls"
+                velocity.x * HXP.elapsed, velocity.y * HXP.elapsed
             );
         }
         else if(tosser.active) {

@@ -26,8 +26,10 @@ class RingMaster extends Enemy
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var PAUSE_BETWEEN_TOSSES = 1;
     public static inline var PAUSE_BETWEEN_CHASES = 3;
-    public static inline var TARGETED_SHOT_INTERVAL = 1;
-    public static inline var TARGETED_SHOT_SPEED = 300;
+    public static inline var SCATTER_SHOT_INTERVAL = 2;
+    public static inline var SCATTER_SHOT_SPEED = 250;
+    public static inline var SCATTER_SHOT_NUM_BULLETS = 8;
+    public static inline var CIRCLE_PERIMETER_TIME = 10;
 
     public var rings(default, null):Array<Ring>;
 
@@ -42,7 +44,6 @@ class RingMaster extends Enemy
 
     private var tossTimer:Alarm;
     private var tossCount:Int;
-    private var targetedShotTimer:Alarm;
 
     private var screenCenter:Vector2;
     private var isEnraged:Bool;
@@ -51,6 +52,8 @@ class RingMaster extends Enemy
     private var sfx:Map<String, Sfx>;
 
     private var chaseTimer:Alarm;
+    private var scatterShotTimer:Alarm;
+    private var circlePerimeter:LinearPath;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -110,13 +113,13 @@ class RingMaster extends Enemy
         });
         addTween(tossTimer);
         tossCount = 0;
-        targetedShotTimer = new Alarm(
-            TARGETED_SHOT_INTERVAL, TweenType.Looping
+        scatterShotTimer = new Alarm(
+            SCATTER_SHOT_INTERVAL, TweenType.Looping
         );
-        targetedShotTimer.onComplete.bind(function() {
-            targetedShot();
+        scatterShotTimer.onComplete.bind(function() {
+            scatterShot();
         });
-        addTween(targetedShotTimer);
+        addTween(scatterShotTimer);
 
         chaseTimer = new Alarm(
             Ring.MAX_TOSS_TIME + PAUSE_BETWEEN_TOSSES, TweenType.Looping
@@ -133,7 +136,14 @@ class RingMaster extends Enemy
                 }
             }
             // If we're out of rings, start shooting and moving
-            targetedShotTimer.start();
+            if(!scatterShotTimer.active) {
+                scatterShot();
+                scatterShotTimer.start();
+                circlePerimeter.setMotion(
+                    CIRCLE_PERIMETER_TIME, Ease.sineInOut
+                );
+                circlePerimeter.start();
+            }
         });
         addTween(chaseTimer);
 
@@ -163,6 +173,34 @@ class RingMaster extends Enemy
                 screenCenter.x - 95, screenCenter.y - 95
             )
         ];
+        circlePerimeter = new LinearPath();
+        circlePerimeter.addPoint(
+            screenCenter.x - 95, screenCenter.y - 95
+        );
+        circlePerimeter.addPoint(
+            screenCenter.x + 95, screenCenter.y - 95
+        );
+        circlePerimeter.addPoint(
+            screenCenter.x + 95, screenCenter.y + 95
+        );
+        circlePerimeter.addPoint(
+            screenCenter.x - 95, screenCenter.y + 95
+        );
+        circlePerimeter.addPoint(
+            screenCenter.x - 95, screenCenter.y - 95
+        );
+        circlePerimeter.onComplete.bind(function() {
+            scatterShotTimer.active = false;
+            for(ring in rings) {
+                ring.returnToRingMaster();
+            }
+            var ringReturnTimer = new Alarm(Ring.RETURN_TIME);
+            ringReturnTimer.onComplete.bind(function() {
+                preAdvancePhase();
+            });
+            addTween(ringReturnTimer, true);
+        });
+        addTween(circlePerimeter);
     }
 
     private function preAdvancePhase() {
@@ -238,6 +276,9 @@ class RingMaster extends Enemy
                 var player = scene.getInstance("player");
                 rings[0].chase(player);
             }
+            if(circlePerimeter.active && circlePerimeter.x != 0) {
+                moveTo(circlePerimeter.x, circlePerimeter.y);
+            }
         }
     }
 
@@ -248,19 +289,17 @@ class RingMaster extends Enemy
         );
     }
 
-    private function targetedShot(isBig:Bool = false) {
+    private function scatterShot(isBig:Bool = false) {
         var shotAngle = getAngleTowardsPlayer();
         var shotVector = new Vector2(
             Math.cos(shotAngle), Math.sin(shotAngle)
         );
-        scene.add(new Spit(this, shotVector, TARGETED_SHOT_SPEED, isBig));
-        for(i in 0...10) {
+        scene.add(new Spit(this, shotVector, SCATTER_SHOT_SPEED, isBig));
+        for(i in 0...SCATTER_SHOT_NUM_BULLETS) {
             var scatter = shotVector.clone();
-            scatter.x += Math.random() / 3;
-            scatter.y += Math.random() / 3;
-            var speed = TARGETED_SHOT_SPEED * HXP.choose(
-                1, 0.95, 0.9, 0.85, 0.8
-            );
+            scatter.x += Math.random() / 4;
+            scatter.y += Math.random() / 4;
+            var speed = SCATTER_SHOT_SPEED * HXP.choose(1, 0.95, 0.9, 0.85);
             scene.add(new Spit(this, scatter, speed, isBig));
         }
     }

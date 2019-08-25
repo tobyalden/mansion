@@ -199,7 +199,7 @@ class SuperWizard extends Enemy
             "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95)
         ];
 
-        zigZag = new LinearPath(TweenType.Persist);
+        zigZag = new LinearPath();
         zigZag.onComplete.bind(function() {
             laser.turnOff();
             postZigZag.start();
@@ -322,6 +322,9 @@ class SuperWizard extends Enemy
                 laser.turnOn();
             }
             else if(zigZag.active && zigZag.x != 0) {
+                // Checking that zigZag.x != 0 is a workaround for a bug
+                // where LinearMotion instances return (0, 0) after starting
+                // until a frame has passed
                 moveTo(zigZag.x, zigZag.y);
             }
         }
