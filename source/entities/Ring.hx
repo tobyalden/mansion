@@ -11,9 +11,17 @@ import haxepunk.utils.*;
 import scenes.*;
 
 class Ring extends Entity {
+    public static inline var MIN_TOSS_TIME = 1.5;
+    public static inline var MAX_TOSS_TIME = 2;
+    public static inline var CHASE_ACCEL = 350;
+    public static inline var MAX_CHASE_SPEED = 150;
+
+    public var isChasing(default, null):Bool;
     private var ringMaster:RingMaster;
     private var sprite:Spritemap;
     private var tosser:CubicMotion;
+    private var velocity:Vector2;
+    private var chaseTarget:Entity;
 
     public function new(ringMaster:RingMaster) {
         super();
@@ -27,6 +35,9 @@ class Ring extends Entity {
         collidable = false;
         tosser = new CubicMotion();
         addTween(tosser);
+        isChasing = false;
+        velocity = new Vector2();
+        chaseTarget = null;
     }
 
     private function getCurveControlPoint(target:Entity, flip:Bool) {
@@ -44,28 +55,76 @@ class Ring extends Entity {
         return towardsPlayer;
     }
 
-    public function toss() {
+    public function chase(target:Entity) {
+        isChasing = true;
+        chaseTarget = target;
+    }
+
+    public function setChaseVelocity() {
+        var towardsPlayer = new Vector2(
+            chaseTarget.centerX - centerX, chaseTarget.centerY - centerY
+        );
+        //towardsPlayer.normalize();
+
+        //for(ring in ringMaster.rings) {
+            //if(ring == this) {
+                //continue;
+            //}
+            //else {
+                //var awayFromRing = new Vector2(
+                    //centerX - ring.centerX, centerY - ring.centerY
+                //);
+                //var distanceFactor = Math.max(
+                    //60 - awayFromRing.length, 0
+                //) / 60 * 0.75;
+                //awayFromRing.normalize(distanceFactor);
+                //towardsPlayer.add(awayFromRing);
+            //}
+        //}
+
+        if(towardsPlayer.length < 50) {
+            towardsPlayer.normalize(CHASE_ACCEL * HXP.elapsed);
+        }
+        else {
+            towardsPlayer.normalize(CHASE_ACCEL * HXP.elapsed * 2);
+        }
+        velocity += towardsPlayer;
+        velocity.normalize(MAX_CHASE_SPEED);
+    }
+
+    public function toss(clockwise:Bool) {
         if(!tosser.active) {
             var player = scene.getInstance("player");
             var controlPointA = getCurveControlPoint(player, false);
             var controlPointB = getCurveControlPoint(player, true);
+            if(clockwise) {
+                var temp = controlPointA;
+                controlPointA = controlPointB;
+                controlPointB = temp;
+            }
             tosser.setMotion(
                 x, y,
                 x + controlPointA.x, y + controlPointA.y,
                 x + controlPointB.x, y + controlPointB.y,
                 x, y,
-                MathUtil.clamp(distanceFrom(player, true) / 50, 1.5, 2),
+                MathUtil.clamp(
+                    distanceFrom(player, true) / 50,
+                    MIN_TOSS_TIME, MAX_TOSS_TIME
+                ),
                 Ease.sineInOut
             );
-            trace(distanceFrom(player, true));
-
-            //23 -> 230
             tosser.start();
         }
     }
 
     override public function update() {
-        if(tosser.active) {
+        if(isChasing) {
+            setChaseVelocity();
+            moveBy(
+                velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls"
+            );
+        }
+        else if(tosser.active) {
             moveTo(tosser.x, tosser.y);
         }
         else {
@@ -75,6 +134,16 @@ class Ring extends Entity {
             );
         }
         super.update();
+    }
+
+    override public function moveCollideX(e:Entity) {
+        velocity.x = -velocity.x;
+        return true;
+    }
+
+    override public function moveCollideY(e:Entity) {
+        velocity.y = -velocity.y;
+        return true;
     }
 }
 

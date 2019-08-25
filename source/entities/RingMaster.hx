@@ -24,8 +24,12 @@ class RingMaster extends Enemy
     public static inline var ENRAGE_PHASE_DURATION = 10;
     public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
     public static inline var PHASE_TRANSITION_TIME = 2;
+    public static inline var PAUSE_BETWEEN_TOSSES = 1;
+    public static inline var PAUSE_BETWEEN_CHASES = 3;
+    public static inline var TARGETED_SHOT_INTERVAL = 1;
+    public static inline var TARGETED_SHOT_SPEED = 300;
 
-    public var ring(default, null):Ring;
+    public var rings(default, null):Array<Ring>;
 
     private var sprite:Spritemap;
     private var preEnrage:Alarm;
@@ -36,15 +40,23 @@ class RingMaster extends Enemy
     private var phaseTimer:Alarm;
     private var preAdvancePhaseTimer:Alarm;
 
+    private var tossTimer:Alarm;
+    private var tossCount:Int;
+    private var targetedShotTimer:Alarm;
+
     private var screenCenter:Vector2;
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
 
     private var sfx:Map<String, Sfx>;
 
+    private var chaseTimer:Alarm;
+
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
-        this.ring = new Ring(this);
+        rings = [
+            new Ring(this), new Ring(this)
+        ];
         name = "ringmaster";
         isBoss = true;
         mask = new Hitbox(SIZE, SIZE);
@@ -70,7 +82,7 @@ class RingMaster extends Enemy
         });
         addTween(preEnrage);
 
-        currentPhase = "tossrings";
+        currentPhase = "chaserings";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -84,14 +96,72 @@ class RingMaster extends Enemy
         });
         addTween(preAdvancePhaseTimer);
 
+        tossTimer = new Alarm(
+            Ring.MAX_TOSS_TIME + PAUSE_BETWEEN_TOSSES, TweenType.Looping
+        );
+        tossTimer.onComplete.bind(function() {
+            if(tossCount > 2) {
+                preAdvancePhase();
+                tossCount = 0;
+            }
+            else {
+                tossRing();
+            }
+        });
+        addTween(tossTimer);
+        tossCount = 0;
+        targetedShotTimer = new Alarm(
+            TARGETED_SHOT_INTERVAL, TweenType.Looping
+        );
+        targetedShotTimer.onComplete.bind(function() {
+            targetedShot();
+        });
+        addTween(targetedShotTimer);
+
+        chaseTimer = new Alarm(
+            Ring.MAX_TOSS_TIME + PAUSE_BETWEEN_TOSSES, TweenType.Looping
+        );
+        chaseTimer.onComplete.bind(function() {
+            var lastChasingRing:Ring = null;
+            for(ring in rings) {
+                if(ring.isChasing) {
+                    lastChasingRing = ring;
+                }
+                else {
+                    ring.chase(lastChasingRing);
+                    return;
+                }
+            }
+            // If we're out of rings, start shooting and moving
+            targetedShotTimer.start();
+        });
+        addTween(chaseTimer);
+
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
         ];
     }
 
+    private function tossRing() {
+        if(tossCount == 0) {
+            rings[0].toss(false);
+        }
+        else if(tossCount == 1) {
+            rings[1].toss(true);
+        }
+        else {
+            rings[0].toss(false);
+            rings[1].toss(true);
+        }
+        tossCount++;
+    }
+
     private function generatePhaseLocations() {
         phaseLocations = [
             "tossrings" => new Vector2(screenCenter.x, screenCenter.y - 95),
+            "chaserings" => new Vector2(
+                screenCenter.x - 95, screenCenter.y - 95
+            )
         ];
     }
 
@@ -121,7 +191,7 @@ class RingMaster extends Enemy
                 Std.int(Math.floor(Math.random() * allPhases.length))
             ];
             // TEMP
-            currentPhase = "tossrings";
+            //currentPhase = "tossrings";
         }
     }
 
@@ -157,7 +227,17 @@ class RingMaster extends Enemy
             }
         }
         else if(currentPhase == "tossrings") {
-            ring.toss();
+            if(!tossTimer.active) {
+                tossTimer.start();
+                tossRing();
+            }
+        }
+        else if(currentPhase == "chaserings") {
+            if(!chaseTimer.active) {
+                chaseTimer.start();
+                var player = scene.getInstance("player");
+                rings[0].chase(player);
+            }
         }
     }
 
@@ -166,6 +246,23 @@ class RingMaster extends Enemy
             x == phaseLocations[currentPhase].x
             && y == phaseLocations[currentPhase].y
         );
+    }
+
+    private function targetedShot(isBig:Bool = false) {
+        var shotAngle = getAngleTowardsPlayer();
+        var shotVector = new Vector2(
+            Math.cos(shotAngle), Math.sin(shotAngle)
+        );
+        scene.add(new Spit(this, shotVector, TARGETED_SHOT_SPEED, isBig));
+        for(i in 0...10) {
+            var scatter = shotVector.clone();
+            scatter.x += Math.random() / 3;
+            scatter.y += Math.random() / 3;
+            var speed = TARGETED_SHOT_SPEED * HXP.choose(
+                1, 0.95, 0.9, 0.85, 0.8
+            );
+            scene.add(new Spit(this, scatter, speed, isBig));
+        }
     }
 
     override function die() {

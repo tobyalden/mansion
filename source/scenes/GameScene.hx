@@ -83,7 +83,9 @@ class GameScene extends Scene
             start.y + PLAYFIELD_SIZE / 2
         );
         add(boss);
-        add(boss.ring);
+        for(ring in boss.rings) {
+            add(ring);
+        }
         allEnemies = new Array<Entity>();
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();
