@@ -9,7 +9,6 @@ import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
 import haxepunk.tweens.motion.*;
 import haxepunk.utils.*;
-import entities.*;
 import entities.Level;
 import scenes.*;
 
@@ -30,6 +29,7 @@ class RingMaster extends Enemy
     public static inline var SCATTER_SHOT_SPEED = 250;
     public static inline var SCATTER_SHOT_NUM_BULLETS = 8;
     public static inline var CIRCLE_PERIMETER_TIME = 10;
+    public static inline var BOUNCE_PHASE_DURATION = 5;
 
     public var rings(default, null):Array<Ring>;
 
@@ -55,10 +55,13 @@ class RingMaster extends Enemy
     private var scatterShotTimer:Alarm;
     private var circlePerimeter:LinearPath;
 
+    private var bounceTimer:Alarm;
+
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
         rings = [
-            new Ring(this), new Ring(this)
+            new Ring(this), new Ring(this),
+            new Ring(this)
         ];
         name = "ringmaster";
         isBoss = true;
@@ -85,7 +88,7 @@ class RingMaster extends Enemy
         });
         addTween(preEnrage);
 
-        currentPhase = "chaserings";
+        currentPhase = "tossrings";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -147,6 +150,19 @@ class RingMaster extends Enemy
         });
         addTween(chaseTimer);
 
+        bounceTimer = new Alarm(BOUNCE_PHASE_DURATION);
+        bounceTimer.onComplete.bind(function() {
+            for(ring in rings) {
+                ring.returnToRingMaster();
+            }
+            var ringReturnTimer = new Alarm(Ring.RETURN_TIME);
+            ringReturnTimer.onComplete.bind(function() {
+                preAdvancePhase();
+            });
+            addTween(ringReturnTimer, true);
+        });
+        addTween(bounceTimer);
+
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
         ];
@@ -171,7 +187,8 @@ class RingMaster extends Enemy
             "tossrings" => new Vector2(screenCenter.x, screenCenter.y - 95),
             "chaserings" => new Vector2(
                 screenCenter.x - 95, screenCenter.y - 95
-            )
+            ),
+            "bouncerings" => new Vector2(screenCenter.x, screenCenter.y)
         ];
         circlePerimeter = new LinearPath();
         circlePerimeter.addPoint(
@@ -225,11 +242,19 @@ class RingMaster extends Enemy
             }
             allPhases.remove(currentPhase);
             allPhases.remove("enrage");
-            currentPhase = allPhases[
-                Std.int(Math.floor(Math.random() * allPhases.length))
-            ];
-            // TEMP
-            //currentPhase = "tossrings";
+            //currentPhase = allPhases[
+                //Std.int(Math.floor(Math.random() * allPhases.length))
+            //];
+            // TODO: TEMP
+            if(currentPhase == "tossrings") {
+                currentPhase = "chaserings";
+            }
+            else if(currentPhase == "chaserings") {
+                currentPhase = "bouncerings";
+            }
+            else {
+                currentPhase = "tossrings";
+            }
         }
     }
 
@@ -278,6 +303,14 @@ class RingMaster extends Enemy
             }
             if(circlePerimeter.active && circlePerimeter.x != 0) {
                 moveTo(circlePerimeter.x, circlePerimeter.y);
+            }
+        }
+        else if(currentPhase == "bouncerings") {
+            if(!bounceTimer.active && !rings[0].isReturning) {
+                bounceTimer.start();
+                for(ring in rings) {
+                    ring.bounce();
+                }
             }
         }
     }

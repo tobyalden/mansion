@@ -16,6 +16,7 @@ import openfl.Assets;
 // TODO: Maybe doors lock on room enter 50% of the time?
 // TODO: In roguelike mode, enemies are reshuffled in addition to being
 // respawned normally when resting at bonfire
+// TODO: The nymph has a malignant aura around her, which she uses as her weapon
 
 class GameScene extends Scene
 {

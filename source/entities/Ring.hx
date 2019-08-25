@@ -16,15 +16,17 @@ class Ring extends Entity {
     public static inline var CHASE_ACCEL = 350;
     public static inline var CHASE_DECCEL = 100;
     public static inline var MAX_CHASE_SPEED = 150;
+    public static inline var BOUNCE_SPEED = 150;
     public static inline var RETURN_TIME = 2;
 
     public var isChasing(default, null):Bool;
+    public var isReturning(default, null):Bool;
+    private var isBouncing:Bool;
     private var ringMaster:RingMaster;
     private var sprite:Spritemap;
     private var tosser:CubicMotion;
     private var velocity:Vector2;
     private var chaseTarget:Entity;
-    private var isReturning:Bool;
     private var returnTween:LinearMotion;
 
     public function new(ringMaster:RingMaster) {
@@ -39,6 +41,7 @@ class Ring extends Entity {
         tosser = new CubicMotion();
         addTween(tosser);
         isChasing = false;
+        isBouncing = false;
         velocity = new Vector2();
         chaseTarget = null;
         isReturning = false;
@@ -67,6 +70,22 @@ class Ring extends Entity {
     public function chase(target:Entity) {
         isChasing = true;
         chaseTarget = target;
+    }
+
+    public function bounce() {
+        isBouncing = true;
+        var player = scene.getInstance("player");
+        var towardsPlayer = new Vector2(
+            Math.random() - 0.5, Math.random() - 0.5
+        );
+        if(Math.abs(velocity.x) < 0.33) {
+            velocity.x = velocity.x / Math.abs(velocity.x) * 0.33;
+        }
+        if(Math.abs(velocity.y) < 0.33) {
+            velocity.y = velocity.y / Math.abs(velocity.y) * 0.33;
+        }
+        towardsPlayer.normalize(BOUNCE_SPEED);
+        velocity = towardsPlayer;
     }
 
     public function setChaseVelocity() {
@@ -128,11 +147,23 @@ class Ring extends Entity {
 
     public function returnToRingMaster() {
         isChasing = false;
+        isBouncing = false;
         isReturning = true;
     }
 
     override public function update() {
-        if(isReturning) {
+        if(isBouncing) {
+            var collideTypes = ["walls"];
+            var collideTypes = (
+                collideWith(ringMaster, x, y) != null ?
+                ["walls"] : ["walls", "enemy"]
+            );
+            moveBy(
+                velocity.x * HXP.elapsed, velocity.y * HXP.elapsed,
+                collideTypes
+            );
+        }
+        else if(isReturning) {
             if(velocity.length > 0) {
                 velocity.x = MathUtil.approach(
                     velocity.x, 0, HXP.elapsed * CHASE_DECCEL
