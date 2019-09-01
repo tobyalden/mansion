@@ -13,6 +13,8 @@ import scenes.*;
 class Ring extends Entity {
     public static inline var MIN_TOSS_TIME = 1.5;
     public static inline var MAX_TOSS_TIME = 2;
+    public static inline var ENRAGE_MIN_TOSS_TIME = 1.1;
+    public static inline var ENRAGE_MAX_TOSS_TIME = 1.5;
     public static inline var CHASE_ACCEL = 350;
     public static inline var CHASE_DECCEL = 100;
     public static inline var MAX_CHASE_SPEED = 150;
@@ -133,7 +135,6 @@ class Ring extends Entity {
     }
 
     public function enrageToss(tossRight:Bool, tossSpeed:Float) {
-        trace(age);
         age = 0;
         isEnrageTossed = true;
         velocity = new Vector2(0, -ENRAGE_TOSS_DOWNWARDS_SPEED);
@@ -158,7 +159,10 @@ class Ring extends Entity {
                 x, y,
                 MathUtil.clamp(
                     distanceFrom(player, true) / 50,
-                    MIN_TOSS_TIME, MAX_TOSS_TIME
+                    ringMaster.isEnraged ?
+                    ENRAGE_MIN_TOSS_TIME : MIN_TOSS_TIME,
+                    ringMaster.isEnraged ?
+                    ENRAGE_MAX_TOSS_TIME : MAX_TOSS_TIME
                 ),
                 Ease.sineInOut
             );

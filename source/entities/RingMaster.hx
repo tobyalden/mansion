@@ -20,10 +20,12 @@ class RingMaster extends Enemy
     public static inline var PRE_PHASE_ADVANCE_TIME = 2;
     public static inline var PRE_ENRAGE_TIME = 2;
     public static inline var PHASE_DURATION = 12.5;
-    public static inline var ENRAGE_PHASE_DURATION = 17;
+    //public static inline var ENRAGE_PHASE_DURATION = 17;
+    public static inline var ENRAGE_PHASE_DURATION = 5;
     public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var PAUSE_BETWEEN_TOSSES = 1;
+    public static inline var ENRAGED_PAUSE_BETWEEN_TOSSES = 0.75;
     public static inline var PAUSE_BETWEEN_CHASES = 3;
     public static inline var SCATTER_SHOT_INTERVAL = 2;
     public static inline var SCATTER_SHOT_SPEED = 250;
@@ -33,6 +35,7 @@ class RingMaster extends Enemy
 
     public var rings(default, null):Array<Ring>;
     public var screenCenter(default, null):Vector2;
+    public var isEnraged(default, null):Bool;
 
     private var sprite:Spritemap;
     private var preEnrage:Alarm;
@@ -46,7 +49,6 @@ class RingMaster extends Enemy
     private var tossTimer:Alarm;
     private var tossCount:Int;
 
-    private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
 
     private var sfx:Map<String, Sfx>;
@@ -65,7 +67,6 @@ class RingMaster extends Enemy
         super(startX, startY);
         rings = [
             new Ring(this), new Ring(this),
-            new Ring(this), new Ring(this),
             new Ring(this), new Ring(this)
         ];
         name = "ringmaster";
@@ -81,7 +82,7 @@ class RingMaster extends Enemy
         graphic = sprite;
         health = STARTING_HEALTH;
 
-        isEnraged = false;
+        isEnraged = true;
         enrageNextPhase = false;
         generatePhaseLocations();
         phaseRelocater = new LinearMotion();
@@ -94,7 +95,7 @@ class RingMaster extends Enemy
         });
         addTween(preEnrage);
 
-        currentPhase = "enrage";
+        currentPhase = "tossrings";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -112,7 +113,8 @@ class RingMaster extends Enemy
             Ring.MAX_TOSS_TIME + PAUSE_BETWEEN_TOSSES, TweenType.Looping
         );
         tossTimer.onComplete.bind(function() {
-            if(tossCount > 2) {
+            var numTosses = isEnraged ? 4 : 2;
+            if(tossCount > numTosses) {
                 preAdvancePhase();
                 tossCount = 0;
             }
@@ -209,15 +211,26 @@ class RingMaster extends Enemy
     }
 
     private function tossRing() {
-        if(tossCount == 0) {
-            rings[0].toss(false);
-        }
-        else if(tossCount == 1) {
-            rings[1].toss(true);
+        if(isEnraged) {
+            if(tossCount == 4) {
+                rings[0].toss(false);
+                rings[1].toss(true);
+            }
+            else {
+                rings[tossCount % 4].toss(tossCount % 2 == 0 ? true : false);
+            }
         }
         else {
-            rings[0].toss(false);
-            rings[1].toss(true);
+            if(tossCount == 0) {
+                rings[0].toss(false);
+            }
+            else if(tossCount == 1) {
+                rings[1].toss(true);
+            }
+            else {
+                rings[0].toss(false);
+                rings[1].toss(true);
+            }
         }
         tossCount++;
     }
@@ -294,7 +307,7 @@ class RingMaster extends Enemy
                 //currentPhase = "bouncerings";
             //}
             //else {
-                //currentPhase = "tossrings";
+                currentPhase = "tossrings";
             //}
         }
     }
@@ -332,7 +345,12 @@ class RingMaster extends Enemy
         }
         else if(currentPhase == "tossrings") {
             if(!tossTimer.active) {
-                tossTimer.start();
+                if(isEnraged) {
+                    tossTimer.reset(ENRAGED_PAUSE_BETWEEN_TOSSES);
+                }
+                else {
+                    tossTimer.reset(Ring.MAX_TOSS_TIME + PAUSE_BETWEEN_TOSSES);
+                }
                 tossRing();
             }
         }
