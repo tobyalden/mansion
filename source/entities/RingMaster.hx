@@ -20,7 +20,7 @@ class RingMaster extends Enemy
     public static inline var PRE_PHASE_ADVANCE_TIME = 2;
     public static inline var PRE_ENRAGE_TIME = 2;
     public static inline var PHASE_DURATION = 12.5;
-    public static inline var ENRAGE_PHASE_DURATION = 10;
+    public static inline var ENRAGE_PHASE_DURATION = 17;
     public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var PAUSE_BETWEEN_TOSSES = 1;
@@ -32,6 +32,7 @@ class RingMaster extends Enemy
     public static inline var BOUNCE_PHASE_DURATION = 5;
 
     public var rings(default, null):Array<Ring>;
+    public var screenCenter(default, null):Vector2;
 
     private var sprite:Spritemap;
     private var preEnrage:Alarm;
@@ -45,7 +46,6 @@ class RingMaster extends Enemy
     private var tossTimer:Alarm;
     private var tossCount:Int;
 
-    private var screenCenter:Vector2;
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
 
@@ -57,11 +57,16 @@ class RingMaster extends Enemy
 
     private var bounceTimer:Alarm;
 
+    private var enrageTossTimer:Alarm;
+    private var endEnragePhaseTimer:Alarm;
+    private var isEndingEnragePhase:Bool;
+
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
         rings = [
             new Ring(this), new Ring(this),
-            new Ring(this)
+            new Ring(this), new Ring(this),
+            new Ring(this), new Ring(this)
         ];
         name = "ringmaster";
         isBoss = true;
@@ -84,11 +89,12 @@ class RingMaster extends Enemy
         preEnrage = new Alarm(PRE_ENRAGE_TIME);
         preEnrage.onComplete.bind(function() {
             // Start timers for enrage attacks
-            phaseTimer.reset(ENRAGE_PHASE_DURATION);
+            enrageTossTimer.start();
+            endEnragePhaseTimer.start();
         });
         addTween(preEnrage);
 
-        currentPhase = "tossrings";
+        currentPhase = "enrage";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -163,6 +169,40 @@ class RingMaster extends Enemy
         });
         addTween(bounceTimer);
 
+        enrageTossTimer = new Alarm(1, TweenType.Looping);
+        enrageTossTimer.onComplete.bind(function() {
+            var tossSpeed = HXP.choose(2, 3, 4, 5);
+            if(!rings[0].isEnrageTossed && !rings[0].isReturning) {
+                rings[0].enrageToss(true, tossSpeed);
+                rings[1].enrageToss(false, tossSpeed);
+            }
+            else if(!rings[2].isEnrageTossed && !rings[2].isReturning) {
+                rings[2].enrageToss(true, tossSpeed);
+                rings[3].enrageToss(false, tossSpeed);
+            }
+            else if(!rings[4].isEnrageTossed && !rings[4].isReturning) {
+                rings[4].enrageToss(true, tossSpeed);
+                rings[5].enrageToss(false, tossSpeed);
+            }
+        });
+        addTween(enrageTossTimer);
+
+        endEnragePhaseTimer = new Alarm(ENRAGE_PHASE_DURATION);
+        endEnragePhaseTimer.onComplete.bind(function() {
+            enrageTossTimer.active = false;
+            for(ring in rings) {
+                ring.returnToRingMaster();
+            }
+            isEndingEnragePhase = true;
+            var ringReturnTimer = new Alarm(4);
+            ringReturnTimer.onComplete.bind(function() {
+                preAdvancePhase();
+            });
+            addTween(ringReturnTimer, true);
+        });
+        addTween(endEnragePhaseTimer);
+        isEndingEnragePhase = false;
+
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
         ];
@@ -188,7 +228,8 @@ class RingMaster extends Enemy
             "chaserings" => new Vector2(
                 screenCenter.x - 95, screenCenter.y - 95
             ),
-            "bouncerings" => new Vector2(screenCenter.x, screenCenter.y)
+            "bouncerings" => new Vector2(screenCenter.x, screenCenter.y),
+            "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95)
         ];
         circlePerimeter = new LinearPath();
         circlePerimeter.addPoint(
@@ -242,19 +283,19 @@ class RingMaster extends Enemy
             }
             allPhases.remove(currentPhase);
             allPhases.remove("enrage");
-            //currentPhase = allPhases[
-                //Std.int(Math.floor(Math.random() * allPhases.length))
-            //];
+            currentPhase = allPhases[
+                Std.int(Math.floor(Math.random() * allPhases.length))
+            ];
             // TODO: TEMP
-            if(currentPhase == "tossrings") {
-                currentPhase = "chaserings";
-            }
-            else if(currentPhase == "chaserings") {
-                currentPhase = "bouncerings";
-            }
-            else {
-                currentPhase = "tossrings";
-            }
+            //if(currentPhase == "tossrings") {
+                //currentPhase = "chaserings";
+            //}
+            //else if(currentPhase == "chaserings") {
+                //currentPhase = "bouncerings";
+            //}
+            //else {
+                //currentPhase = "tossrings";
+            //}
         }
     }
 
@@ -311,6 +352,18 @@ class RingMaster extends Enemy
                 for(ring in rings) {
                     ring.bounce();
                 }
+            }
+        }
+        else if(currentPhase == "enrage") {
+            if(isEndingEnragePhase) {
+                // Do nothing
+            }
+            else if(
+                !preEnrage.active
+                && !enrageTossTimer.active
+            ) {
+                preEnrage.start();
+                sfx["enrage"].play();
             }
         }
     }

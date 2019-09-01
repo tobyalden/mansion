@@ -18,9 +18,12 @@ class Ring extends Entity {
     public static inline var MAX_CHASE_SPEED = 150;
     public static inline var BOUNCE_SPEED = 150;
     public static inline var RETURN_TIME = 2;
+    public static inline var ENRAGE_RETURN_TIME = 0.8;
+    public static inline var ENRAGE_TOSS_DOWNWARDS_SPEED = 100;
 
     public var isChasing(default, null):Bool;
     public var isReturning(default, null):Bool;
+    public var isEnrageTossed(default, null):Bool;
     private var isBouncing:Bool;
     private var ringMaster:RingMaster;
     private var sprite:Spritemap;
@@ -28,6 +31,10 @@ class Ring extends Entity {
     private var velocity:Vector2;
     private var chaseTarget:Entity;
     private var returnTween:LinearMotion;
+    private var age:Float;
+    private var enrageTossHorizontalSpeedMultiplier:Float;
+    private var enrageTossRight:Bool;
+    private var returnTime:Float;
 
     public function new(ringMaster:RingMaster) {
         super();
@@ -42,6 +49,7 @@ class Ring extends Entity {
         addTween(tosser);
         isChasing = false;
         isBouncing = false;
+        isEnrageTossed = false;
         velocity = new Vector2();
         chaseTarget = null;
         isReturning = false;
@@ -50,6 +58,10 @@ class Ring extends Entity {
             isReturning = false;
         });
         addTween(returnTween);
+        age = 0;
+        enrageTossHorizontalSpeedMultiplier = 1;
+        enrageTossRight = true;
+        returnTime = RETURN_TIME;
     }
 
     private function getCurveControlPoint(target:Entity, flip:Bool) {
@@ -120,6 +132,15 @@ class Ring extends Entity {
         velocity.normalize(MAX_CHASE_SPEED);
     }
 
+    public function enrageToss(tossRight:Bool, tossSpeed:Float) {
+        trace(age);
+        age = 0;
+        isEnrageTossed = true;
+        velocity = new Vector2(0, -ENRAGE_TOSS_DOWNWARDS_SPEED);
+        enrageTossHorizontalSpeedMultiplier = tossSpeed;
+        enrageTossRight = tossRight;
+    }
+
     public function toss(clockwise:Bool) {
         if(!tosser.active) {
             var player = scene.getInstance("player");
@@ -145,14 +166,40 @@ class Ring extends Entity {
         }
     }
 
-    public function returnToRingMaster() {
+    public function returnToRingMaster(newReturnTime:Float = RETURN_TIME) {
         isChasing = false;
         isBouncing = false;
+        isEnrageTossed = false;
         isReturning = true;
+        returnTime = newReturnTime;
     }
 
     override public function update() {
-        if(isBouncing) {
+        if(isEnrageTossed) {
+            velocity.y = Math.min(
+                velocity.y + ENRAGE_TOSS_DOWNWARDS_SPEED * HXP.elapsed,
+                ENRAGE_TOSS_DOWNWARDS_SPEED
+            );
+            velocity.x = (
+                Math.sin(age * enrageTossHorizontalSpeedMultiplier)
+                * 120 * (enrageTossRight ? 1 : -1)
+            );
+            moveBy(0, velocity.y * HXP.elapsed);
+            moveTo(
+                ringMaster.x + ringMaster.width / 2 - width / 2 + velocity.x,
+                y
+            );
+            if(
+                top >
+                ringMaster.screenCenter.y + ringMaster.height / 2
+                + GameScene.PLAYFIELD_SIZE / 2
+            ) {
+                y -= (GameScene.PLAYFIELD_SIZE + height);
+                velocity = new Vector2(0, 0);
+                returnToRingMaster(ENRAGE_RETURN_TIME);
+            }
+        }
+        else if(isBouncing) {
             var collideTypes = ["walls"];
             var collideTypes = (
                 collideWith(ringMaster, x, y) != null ?
@@ -181,7 +228,7 @@ class Ring extends Entity {
                         x, y,
                         ringMaster.centerX - width / 2,
                         ringMaster.centerY - height / 2,
-                        RETURN_TIME,
+                        returnTime,
                         Ease.sineInOut
                     );
                     returnTween.start();
@@ -204,6 +251,7 @@ class Ring extends Entity {
                 ringMaster.centerY - height / 2
             );
         }
+        age += HXP.elapsed;
         super.update();
     }
 
