@@ -15,14 +15,14 @@ import scenes.*;
 class RingMaster extends Enemy
 {
     public static inline var SIZE = 80;
-    public static inline var STARTING_HEALTH = 100;
-    public static inline var ENRAGE_THRESHOLD = 40;
-    public static inline var PRE_PHASE_ADVANCE_TIME = 2;
-    public static inline var PRE_ENRAGE_TIME = 2;
+    public static inline var STARTING_HEALTH = 200;
+    public static inline var ENRAGE_THRESHOLD = 80;
+    public static inline var PRE_PHASE_ADVANCE_TIME = 1.5;
+    public static inline var PRE_ENRAGE_TIME = 1;
     public static inline var PHASE_DURATION = 12.5;
     public static inline var ENRAGE_PHASE_DURATION = 17;
-    public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
-    public static inline var PHASE_TRANSITION_TIME = 2;
+    public static inline var PHASE_TRANSITION_TIME = 1;
+    public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1;
     public static inline var PAUSE_BETWEEN_TOSSES = 1;
     public static inline var ENRAGED_PAUSE_BETWEEN_TOSSES = 0.75;
     public static inline var PAUSE_BETWEEN_CHASES = 1;
@@ -100,7 +100,7 @@ class RingMaster extends Enemy
         });
         addTween(preEnrage);
 
-        currentPhase = HXP.choose("tossrings", "chaserings", "bouncerings");;
+        currentPhase = HXP.choose("tossrings", "chaserings", "bouncerings");
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
