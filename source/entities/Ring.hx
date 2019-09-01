@@ -20,7 +20,7 @@ class Ring extends Entity {
     public static inline var MAX_CHASE_SPEED = 150;
     public static inline var BOUNCE_SPEED = 150;
     public static inline var RETURN_TIME = 2;
-    public static inline var ENRAGE_RETURN_TIME = 0.8;
+    public static inline var ENRAGE_RETURN_TIME = 1;
     public static inline var ENRAGE_TOSS_DOWNWARDS_SPEED = 100;
 
     public var isChasing(default, null):Bool;

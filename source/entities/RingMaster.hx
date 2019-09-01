@@ -20,18 +20,21 @@ class RingMaster extends Enemy
     public static inline var PRE_PHASE_ADVANCE_TIME = 2;
     public static inline var PRE_ENRAGE_TIME = 2;
     public static inline var PHASE_DURATION = 12.5;
-    //public static inline var ENRAGE_PHASE_DURATION = 17;
-    public static inline var ENRAGE_PHASE_DURATION = 5;
+    public static inline var ENRAGE_PHASE_DURATION = 17;
     public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var PAUSE_BETWEEN_TOSSES = 1;
     public static inline var ENRAGED_PAUSE_BETWEEN_TOSSES = 0.75;
-    public static inline var PAUSE_BETWEEN_CHASES = 3;
+    public static inline var PAUSE_BETWEEN_CHASES = 1;
+    public static inline var ENRAGED_PAUSE_BETWEEN_CHASES = 0.25;
     public static inline var SCATTER_SHOT_INTERVAL = 2;
+    public static inline var ENRAGED_SCATTER_SHOT_INTERVAL = 1.5;
     public static inline var SCATTER_SHOT_SPEED = 250;
     public static inline var SCATTER_SHOT_NUM_BULLETS = 8;
+    public static inline var ENRAGED_SCATTER_SHOT_NUM_BULLETS = 16;
     public static inline var CIRCLE_PERIMETER_TIME = 10;
-    public static inline var BOUNCE_PHASE_DURATION = 5;
+    public static inline var ENRAGED_CIRCLE_PERIMETER_TIME = 7;
+    public static inline var BOUNCE_PHASE_DURATION = 10;
 
     public var rings(default, null):Array<Ring>;
     public var screenCenter(default, null):Vector2;
@@ -56,6 +59,7 @@ class RingMaster extends Enemy
     private var chaseTimer:Alarm;
     private var scatterShotTimer:Alarm;
     private var circlePerimeter:LinearPath;
+    private var chaseCount:Int;
 
     private var bounceTimer:Alarm;
 
@@ -66,6 +70,7 @@ class RingMaster extends Enemy
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
         rings = [
+            new Ring(this), new Ring(this),
             new Ring(this), new Ring(this),
             new Ring(this), new Ring(this)
         ];
@@ -82,7 +87,7 @@ class RingMaster extends Enemy
         graphic = sprite;
         health = STARTING_HEALTH;
 
-        isEnraged = true;
+        isEnraged = false;
         enrageNextPhase = false;
         generatePhaseLocations();
         phaseRelocater = new LinearMotion();
@@ -95,7 +100,7 @@ class RingMaster extends Enemy
         });
         addTween(preEnrage);
 
-        currentPhase = "tossrings";
+        currentPhase = "chaserings";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -133,30 +138,40 @@ class RingMaster extends Enemy
         addTween(scatterShotTimer);
 
         chaseTimer = new Alarm(
-            Ring.MAX_TOSS_TIME + PAUSE_BETWEEN_TOSSES, TweenType.Looping
+            Ring.MAX_TOSS_TIME + PAUSE_BETWEEN_CHASES, TweenType.Looping
         );
         chaseTimer.onComplete.bind(function() {
             var lastChasingRing:Ring = null;
+            var numChases = isEnraged ? 4 : 2;
             for(ring in rings) {
                 if(ring.isChasing) {
                     lastChasingRing = ring;
                 }
-                else {
+                else if(chaseCount < numChases) {
                     ring.chase(lastChasingRing);
+                    chaseCount++;
                     return;
                 }
             }
             // If we're out of rings, start shooting and moving
             if(!scatterShotTimer.active) {
                 scatterShot();
-                scatterShotTimer.start();
+                if(isEnraged) {
+                    scatterShotTimer.reset(ENRAGED_SCATTER_SHOT_INTERVAL);
+                }
+                else {
+                    scatterShotTimer.start();
+                }
                 circlePerimeter.setMotion(
-                    CIRCLE_PERIMETER_TIME, Ease.sineInOut
+                    isEnraged ?
+                    ENRAGED_CIRCLE_PERIMETER_TIME : CIRCLE_PERIMETER_TIME,
+                    Ease.sineInOut
                 );
                 circlePerimeter.start();
             }
         });
         addTween(chaseTimer);
+        chaseCount = 0;
 
         bounceTimer = new Alarm(BOUNCE_PHASE_DURATION);
         bounceTimer.onComplete.bind(function() {
@@ -263,7 +278,9 @@ class RingMaster extends Enemy
         circlePerimeter.onComplete.bind(function() {
             scatterShotTimer.active = false;
             for(ring in rings) {
-                ring.returnToRingMaster();
+                ring.returnToRingMaster(
+                    isEnraged ? Ring.ENRAGE_RETURN_TIME : Ring.RETURN_TIME
+                );
             }
             var ringReturnTimer = new Alarm(Ring.RETURN_TIME);
             ringReturnTimer.onComplete.bind(function() {
@@ -296,19 +313,19 @@ class RingMaster extends Enemy
             }
             allPhases.remove(currentPhase);
             allPhases.remove("enrage");
-            currentPhase = allPhases[
-                Std.int(Math.floor(Math.random() * allPhases.length))
-            ];
+            //currentPhase = allPhases[
+                //Std.int(Math.floor(Math.random() * allPhases.length))
+            //];
             // TODO: TEMP
-            //if(currentPhase == "tossrings") {
-                //currentPhase = "chaserings";
-            //}
-            //else if(currentPhase == "chaserings") {
-                //currentPhase = "bouncerings";
-            //}
-            //else {
+            if(currentPhase == "tossrings") {
+                currentPhase = "chaserings";
+            }
+            else if(currentPhase == "chaserings") {
+                currentPhase = "bouncerings";
+            }
+            else {
                 currentPhase = "tossrings";
-            //}
+            }
         }
     }
 
@@ -356,9 +373,17 @@ class RingMaster extends Enemy
         }
         else if(currentPhase == "chaserings") {
             if(!chaseTimer.active) {
-                chaseTimer.start();
+                if(isEnraged) {
+                    chaseTimer.reset(
+                        Ring.MAX_TOSS_TIME + ENRAGED_PAUSE_BETWEEN_CHASES
+                    );
+                }
+                else {
+                    chaseTimer.start();
+                }
                 var player = scene.getInstance("player");
                 rings[0].chase(player);
+                chaseCount = 1;
             }
             if(circlePerimeter.active && circlePerimeter.x != 0) {
                 moveTo(circlePerimeter.x, circlePerimeter.y);
@@ -367,8 +392,14 @@ class RingMaster extends Enemy
         else if(currentPhase == "bouncerings") {
             if(!bounceTimer.active && !rings[0].isReturning) {
                 bounceTimer.start();
+                var bounceCount = 0;
+                var numBounces = isEnraged ? 4 : 2;
                 for(ring in rings) {
+                    if(bounceCount >= numBounces) {
+                        continue;
+                    }
                     ring.bounce();
+                    bounceCount++;
                 }
             }
         }
@@ -399,7 +430,11 @@ class RingMaster extends Enemy
             Math.cos(shotAngle), Math.sin(shotAngle)
         );
         scene.add(new Spit(this, shotVector, SCATTER_SHOT_SPEED, isBig));
-        for(i in 0...SCATTER_SHOT_NUM_BULLETS) {
+        var numBullets = (
+            isEnraged ?
+            ENRAGED_SCATTER_SHOT_NUM_BULLETS : SCATTER_SHOT_NUM_BULLETS
+        );
+        for(i in 0...numBullets) {
             var scatter = shotVector.clone();
             scatter.x += Math.random() / 4;
             scatter.y += Math.random() / 4;
