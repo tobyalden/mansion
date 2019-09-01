@@ -100,7 +100,7 @@ class RingMaster extends Enemy
         });
         addTween(preEnrage);
 
-        currentPhase = "chaserings";
+        currentPhase = HXP.choose("tossrings", "chaserings", "bouncerings");;
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -253,28 +253,33 @@ class RingMaster extends Enemy
     private function generatePhaseLocations() {
         phaseLocations = [
             "tossrings" => new Vector2(screenCenter.x, screenCenter.y - 95),
-            "chaserings" => new Vector2(
-                screenCenter.x - 95, screenCenter.y - 95
-            ),
+            // chaserings is set below
             "bouncerings" => new Vector2(screenCenter.x, screenCenter.y),
             "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95)
         ];
         circlePerimeter = new LinearPath();
-        circlePerimeter.addPoint(
-            screenCenter.x - 95, screenCenter.y - 95
-        );
-        circlePerimeter.addPoint(
-            screenCenter.x + 95, screenCenter.y - 95
-        );
-        circlePerimeter.addPoint(
-            screenCenter.x + 95, screenCenter.y + 95
-        );
-        circlePerimeter.addPoint(
-            screenCenter.x - 95, screenCenter.y + 95
-        );
-        circlePerimeter.addPoint(
-            screenCenter.x - 95, screenCenter.y - 95
-        );
+        var perimeterPoints = [
+            new Vector2(screenCenter.x - 95, screenCenter.y - 95),
+            new Vector2(screenCenter.x + 95, screenCenter.y - 95),
+            new Vector2(screenCenter.x + 95, screenCenter.y + 95),
+            new Vector2(screenCenter.x - 95, screenCenter.y + 95)
+        ];
+        if(Math.random() > 0.5) {
+            perimeterPoints.reverse();
+        }
+        var pointCount = 0;
+        var startCount = HXP.choose(0, 1, 2, 3);
+        var startPoint = perimeterPoints[
+            (startCount + pointCount) % perimeterPoints.length
+        ];
+        phaseLocations["chaserings"] = new Vector2(startPoint.x, startPoint.y);
+        while(pointCount < 5) {
+            var point = perimeterPoints[
+                (startCount + pointCount) % perimeterPoints.length
+            ];
+            circlePerimeter.addPoint(point.x, point.y);
+            pointCount++;
+        }
         circlePerimeter.onComplete.bind(function() {
             scatterShotTimer.active = false;
             for(ring in rings) {
@@ -313,19 +318,19 @@ class RingMaster extends Enemy
             }
             allPhases.remove(currentPhase);
             allPhases.remove("enrage");
-            //currentPhase = allPhases[
-                //Std.int(Math.floor(Math.random() * allPhases.length))
-            //];
+            currentPhase = allPhases[
+                Std.int(Math.floor(Math.random() * allPhases.length))
+            ];
             // TODO: TEMP
-            if(currentPhase == "tossrings") {
-                currentPhase = "chaserings";
-            }
-            else if(currentPhase == "chaserings") {
-                currentPhase = "bouncerings";
-            }
-            else {
-                currentPhase = "tossrings";
-            }
+            //if(currentPhase == "tossrings") {
+                //currentPhase = "chaserings";
+            //}
+            //else if(currentPhase == "chaserings") {
+                //currentPhase = "bouncerings";
+            //}
+            //else {
+                //currentPhase = "tossrings";
+            //}
         }
     }
 
