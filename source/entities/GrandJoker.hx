@@ -87,7 +87,7 @@ class GrandJoker extends Enemy
         addTween(preEnrage);
 
         //currentPhase = HXP.choose("clock");
-        currentPhase = "curtain";
+        currentPhase = "clock";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -194,14 +194,14 @@ class GrandJoker extends Enemy
         else if(currentPhase == "clock") {
             if(!clockShotTimer.active) {
                 clockShotTimer.start();
-                age = 0;
+                age = Math.random() * Math.PI * 2;
             }
         }
         else if(currentPhase == "curtain") {
             if(!curtainShotTimer.active) {
                 curtainShotTimer.start();
                 curtainAimedShotTimer.start();
-                age = 0;
+                age = Math.random() * Math.PI * 2;
             }
         }
         else if(currentPhase == "enrage") {
@@ -210,29 +210,47 @@ class GrandJoker extends Enemy
     }
 
     private function clockShot() {
+        //var shotVector = new Vector2(0, -1);
+        //shotVector.rotate(age);
+        //scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+
+        //shotVector = new Vector2(0, -1);
+        //shotVector.rotate(age * 2);
+        //scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+
+        //shotVector = new Vector2(0, -1);
+        //shotVector.rotate(-age);
+        //scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+
+        //shotVector = new Vector2(0, -1);
+        //shotVector.rotate(-age / 2);
+        //scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+
+        // For enrage phase
+
+        //var shotVector = new Vector2(0, -1);
+        //shotVector.rotate(-age * Math.PI);
+        //scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+
+        //shotVector = new Vector2(0, -1);
+        //shotVector.rotate(age * Math.PI);
+        //scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+
         var shotVector = new Vector2(0, -1);
-        shotVector.rotate(age);
+        shotVector.rotate(-age * Math.PI / 2);
         scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
 
         shotVector = new Vector2(0, -1);
-        shotVector.rotate(age * 2);
-        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+        shotVector.rotate(age * Math.PI / 3);
+        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED / 2, false));
 
-        //shotVector = new Vector2(0, -1);
-        //shotVector.rotate(age / 2);
-        //scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
-
-        shotVector = new Vector2(0, -1);
-        shotVector.rotate(-age);
-        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
-
-        //shotVector = new Vector2(0, -1);
-        //shotVector.rotate(-age * 2);
-        //scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+        var shotVector = new Vector2(0, -1);
+        shotVector.rotate(-age * Math.PI / 4);
+        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED / 2, false));
 
         shotVector = new Vector2(0, -1);
-        shotVector.rotate(-age / 2);
-        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+        shotVector.rotate(age * Math.PI / 5);
+        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED * 2, false));
     }
 
     private function curtainShot() {
