@@ -87,7 +87,7 @@ class GrandJoker extends Enemy
         addTween(preEnrage);
 
         //currentPhase = HXP.choose("clock");
-        currentPhase = "clock";
+        currentPhase = "curtain";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -278,10 +278,27 @@ class GrandJoker extends Enemy
     }
 
     private function curtainAimedShot() {
-        var shotVector = new Vector2(Math.sin(age), 1);
+        //var shotVector = new Vector2(1 + Math.sin(age) / 4, Math.sin(age) / 1.5);
         //scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED, false));
-        var shotVector = new Vector2(Math.sin(age * 2), 1);
+        //var shotVector = new Vector2(-1 + Math.cos(age) / 4, -Math.sin(age) / 1.5);
         //scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED, false));
+
+        var shotVector = new Vector2(1, (Math.random() - 0.5) / 1.5);
+        scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED * Math.random(), false));
+        var shotVector = new Vector2(-1, (Math.random() - 0.5) / 1.5);
+        scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED * Math.random(), false));
+        var shotVector = new Vector2(1, (Math.random() - 0.8));
+        scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED * Math.random(), false));
+        var shotVector = new Vector2(-1, (Math.random() - 0.8));
+        scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED * Math.random(), false));
+
+        var shotVector = new Vector2(1, 0.3);
+        var spit = new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED, false);
+        scene.add(spit);
+
+        shotVector = new Vector2(-1, 0.3);
+        spit = new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED, false);
+        scene.add(spit);
     }
 
     private function atPhaseLocation() {
