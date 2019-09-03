@@ -52,7 +52,8 @@ class Spit extends Entity
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
-            ["walls", "player", "lock"]
+            ["player"]
+            //["walls", "player", "lock"]
         );
         if(!cast(scene, GameScene).isEntityOnscreen(this)) {
             scene.remove(this);
@@ -67,7 +68,7 @@ class Spit extends Entity
     private function collideEntity(e:Entity) {
         if(e.type == "walls" || e.type == "lock") {
             //sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
-            destroy();
+            //destroy();
         }
         else if(e.type == "player") {
             var player = cast(e, Player);

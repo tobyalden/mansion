@@ -79,14 +79,11 @@ class GameScene extends Scene
         );
         add(player);
         //add(player.sword);
-        var boss = new RingMaster(
+        var boss = new GrandJoker(
             start.x + PLAYFIELD_SIZE / 2,
             start.y + PLAYFIELD_SIZE / 2
         );
         add(boss);
-        for(ring in boss.rings) {
-            add(ring);
-        }
         allEnemies = new Array<Entity>();
         for(i in 0...NUMBER_OF_ENEMIES) {
             var enemySpot = getOpenSpot();

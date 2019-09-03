@@ -1,9 +1,5 @@
-+ knockback
-+ health
-+ player death
-+ pits
-- ~5 bosses
-? enemy particles on death
+- bosses (2 remaining)
+- non-procedural level loading
 - music
 - all sfx
 - main menu
@@ -12,8 +8,6 @@
 - controller support
 - credits
 - graphics
-- console
-- different floors
 
 - should you be able to do a crappy roll/spellcast if your stamina is low?
 - should some rooms lock you inside them? maybe at set intervals you're aware of, like encounters in etrian odyssey?
