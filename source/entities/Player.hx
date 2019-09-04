@@ -20,6 +20,7 @@ class Player extends Entity
     public static inline var ROLL_TIME = 0.25;
     public static inline var STUN_TIME = 0.3;
     public static inline var CAST_COOLDOWN = 0.4;
+    public static inline var HEAL_TIME = 2.5;
 
     public static inline var MAX_STAMINA = 125;
     public static inline var STAMINA_RECOVERY_SPEED_MOVING = 25;
@@ -65,6 +66,8 @@ class Player extends Entity
     private var isFalling:Bool;
     private var boundingBox:Hitbox;
     private var lastSafeSpot:Vector2;
+    private var healTimer:Alarm;
+    private var healSigil:Image;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -78,6 +81,8 @@ class Player extends Entity
         Key.define("roll", [Key.Z]);
         Key.define("cast", [Key.X]);
         Key.define("sword", [Key.C]);
+        boundingBox = new Hitbox(16, 16);
+        mask = boundingBox;
         sprite = new Spritemap("graphics/player.png", 16, 16);
         sprite.add("idle", [0]);
         sprite.add("roll", [1]);
@@ -87,9 +92,9 @@ class Player extends Entity
         sprite.add("dead", [5]);
         sprite.add("fall", [6, 7, 8, 9], 12, false);
         graphic = sprite;
+        healSigil = new Image("graphics/healsigil.png");
+        addGraphic(healSigil);
         velocity = new Vector2();
-        boundingBox = new Hitbox(16, 16);
-        mask = boundingBox;
 
         rollCooldown = new Alarm(ROLL_TIME, TweenType.Persist);
         addTween(rollCooldown);
@@ -148,6 +153,11 @@ class Player extends Entity
         isFalling = false;
 
         lastSafeSpot = new Vector2(x, y);
+        healTimer = new Alarm(HEAL_TIME);
+        healTimer.onComplete.bind(function() {
+            health += 1;
+        });
+        addTween(healTimer);
     }
 
     public function cancelRoll() {
@@ -210,6 +220,23 @@ class Player extends Entity
                 fallIntoPit();
             }
         }
+
+        if(canControl() && velocity.length == 0) {
+            if(!healTimer.active && health < MAX_HEALTH) {
+                healTimer.start();
+            }
+        }
+        else {
+            healTimer.active = false;
+        }
+
+        healSigil.visible = healTimer.active;
+        healSigil.centerOrigin();
+        healSigil.scaleX = (1 - healTimer.percent);
+        healSigil.scaleY = (1 - healTimer.percent);
+        healSigil.x = 8;
+        healSigil.y = 8;
+        healSigil.alpha = healTimer.percent;
 
         super.update();
     }
