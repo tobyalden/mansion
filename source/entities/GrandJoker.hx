@@ -85,7 +85,7 @@ class GrandJoker extends Enemy
         graphic = sprite;
         health = STARTING_HEALTH;
 
-        isEnraged = true;
+        isEnraged = false;
         enrageNextPhase = false;
 
         generatePhaseLocations();
@@ -94,7 +94,6 @@ class GrandJoker extends Enemy
         addTween(phaseRelocater);
 
         currentPhase = HXP.choose("clock", "curtain", "circle");
-        currentPhase = "circle";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
