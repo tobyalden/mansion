@@ -31,8 +31,11 @@ class GrandJoker extends Enemy
 
     public static inline var CURTAIN_SHOT_SPEED = 80;
     public static inline var CURTAIN_SHOT_INTERVAL = 2;
+    public static inline var CURTAIN_BARRIER_SHOT_SPEED = 160;
 
-    public static inline var CURTAIN_AIMED_SHOT_SPEED = 160;
+    public static inline var CIRCLE_PERIMETER_TIME = 10;
+    public static inline var ENRAGED_CIRCLE_PERIMETER_TIME = 7;
+    public static inline var CIRCLE_SHOT_SPEED = 80;
 
     private var sprite:Spritemap;
 
@@ -52,7 +55,10 @@ class GrandJoker extends Enemy
     private var clockShotTimer:Alarm;
 
     private var curtainShotTimer:Alarm;
-    private var curtainAimedShotTimer:Alarm;
+    private var curtainBarrierShotTimer:Alarm;
+
+    private var circlePerimeter:LinearPath;
+    private var circleShotTimer:Alarm;
 
     private var sfx:Map<String, Sfx>;
 
@@ -86,8 +92,8 @@ class GrandJoker extends Enemy
         });
         addTween(preEnrage);
 
-        //currentPhase = HXP.choose("clock");
-        currentPhase = "curtain";
+        currentPhase = HXP.choose("clock", "curtain");
+        currentPhase = "circle";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -113,11 +119,17 @@ class GrandJoker extends Enemy
         });
         addTween(curtainShotTimer);
 
-        curtainAimedShotTimer = new Alarm(0.05, TweenType.Looping);
-        curtainAimedShotTimer.onComplete.bind(function() {
-            curtainAimedShot();
+        curtainBarrierShotTimer = new Alarm(0.05, TweenType.Looping);
+        curtainBarrierShotTimer.onComplete.bind(function() {
+            curtainBarrierShot();
         });
-        addTween(curtainAimedShotTimer);
+        addTween(curtainBarrierShotTimer);
+
+        circleShotTimer = new Alarm(0.015, TweenType.Looping);
+        circleShotTimer.onComplete.bind(function() {
+            circleShot();
+        });
+        addTween(circleShotTimer);
 
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
@@ -128,7 +140,35 @@ class GrandJoker extends Enemy
         phaseLocations = [
             "clock" => new Vector2(screenCenter.x, screenCenter.y),
             "curtain" => new Vector2(screenCenter.x, screenCenter.y - 95)
+            // circle is set below
         ];
+        circlePerimeter = new LinearPath();
+        var perimeterPoints = [
+            new Vector2(screenCenter.x - 95, screenCenter.y - 95),
+            new Vector2(screenCenter.x + 95, screenCenter.y - 95),
+            new Vector2(screenCenter.x + 95, screenCenter.y + 95),
+            new Vector2(screenCenter.x - 95, screenCenter.y + 95)
+        ];
+        if(Math.random() > 0.5) {
+            perimeterPoints.reverse();
+        }
+        var pointCount = 0;
+        var startCount = HXP.choose(0, 1, 2, 3);
+        var startPoint = perimeterPoints[
+            (startCount + pointCount) % perimeterPoints.length
+        ];
+        phaseLocations["circle"] = new Vector2(startPoint.x, startPoint.y);
+        while(pointCount < 5) {
+            var point = perimeterPoints[
+                (startCount + pointCount) % perimeterPoints.length
+            ];
+            circlePerimeter.addPoint(point.x, point.y);
+            pointCount++;
+        }
+        circlePerimeter.onComplete.bind(function() {
+            // Do nothing
+        });
+        addTween(circlePerimeter);
     }
 
     private function preAdvancePhase() {
@@ -153,10 +193,10 @@ class GrandJoker extends Enemy
             }
             allPhases.remove(currentPhase);
             allPhases.remove("enrage");
-            //currentPhase = allPhases[
-                //Std.int(Math.floor(Math.random() * allPhases.length))
-            //];
-            currentPhase = "clock";
+            currentPhase = allPhases[
+                Std.int(Math.floor(Math.random() * allPhases.length))
+            ];
+            //currentPhase = "clock";
         }
     }
 
@@ -200,8 +240,22 @@ class GrandJoker extends Enemy
         else if(currentPhase == "curtain") {
             if(!curtainShotTimer.active) {
                 curtainShotTimer.start();
-                curtainAimedShotTimer.start();
+                curtainBarrierShotTimer.start();
                 age = Math.random() * Math.PI * 2;
+            }
+        }
+        else if(currentPhase == "circle") {
+            if(!circlePerimeter.active) {
+                circlePerimeter.setMotion(
+                    isEnraged ?
+                    ENRAGED_CIRCLE_PERIMETER_TIME : CIRCLE_PERIMETER_TIME,
+                    Ease.linear
+                );
+                circlePerimeter.start();
+                circleShotTimer.start();
+            }
+            else {
+                moveTo(circlePerimeter.x, circlePerimeter.y);
             }
         }
         else if(currentPhase == "enrage") {
@@ -277,27 +331,58 @@ class GrandJoker extends Enemy
         }
     }
 
-    private function curtainAimedShot() {
+    private function curtainBarrierShot() {
         //var shotVector = new Vector2(1 + Math.sin(age) / 4, Math.sin(age) / 1.5);
-        //scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED, false));
+        //scene.add(new Spit(this, shotVector, CURTAIN_BARRIER_SHOT_SPEED, false));
         //var shotVector = new Vector2(-1 + Math.cos(age) / 4, -Math.sin(age) / 1.5);
-        //scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED, false));
+        //scene.add(new Spit(this, shotVector, CURTAIN_BARRIER_SHOT_SPEED, false));
 
         var shotVector = new Vector2(1, (Math.random() - 0.5) / 1.5);
-        scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED * Math.random(), false));
+        scene.add(new Spit(
+            this, shotVector, CURTAIN_BARRIER_SHOT_SPEED * Math.random(), false
+        ));
         var shotVector = new Vector2(-1, (Math.random() - 0.5) / 1.5);
-        scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED * Math.random(), false));
+        scene.add(new Spit(
+            this, shotVector, CURTAIN_BARRIER_SHOT_SPEED * Math.random(), false
+        ));
         var shotVector = new Vector2(1, (Math.random() - 0.8));
-        scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED * Math.random(), false));
+        scene.add(new Spit(
+            this, shotVector, CURTAIN_BARRIER_SHOT_SPEED * Math.random(), false
+        ));
         var shotVector = new Vector2(-1, (Math.random() - 0.8));
-        scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED * Math.random(), false));
+        scene.add(new Spit(
+            this, shotVector, CURTAIN_BARRIER_SHOT_SPEED * Math.random(), false
+        ));
 
         var shotVector = new Vector2(1, 0.3);
-        var spit = new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED, false);
+        var spit = new Spit(this, shotVector, CURTAIN_BARRIER_SHOT_SPEED, false);
         scene.add(spit);
 
         shotVector = new Vector2(-1, 0.3);
-        spit = new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED, false);
+        spit = new Spit(this, shotVector, CURTAIN_BARRIER_SHOT_SPEED, false);
+        scene.add(spit);
+    }
+
+    private function circleShot() {
+        var shotAngle = age * 4;
+        var shotVector = new Vector2(
+            Math.cos(shotAngle), Math.sin(shotAngle)
+        );
+        var spit = new Spit(this, shotVector, CIRCLE_SHOT_SPEED, false);
+        scene.add(spit);
+
+        //shotAngle = -age * Math.PI;
+        //shotVector = new Vector2(
+            //Math.cos(shotAngle), Math.sin(shotAngle)
+        //);
+        //spit = new Spit(this, shotVector, CIRCLE_SHOT_SPEED, false);
+        //scene.add(spit);
+
+        shotAngle = getAngleTowardsPlayer();
+        shotVector = new Vector2(
+            Math.cos(shotAngle), Math.sin(shotAngle)
+        );
+        spit = new Spit(this, shotVector, CIRCLE_SHOT_SPEED * 2, false);
         scene.add(spit);
     }
 
