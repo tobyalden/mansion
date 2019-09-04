@@ -37,6 +37,10 @@ class GrandJoker extends Enemy
     public static inline var ENRAGED_CIRCLE_PERIMETER_TIME = 7;
     public static inline var CIRCLE_SHOT_SPEED = 80;
 
+    public static inline var ENRAGE_SHOT_INTERVAL = 0.02;
+    public static inline var ENRAGE_SHOT_SPEED = 100;
+    public static inline var ENRAGE_SINGLE_ROTATION_DURATION = 10;
+
     private var sprite:Spritemap;
 
     private var preEnrage:Alarm;
@@ -59,6 +63,8 @@ class GrandJoker extends Enemy
 
     private var circlePerimeter:LinearPath;
     private var circleShotTimer:Alarm;
+
+    private var enrageShotTimer:Alarm;
 
     private var sfx:Map<String, Sfx>;
 
@@ -92,8 +98,7 @@ class GrandJoker extends Enemy
         });
         addTween(preEnrage);
 
-        currentPhase = HXP.choose("clock", "curtain");
-        currentPhase = "circle";
+        currentPhase = HXP.choose("clock", "curtain", "circle");
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -131,6 +136,19 @@ class GrandJoker extends Enemy
         });
         addTween(circleShotTimer);
 
+        preEnrage = new Alarm(PRE_ENRAGE_TIME);
+        preEnrage.onComplete.bind(function() {
+            age = 0;
+            enrageShotTimer.start();
+        });
+        addTween(preEnrage);
+
+        enrageShotTimer = new Alarm(ENRAGE_SHOT_INTERVAL, TweenType.Looping);
+        enrageShotTimer.onComplete.bind(function() {
+            enrageShot();
+        });
+        addTween(enrageShotTimer);
+
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
         ];
@@ -139,8 +157,9 @@ class GrandJoker extends Enemy
     private function generatePhaseLocations() {
         phaseLocations = [
             "clock" => new Vector2(screenCenter.x, screenCenter.y),
-            "curtain" => new Vector2(screenCenter.x, screenCenter.y - 95)
+            "curtain" => new Vector2(screenCenter.x, screenCenter.y - 95),
             // circle is set below
+            "enrage" => new Vector2(screenCenter.x, screenCenter.y)
         ];
         circlePerimeter = new LinearPath();
         var perimeterPoints = [
@@ -193,10 +212,12 @@ class GrandJoker extends Enemy
             }
             allPhases.remove(currentPhase);
             allPhases.remove("enrage");
+            if(currentPhase == "enrage") {
+                allPhases.remove("clock");
+            }
             currentPhase = allPhases[
                 Std.int(Math.floor(Math.random() * allPhases.length))
             ];
-            //currentPhase = "clock";
         }
     }
 
@@ -259,7 +280,20 @@ class GrandJoker extends Enemy
             }
         }
         else if(currentPhase == "enrage") {
-            // Do nothing
+            if(
+                enrageShotTimer.active
+                && age >= ENRAGE_SINGLE_ROTATION_DURATION * 2
+            ) {
+                preAdvancePhase();
+            }
+            else if(
+                !preEnrage.active
+                && !enrageShotTimer.active
+                && !preAdvancePhaseTimer.active
+            ) {
+                preEnrage.start();
+                sfx["enrage"].play();
+            }
         }
     }
 
@@ -383,6 +417,26 @@ class GrandJoker extends Enemy
             Math.cos(shotAngle), Math.sin(shotAngle)
         );
         spit = new Spit(this, shotVector, CIRCLE_SHOT_SPEED * 2, false);
+        scene.add(spit);
+    }
+
+    private function enrageShot() {
+        var shotAngle = -Math.PI / 2;
+        if(age < ENRAGE_SINGLE_ROTATION_DURATION) {
+            shotAngle += age * age;
+        }
+        else {
+            shotAngle += (
+                (ENRAGE_SINGLE_ROTATION_DURATION * 2 - age)
+                * (ENRAGE_SINGLE_ROTATION_DURATION * 2 - age)
+            );
+        }
+        var shotVector = new Vector2(
+            Math.cos(shotAngle), Math.sin(shotAngle)
+        );
+        var spit = new Spit(
+            this, shotVector, ENRAGE_SHOT_SPEED, false
+        );
         scene.add(spit);
     }
 
