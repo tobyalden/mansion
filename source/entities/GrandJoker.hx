@@ -84,7 +84,7 @@ class GrandJoker extends Enemy
         graphic = sprite;
         health = STARTING_HEALTH;
 
-        isEnraged = false;
+        isEnraged = true;
         enrageNextPhase = false;
 
         generatePhaseLocations();
@@ -93,7 +93,7 @@ class GrandJoker extends Enemy
         addTween(phaseRelocater);
 
         currentPhase = HXP.choose("clock", "curtain", "circle");
-        currentPhase = "curtain";
+        currentPhase = "clock";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -300,21 +300,28 @@ class GrandJoker extends Enemy
     }
 
     private function clockShot() {
+        var rotationSpeedMultiplier = isEnraged ? 1.25 : 1;
         var shotVector = new Vector2(0, -1);
-        shotVector.rotate(-age * Math.PI / 2);
+        shotVector.rotate(-age * Math.PI / 2 * rotationSpeedMultiplier);
         scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
 
         shotVector = new Vector2(0, -1);
-        shotVector.rotate(age * Math.PI / 3);
+        shotVector.rotate(age * Math.PI / 3 * rotationSpeedMultiplier);
         scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED / 2, false));
 
         var shotVector = new Vector2(0, -1);
-        shotVector.rotate(-age * Math.PI / 4);
+        shotVector.rotate(-age * Math.PI / 4 * rotationSpeedMultiplier);
         scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED / 2, false));
 
         shotVector = new Vector2(0, -1);
-        shotVector.rotate(age * Math.PI / 5);
-        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED * 1.5, false));
+        shotVector.rotate(age * Math.PI / 5 * rotationSpeedMultiplier);
+        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+
+        if(isEnraged) {
+            shotVector = new Vector2(0, -1);
+            shotVector.rotate(age * Math.PI / 1.5);
+            scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
+        }
     }
 
     private function curtainShot() {
@@ -331,7 +338,6 @@ class GrandJoker extends Enemy
             new Vector2(-50, 0),
             new Vector2(-25, 25)
         );
-        //for(i in -Std.int(boundPair.x)...Std.int(boundPair.y)) {
         for(i in -50...50) {
             var shotVector = new Vector2(0, 1);
             var spit = new Spit(this, shotVector, speed, false);
@@ -371,13 +377,6 @@ class GrandJoker extends Enemy
         );
         var spit = new Spit(this, shotVector, CIRCLE_SHOT_SPEED, false);
         scene.add(spit);
-
-        //shotAngle = -age * Math.PI;
-        //shotVector = new Vector2(
-            //Math.cos(shotAngle), Math.sin(shotAngle)
-        //);
-        //spit = new Spit(this, shotVector, CIRCLE_SHOT_SPEED, false);
-        //scene.add(spit);
 
         shotAngle = getAngleTowardsPlayer();
         shotVector = new Vector2(
