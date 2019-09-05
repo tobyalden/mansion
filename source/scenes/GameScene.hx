@@ -365,9 +365,6 @@ class GameScene extends Scene
         var entities = new Array<Entity>();
         allLevels = new Array<Level>();
         for (room in fastXml.node.rooms.nodes.room) {
-            trace('theres a room at ${room.att.x}, ${room.att.y}');
-            player.x = Std.parseInt(room.att.x) + 100;
-            player.y = Std.parseInt(room.att.y) + 100;
             var level = new Level(
                 Std.parseInt(room.att.x),
                 Std.parseInt(room.att.y),
@@ -376,10 +373,15 @@ class GameScene extends Scene
                 Std.parseInt(room.att.width),
                 Std.parseInt(room.att.height)
             );
-            currentLevel = level;
             level.updateGraphic();
             add(level);
             allLevels.push(level);
+        }
+        for (playerStart in fastXml.node.objects.nodes.player) {
+            player.x = Std.parseInt(playerStart.att.x);
+            player.y = Std.parseInt(playerStart.att.y);
+            currentLevel = getLevelFromPlayer();
+            break;
         }
     }
 
