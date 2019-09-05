@@ -66,7 +66,6 @@ class Follower extends Enemy {
         if(locationHistory.length > DISTANCE_BETWEEN_TAILS * NUMBER_OF_TAILS) {
             locationHistory.shift();
         }
-        trace('pushing ${newLocation}');
     }
 
     override public function die() {

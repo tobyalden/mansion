@@ -48,6 +48,7 @@ class Enemy extends Entity
         stunTimer = new Alarm(STUN_TIME, TweenType.Persist);
         addTween(stunTimer);
         isBoss = false;
+        startingHealth = -1;
     }
 
     override public function addTween(tween:Tween, start:Bool = false) {
@@ -82,7 +83,7 @@ class Enemy extends Entity
 
     override public function update() {
         graphic.color = stunTimer.active ? 0x000000 : 0xFFFFFF;
-        if(startingHealth == null) {
+        if(startingHealth == -1) {
             startingHealth = health;
         }
         if(!isOnSameLevelAsPlayer()) {
