@@ -21,9 +21,11 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 100;
+    public static inline var NUMBER_OF_ENEMIES = 75;
     public static inline var CAMERA_PAN_TIME = 1;
     public static inline var LOCK_CHANCE = 0.5;
+
+    public static var isProcedural = false;
 
     public var isLevelLocked(default, null):Bool;
     public var currentLevel(default, null):Level;
@@ -64,68 +66,77 @@ class GameScene extends Scene
         Key.define("restart", [Key.R]);
         Key.define("zoomout", [Key.Q]);
         isLevelLocked = false;
-        loadMaps(0);
-        placeLevels();
-        openSpots = new Array<IntPairWithLevel>();
-        for(level in allLevels) {
-            openSpots = openSpots.concat(level.openSpots);
-            addMask(level.pits, "pits", Std.int(level.x), Std.int(level.y));
-            add(new LockWalls(level.x, level.y, level));
-        }
-        HXP.shuffle(openSpots);
-        player = new Player(
-            start.x + PLAYFIELD_SIZE / 2 - 8 + 100,
-            start.y + PLAYFIELD_SIZE / 2 - 8 + 100
-        );
-        add(player);
-        //add(player.sword);
-        var boss = new GrandJoker(
-            start.x + PLAYFIELD_SIZE / 2,
-            start.y + PLAYFIELD_SIZE / 2
-        );
-        add(boss);
         allEnemies = new Array<Entity>();
-        for(i in 0...NUMBER_OF_ENEMIES) {
-            var enemySpot = getOpenSpot();
-            var enemies = [
-                new Stalker(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
-                new Seer(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
-                new Booster(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
-                new Follower(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
-                new Archer(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
-                new Wizard(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                ),
-                new Bouncer(
-                    enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
-                    enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
-                )
-            ];
-            var enemy = enemies[Random.randInt(enemies.length)];
-            add(enemy);
-            allEnemies.push(enemy);
-            enemySpot.level.enemies.push(enemy);
-            if(Type.getClass(enemy) == Follower) {
-                for(tail in cast(enemy, Follower).tails) {
-                    add(tail);
+        player = new Player(0, 0);
+        add(player);
+        if(isProcedural) {
+            loadMaps(0);
+            placeLevels();
+            openSpots = new Array<IntPairWithLevel>();
+            for(level in allLevels) {
+                openSpots = openSpots.concat(level.openSpots);
+                addMask(level.pits, "pits", Std.int(level.x), Std.int(level.y));
+                add(new LockWalls(level.x, level.y, level));
+            }
+            HXP.shuffle(openSpots);
+            player.x = start.x + PLAYFIELD_SIZE / 2 - 8 + 100;
+            player.y = start.y + PLAYFIELD_SIZE / 2 - 8 + 100;
+            //add(player.sword);
+            var boss = new GrandJoker(
+                start.x + PLAYFIELD_SIZE / 2,
+                start.y + PLAYFIELD_SIZE / 2
+            );
+            add(boss);
+            //add(boss.laser);
+            //for(ring in boss.rings) {
+                //add(ring);
+            //}
+            for(i in 0...NUMBER_OF_ENEMIES) {
+                var enemySpot = getOpenSpot();
+                var enemies = [
+                    new Stalker(
+                        enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                        enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                    ),
+                    new Seer(
+                        enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                        enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                    ),
+                    new Booster(
+                        enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                        enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                    ),
+                    new Follower(
+                        enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                        enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                    ),
+                    new Archer(
+                        enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                        enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                    ),
+                    new Wizard(
+                        enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                        enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                    ),
+                    new Bouncer(
+                        enemySpot.level.x + enemySpot.x * Level.TILE_SIZE,
+                        enemySpot.level.y + enemySpot.y * Level.TILE_SIZE
+                    )
+                ];
+                var enemy = enemies[Random.randInt(enemies.length)];
+                add(enemy);
+                allEnemies.push(enemy);
+                enemySpot.level.enemies.push(enemy);
+                if(Type.getClass(enemy) == Follower) {
+                    for(tail in cast(enemy, Follower).tails) {
+                        add(tail);
+                    }
                 }
             }
+            currentLevel = start;
+        }
+        else {
+            loadStaticLevel("mansion");
         }
         viewport = new Viewport(camera);
         add(viewport);
@@ -134,7 +145,6 @@ class GameScene extends Scene
         curtain.fadeIn();
         currentScreenX = Math.floor((player.centerX) / PLAYFIELD_SIZE);
         currentScreenY = Math.floor((player.centerY) / PLAYFIELD_SIZE);
-        currentLevel = start;
         cameraPanner = new LinearMotion();
         cameraPanner.onComplete.bind(function() {
             for(enemy in allEnemies) {
@@ -346,6 +356,31 @@ class GameScene extends Scene
         }
         onScreenBox.x = camera.x + 20;
         onScreenBox.y = camera.y + 20;
+    }
+
+    private function loadStaticLevel(levelName:String) {
+        var levelPath = 'levels/${levelName}.oel';
+        var xml = Xml.parse(Assets.getText(levelPath));
+        var fastXml = new haxe.xml.Fast(xml.firstElement());
+        var entities = new Array<Entity>();
+        allLevels = new Array<Level>();
+        for (room in fastXml.node.rooms.nodes.room) {
+            trace('theres a room at ${room.att.x}, ${room.att.y}');
+            player.x = Std.parseInt(room.att.x) + 100;
+            player.y = Std.parseInt(room.att.y) + 100;
+            var level = new Level(
+                Std.parseInt(room.att.x),
+                Std.parseInt(room.att.y),
+                "static",
+                levelName,
+                Std.parseInt(room.att.width),
+                Std.parseInt(room.att.height)
+            );
+            currentLevel = level;
+            level.updateGraphic();
+            add(level);
+            allLevels.push(level);
+        }
     }
 
     private function loadMaps(mapNumber:Int) {

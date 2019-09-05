@@ -42,11 +42,18 @@ class Level extends Entity {
     private var groundTiles:Tilemap;
     private var pitTiles:Tilemap;
 
-    public function new(x:Int, y:Int, levelType:String) {
+    public function new(
+        x:Int, y:Int, levelType:String,
+        // These optional attributes are only used for static levels
+        levelName:String = null, levelWidth:Int = null, levelHeight:Int = null
+    ) {
         super(x, y);
         this.levelType = levelType;
         type = "walls";
-        if(levelType == "room") {
+        if(levelType == "static") {
+            loadStaticLevel(levelName, levelWidth, levelHeight);
+        }
+        else if(levelType == "room") {
             loadLevel('${
                 Std.int(Math.floor(Random.random * NUMBER_OF_ROOMS))
             }');
@@ -65,7 +72,7 @@ class Level extends Entity {
             // levelType == "start"
             loadLevel('start');
         }
-        if(levelType != "start") {
+        if(levelType != "start" && levelType != "static") {
             if(Random.random < 0.5) {
                 flipHorizontally(walls);
                 flipHorizontally(pits);
@@ -76,8 +83,8 @@ class Level extends Entity {
             }
         }
         openSpots = new Array<IntPairWithLevel>();
-        mask = walls;
         enemies = new Array<Enemy>();
+        mask = walls;
     }
 
     public function getAliveEnemyCount() {
@@ -184,6 +191,62 @@ class Level extends Entity {
                 wallsToFlip.setTile(
                     tileX, wallsToFlip.rows - tileY - 1, tempTop
                 );
+            }
+        }
+    }
+
+    private function loadStaticLevel(
+        levelName:String, levelWidth:Int, levelHeight:Int
+    ) {
+        // Load geometry
+        var xml = Xml.parse(Assets.getText(
+            'levels/${levelName}.oel'
+        ));
+        var fastXml = new haxe.xml.Fast(xml.firstElement());
+        var wholeLevelWidth = Std.parseInt(fastXml.node.width.innerData);
+        var wholeLevelHeight = Std.parseInt(fastXml.node.height.innerData);
+        var wholeLevelWalls = new Grid(
+            wholeLevelWidth, wholeLevelHeight, TILE_SIZE, TILE_SIZE
+        );
+        for (r in fastXml.node.walls.nodes.rect) {
+            wholeLevelWalls.setRect(
+                Std.int(Std.parseInt(r.att.x) / TILE_SIZE),
+                Std.int(Std.parseInt(r.att.y) / TILE_SIZE),
+                Std.int(Std.parseInt(r.att.w) / TILE_SIZE),
+                Std.int(Std.parseInt(r.att.h) / TILE_SIZE)
+            );
+        }
+        var tileOffsetX = x / TILE_SIZE;
+        var tileOffsetY = y / TILE_SIZE;
+        walls = new Grid(
+            levelWidth, levelHeight, TILE_SIZE, TILE_SIZE
+        );
+        for(tileX in 0...walls.columns) {
+            for(tileY in 0...walls.rows) {
+                var wholeLevelTile = wholeLevelWalls.getTile(
+                    Std.int(tileOffsetX + tileX),
+                    Std.int(tileOffsetY + tileY)
+                );
+                walls.setTile(tileX, tileY, wholeLevelTile != null);
+            }
+        }
+
+        // Load pits
+        pits = new Grid(
+            wholeLevelWidth, wholeLevelHeight, TILE_SIZE, TILE_SIZE
+        );
+
+        lockWalls = new Grid(levelWidth, levelHeight, 8, 8);
+        for(tileX in 0...lockWalls.columns) {
+            for(tileY in 0...lockWalls.rows) {
+                if(
+                    tileX == 0
+                    || tileY == 0
+                    || tileX == lockWalls.columns - 1
+                    || tileY == lockWalls.rows - 1
+                ) {
+                    lockWalls.setTile(tileX, tileY);
+                }
             }
         }
     }

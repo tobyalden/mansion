@@ -71,6 +71,7 @@ class Player extends Entity
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
+        layer = -10;
         sword = new Sword(this);
         type = "player";
         name = "player";

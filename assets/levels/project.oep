@@ -1,14 +1,21 @@
-<project> 
-	<name>Memory</name> 
-	<settings> 
+<project>
+	<name>Mansion</name>
+	<settings>
 		<defaultWidth>320</defaultWidth>
 		<defaultHeight>320</defaultHeight>
-		<maxWidth>640</maxWidth>
-		<maxHeight>640</maxHeight>
-	</settings> 
-	<layers> 
+		<maxWidth>3200</maxWidth>
+		<maxHeight>3200</maxHeight>
+		<workingDirectory>../editorgfx</workingDirectory>
+	</settings>
+	<layers>
 		<grid name="walls" gridSize="16" exportAsObjects="true"/>
 		<grid name="optionalWalls" gridSize="16" exportAsObjects="true" color="#FFFF0000"/>
-	</layers> 
+		<objects name="rooms" gridSize="320"/>
+		<objects name="objects" gridSize="16"/>
+	</layers>
+	<objects>
+		<object name="room" image="room.png" width="320" height="320" resizableX="true" resizableY="true" tile="false"></object>
+		<object name="player" image="player.png" width="16" height="16"></object>
+	</objects>
 </project>
 
