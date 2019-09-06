@@ -53,11 +53,11 @@ class Viewport extends Entity
             player.stamina / Player.MAX_STAMINA * STAMINA_BAR_LENGTH
         );
         healthBar.clipRect = new Rectangle(0, 0, 25 * player.health, 25);
-        var _boss = cast(scene.getInstance("grandjoker"));
+        var _boss = cast(scene.getInstance("ringmaster"));
         if(_boss != null) {
-            var boss = cast(_boss, GrandJoker);
+            var boss = cast(_boss, RingMaster);
             bossHealthBar.width = (
-                boss.health / GrandJoker.STARTING_HEALTH
+                boss.health / RingMaster.STARTING_HEALTH
                 * STAMINA_BAR_LENGTH
             );
         }

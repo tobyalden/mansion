@@ -1,15 +1,47 @@
-- bosses (2 remaining)
-- non-procedural level loading
++ non-procedural level loading
+- bosses (1 remaining)
 - design mansion
+- save rooms
+- items
+- map
+- implement dialogue
+- thought console
+- write dialogue
+- write thoughts
 - music
 - all sfx
 - main menu
 - ending
-- bonfires
 - controller support
 - credits
-- dialogue
 - intro
-- items
-- map
 - graphics
+
+- Protag: Aria
+- Butler: Arthur
+- Aunts: Duessa, Munera
+- Mother: Eirena
+- Grandfather: Geryoneo
+
+Eirena: Hello, Aira.
+Aira: Hi Mom.
+Eirena: Have you been well? It's been too long.
+Aira: I'm all right. I'm here for the crown.
+Eirena: Do you really mean that? You know what that would mean for your grandfather - for the whole family.
+Aira: Mom, why did you let him give me a sorcerer's mark? Your own has caused so much pain...
+Eirena: It's tradition, Aira. It's our birthright. Can you only see the bad in it? Can't you see all its brought you, as well?
+Aira: The bad doesn't balance out the good, Mom. It taints it.
+Eirena: Aria...
+Aira: You know, I think you only say that because you don't want to face that pain yourself. That's why you let him do it - to prove to yourself it was okay. That what he did to you wasn't so bad.
+Eirena: I don't know what to say to that. We see things differently.
+Aira: I see clearly. I'm sorry it had to come to this.
+Eirena: I as well. Prepare yourself, daughter.
+
+Duessa: Well, the rebel child makes her appearance.
+Aira: Aunt Duessa. How have you been.
+Duessa: Cut the chat, Aira. I've been around a lot longer than you, and I can say what you're doing right now is pointless and selfish.
+Aira: Maybe the point is to be selfish for once.
+Duessa: Oh, it wouldn't be the first time. You've been a nasty little self-centered bitch since you popped out looking like a shriveled grape.
+Aira: Have you been drinking?
+Duessa: Oh, fuck off! You're an embarassment to this whole family!
+Aira: Jesus. Can we just fight already?

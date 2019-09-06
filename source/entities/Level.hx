@@ -208,6 +208,7 @@ class Level extends Entity {
         var wholeLevelWalls = new Grid(
             wholeLevelWidth, wholeLevelHeight, TILE_SIZE, TILE_SIZE
         );
+
         for (r in fastXml.node.walls.nodes.rect) {
             wholeLevelWalls.setRect(
                 Std.int(Std.parseInt(r.att.x) / TILE_SIZE),
@@ -232,9 +233,29 @@ class Level extends Entity {
         }
 
         // Load pits
+        var wholeLevelPits = new Grid(
+            wholeLevelWidth, wholeLevelHeight, TILE_SIZE, TILE_SIZE
+        );
+        for (r in fastXml.node.pits.nodes.rect) {
+            wholeLevelPits.setRect(
+                Std.int(Std.parseInt(r.att.x) / TILE_SIZE),
+                Std.int(Std.parseInt(r.att.y) / TILE_SIZE),
+                Std.int(Std.parseInt(r.att.w) / TILE_SIZE),
+                Std.int(Std.parseInt(r.att.h) / TILE_SIZE)
+            );
+        }
         pits = new Grid(
             wholeLevelWidth, wholeLevelHeight, TILE_SIZE, TILE_SIZE
         );
+        for(tileX in 0...pits.columns) {
+            for(tileY in 0...pits.rows) {
+                var wholeLevelPitTile = wholeLevelPits.getTile(
+                    Std.int(tileOffsetX + tileX),
+                    Std.int(tileOffsetY + tileY)
+                );
+                pits.setTile(tileX, tileY, wholeLevelPitTile != null);
+            }
+        }
 
         lockWalls = new Grid(levelWidth, levelHeight, 8, 8);
         for(tileX in 0...lockWalls.columns) {

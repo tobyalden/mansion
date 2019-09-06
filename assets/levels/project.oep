@@ -9,13 +9,21 @@
 	</settings>
 	<layers>
 		<grid name="walls" gridSize="16" exportAsObjects="true"/>
+		<grid name="pits" gridSize="16" exportAsObjects="true" color="#FFFF00FF"/>
 		<grid name="optionalWalls" gridSize="16" exportAsObjects="true" color="#FFFF0000"/>
 		<objects name="rooms" gridSize="320"/>
-		<objects name="objects" gridSize="16"/>
+		<objects name="objects" gridSize="8"/>
 	</layers>
 	<objects>
 		<object name="room" image="room.png" width="320" height="320" resizableX="true" resizableY="true" tile="false"></object>
 		<object name="player" image="player.png" width="16" height="16"></object>
+		<object name="stalker" image="stalker.png" width="24" height="24"></object>
+		<object name="archer" image="archer.png" width="24" height="24"></object>
+		<object name="bouncer" image="bouncer.png" width="24" height="24"></object>
+		<object name="follower" image="follower.png" width="24" height="24"></object>
+		<object name="seer" image="seer.png" width="24" height="24"></object>
+		<object name="wizard" image="wizard.png" width="24" height="24"></object>
+		<object name="booster" image="booster.png" width="24" height="24"></object>
 	</objects>
 </project>
 

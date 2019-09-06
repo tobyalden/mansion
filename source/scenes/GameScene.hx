@@ -82,15 +82,15 @@ class GameScene extends Scene
             player.x = start.x + PLAYFIELD_SIZE / 2 - 8 + 100;
             player.y = start.y + PLAYFIELD_SIZE / 2 - 8 + 100;
             //add(player.sword);
-            var boss = new GrandJoker(
+            var boss = new RingMaster(
                 start.x + PLAYFIELD_SIZE / 2,
                 start.y + PLAYFIELD_SIZE / 2
             );
             add(boss);
             //add(boss.laser);
-            //for(ring in boss.rings) {
-                //add(ring);
-            //}
+            for(ring in boss.rings) {
+                add(ring);
+            }
             for(i in 0...NUMBER_OF_ENEMIES) {
                 var enemySpot = getOpenSpot();
                 var enemies = [
@@ -376,12 +376,70 @@ class GameScene extends Scene
             level.updateGraphic();
             add(level);
             allLevels.push(level);
+            addMask(level.pits, "pits", Std.int(level.x), Std.int(level.y));
+            add(new LockWalls(level.x, level.y, level));
         }
-        for (playerStart in fastXml.node.objects.nodes.player) {
+        for(playerStart in fastXml.node.objects.nodes.player) {
             player.x = Std.parseInt(playerStart.att.x);
             player.y = Std.parseInt(playerStart.att.y);
             currentLevel = getLevelFromPlayer();
             break;
+        }
+        for(stalker in fastXml.node.objects.nodes.stalker) {
+            var stalker = new Stalker(
+                Std.parseInt(stalker.att.x),
+                Std.parseInt(stalker.att.y)
+            );
+            allEnemies.push(stalker);
+        }
+        for(archer in fastXml.node.objects.nodes.archer) {
+            var archer = new Archer(
+                Std.parseInt(archer.att.x),
+                Std.parseInt(archer.att.y)
+            );
+            allEnemies.push(archer);
+        }
+        for(bouncer in fastXml.node.objects.nodes.bouncer) {
+            var bouncer = new Bouncer(
+                Std.parseInt(bouncer.att.x),
+                Std.parseInt(bouncer.att.y)
+            );
+            allEnemies.push(bouncer);
+        }
+        for(follower in fastXml.node.objects.nodes.follower) {
+            var follower = new Follower(
+                Std.parseInt(follower.att.x),
+                Std.parseInt(follower.att.y)
+            );
+            allEnemies.push(follower);
+            for(tail in follower.tails) {
+                add(tail);
+            }
+        }
+        for(seer in fastXml.node.objects.nodes.seer) {
+            var seer = new Seer(
+                Std.parseInt(seer.att.x),
+                Std.parseInt(seer.att.y)
+            );
+            allEnemies.push(seer);
+        }
+        for(wizard in fastXml.node.objects.nodes.wizard) {
+            var wizard = new Wizard(
+                Std.parseInt(wizard.att.x),
+                Std.parseInt(wizard.att.y)
+            );
+            allEnemies.push(wizard);
+        }
+        for(booster in fastXml.node.objects.nodes.booster) {
+            var booster = new Booster(
+                Std.parseInt(booster.att.x),
+                Std.parseInt(booster.att.y)
+            );
+            allEnemies.push(booster);
+        }
+        for(enemy in allEnemies) {
+            add(enemy);
+            getLevelFromEntity(enemy).enemies.push(cast(enemy, Enemy));
         }
     }
 
