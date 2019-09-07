@@ -3,8 +3,8 @@
 	<settings>
 		<defaultWidth>320</defaultWidth>
 		<defaultHeight>320</defaultHeight>
-		<maxWidth>3200</maxWidth>
-		<maxHeight>3200</maxHeight>
+		<maxWidth>3520</maxWidth>
+		<maxHeight>3520</maxHeight>
 		<workingDirectory>../editorgfx</workingDirectory>
 	</settings>
 	<layers>
@@ -15,7 +15,13 @@
 		<objects name="objects" gridSize="8"/>
 	</layers>
 	<objects>
-		<object name="room" image="room.png" width="320" height="320" resizableX="true" resizableY="true" tile="false"></object>
+		<object name="room" image="room.png" width="320" height="320" resizableX="true" resizableY="true" tile="false">
+			<values>
+				<boolean name="alwaysLock" default="false"/>
+				<boolean name="neverLock" default="false"/>
+			</values>
+        </object>
+		<object name="saveroom" image="saveroom.png" width="320" height="320"></object>
 		<object name="player" image="player.png" width="16" height="16"></object>
 		<object name="stalker" image="stalker.png" width="24" height="24"></object>
 		<object name="archer" image="archer.png" width="24" height="24"></object>

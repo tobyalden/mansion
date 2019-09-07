@@ -85,13 +85,23 @@ class Player extends Entity
         boundingBox = new Hitbox(16, 16);
         mask = boundingBox;
         sprite = new Spritemap("graphics/player.png", 16, 16);
-        sprite.add("idle", [0]);
-        sprite.add("roll", [1]);
-        sprite.add("stun", [2]);
-        sprite.add("cast", [3]);
-        sprite.add("run", [4]);
-        sprite.add("dead", [5]);
-        sprite.add("fall", [6, 7, 8, 9], 12, false);
+        var runAnimationSpeed = 6;
+        var rollAnimationSpeed = 8;
+        sprite.add("cast_down", [0]);
+        sprite.add("roll_down", [1, 2], rollAnimationSpeed, false);
+        sprite.add("idle_down", [3]);
+        sprite.add("walk_down", [4, 3, 5, 3], runAnimationSpeed);
+        sprite.add("cast_up", [6]);
+        sprite.add("roll_up", [7, 8], rollAnimationSpeed, false);
+        sprite.add("idle_up", [9]);
+        sprite.add("walk_up", [10, 9, 11, 9], runAnimationSpeed);
+        sprite.add("cast_right", [12]);
+        sprite.add("roll_right", [13, 14], rollAnimationSpeed, false);
+        sprite.add("idle_right", [15]);
+        sprite.add("walk_right", [16, 15, 17, 15], runAnimationSpeed);
+        sprite.add("stun", [18]);
+        sprite.add("fall", [18, 19, 20, 22], 8, false);
+        sprite.add("dead", [21]);
         graphic = sprite;
         healSigil = new Image("graphics/healsigil.png");
         addGraphic(healSigil);
@@ -505,6 +515,9 @@ class Player extends Entity
     }
 
     private function animation() {
+        if(!stunCooldown.active) {
+            sprite.flipX = facing == "left";
+        }
         if(isFalling) {
             // Do nothing
         }
@@ -512,19 +525,39 @@ class Player extends Entity
             sprite.play("dead");
         }
         else if(castCooldown.active) {
-            sprite.play("cast");
+            if(facing == "left") {
+                sprite.play("cast_right");
+            }
+            else {
+                sprite.play('cast_${facing}');
+            }
         }
         else if(stunCooldown.active) {
             sprite.play("stun");
         }
         else if(rollCooldown.active) {
-            sprite.play("roll");
+            if(facing == "left") {
+                sprite.play("roll_right");
+            }
+            else {
+                sprite.play('roll_${facing}');
+            }
         }
-        else if(isRunning) {
-            sprite.play("run");
+        else if(velocity.length > 0) {
+            if(facing == "left") {
+                sprite.play("walk_right");
+            }
+            else {
+                sprite.play('walk_${facing}');
+            }
         }
         else {
-            sprite.play("idle");
+            if(facing == "left") {
+                sprite.play("idle_right");
+            }
+            else {
+                sprite.play('idle_${facing}');
+            }
         }
     }
 }
