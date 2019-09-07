@@ -3,8 +3,8 @@
 	<settings>
 		<defaultWidth>320</defaultWidth>
 		<defaultHeight>320</defaultHeight>
-		<maxWidth>3520</maxWidth>
-		<maxHeight>3520</maxHeight>
+		<maxWidth>6400</maxWidth>
+		<maxHeight>6400</maxHeight>
 		<workingDirectory>../editorgfx</workingDirectory>
 	</settings>
 	<layers>

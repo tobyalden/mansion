@@ -8,6 +8,7 @@
 - thought console
 - write dialogue
 - write thoughts
+- nymph
 - music
 - all sfx
 - main menu
