@@ -29,20 +29,21 @@ class GameScene extends Scene
 
     public var isLevelLocked(default, null):Bool;
     public var currentLevel(default, null):Level;
+    public var currentScreenX(default, null):Int;
+    public var currentScreenY(default, null):Int;
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
     private var shaftMapBlueprint:Grid;
     private var startMapBlueprint:Grid;
     private var allBlueprint:Grid;
-    private var map:Grid;
+    private var displayMap:DisplayMap;
+    private var proceduralPlacementMap:Grid;
     private var allLevels:Array<Level>;
     private var player:Player;
     private var viewport:Viewport;
     private var start:Level;
     private var openSpots:Array<IntPairWithLevel>;
     private var curtain:Curtain;
-    private var currentScreenX:Int;
-    private var currentScreenY:Int;
     private var cameraPanner:LinearMotion;
     private var playerPusher:LinearMotion;
     private var allEnemies:Array<Entity>;
@@ -364,6 +365,23 @@ class GameScene extends Scene
         var fastXml = new haxe.xml.Fast(xml.firstElement());
         var entities = new Array<Entity>();
         allLevels = new Array<Level>();
+        var wholeLevelWidth = Std.parseInt(fastXml.node.width.innerData);
+        var wholeLevelHeight = Std.parseInt(fastXml.node.height.innerData);
+        var fullLayout = new Grid(
+            Std.int(wholeLevelWidth / Level.TILE_SIZE),
+            Std.int(wholeLevelHeight / Level.TILE_SIZE),
+            DisplayMap.TILE_SIZE, DisplayMap.TILE_SIZE
+        );
+        for (r in fastXml.node.walls.nodes.rect) {
+            fullLayout.setRect(
+                Std.int(Std.parseInt(r.att.x) / Level.TILE_SIZE),
+                Std.int(Std.parseInt(r.att.y) / Level.TILE_SIZE),
+                Std.int(Std.parseInt(r.att.w) / Level.TILE_SIZE),
+                Std.int(Std.parseInt(r.att.h) / Level.TILE_SIZE)
+            );
+        }
+        displayMap = new DisplayMap(fullLayout, camera);
+        add(displayMap);
         for (room in fastXml.node.rooms.nodes.room) {
             var level = new Level(
                 Std.parseInt(room.att.x),
@@ -437,6 +455,31 @@ class GameScene extends Scene
             );
             allEnemies.push(booster);
         }
+        for(superWizard in fastXml.node.objects.nodes.superwizard) {
+            var superWizard = new SuperWizard(
+                Std.parseInt(superWizard.att.x),
+                Std.parseInt(superWizard.att.y)
+            );
+            allEnemies.push(superWizard);
+            add(superWizard.laser);
+        }
+        for(ringMaster in fastXml.node.objects.nodes.ringmaster) {
+            var ringMaster = new RingMaster(
+                Std.parseInt(ringMaster.att.x),
+                Std.parseInt(ringMaster.att.y)
+            );
+            allEnemies.push(ringMaster);
+            for(ring in ringMaster.rings) {
+                add(ring);
+            }
+        }
+        for(grandJoker in fastXml.node.objects.nodes.grandjoker) {
+            var grandJoker = new SuperWizard(
+                Std.parseInt(grandJoker.att.x),
+                Std.parseInt(grandJoker.att.y)
+            );
+            allEnemies.push(grandJoker);
+        }
         for(enemy in allEnemies) {
             add(enemy);
             getLevelFromEntity(enemy).enemies.push(cast(enemy, Enemy));
@@ -449,7 +492,9 @@ class GameScene extends Scene
         var fastXml = new haxe.xml.Fast(xml.firstElement());
         var mapWidth = Std.parseInt(fastXml.node.width.innerData);
         var mapHeight = Std.parseInt(fastXml.node.height.innerData);
-        map = new Grid(mapWidth, mapHeight, Level.TILE_SIZE, Level.TILE_SIZE);
+        proceduralPlacementMap = new Grid(
+            mapWidth, mapHeight, Level.TILE_SIZE, Level.TILE_SIZE
+        );
         roomMapBlueprint = new Grid(
             mapWidth, mapHeight, Level.TILE_SIZE, Level.TILE_SIZE
         );
@@ -565,7 +610,7 @@ class GameScene extends Scene
                 for(tileY in 0...mapBlueprint.rows) {
                     if(
                         mapBlueprint.getTile(tileX, tileY)
-                        && !map.getTile(tileX, tileY)
+                        && !proceduralPlacementMap.getTile(tileX, tileY)
                     ) {
                         var canPlace = false;
                         while(!canPlace) {
@@ -584,7 +629,7 @@ class GameScene extends Scene
                             for(checkX in 0...levelWidth) {
                                 for(checkY in 0...levelHeight) {
                                     if(
-                                        map.getTile(
+                                        proceduralPlacementMap.getTile(
                                             tileX + checkX, tileY + checkY
                                         )
                                         || !mapBlueprint.getTile(
@@ -598,7 +643,7 @@ class GameScene extends Scene
                             if(canPlace) {
                                 for(checkX in 0...levelWidth) {
                                     for(checkY in 0...levelHeight) {
-                                        map.setTile(
+                                        proceduralPlacementMap.setTile(
                                             tileX + checkX, tileY + checkY
                                         );
                                         if(level.levelType != "start") {

@@ -1,19 +1,22 @@
 + non-procedural level loading
-- bosses (1 remaining)
-- design mansion
-- save rooms
-- items
++ design mansion
 - map
-- implement dialogue
+- flasks
+- controller support
 - thought console
+
+- main menu
+- implement dialogue
+- save rooms
+- final boss
+- revise mansion
+- pieces of heart
 - write dialogue
 - write thoughts
 - nymph
 - music
 - all sfx
-- main menu
 - ending
-- controller support
 - credits
 - intro
 - graphics
