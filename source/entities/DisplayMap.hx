@@ -18,6 +18,7 @@ class DisplayMap extends Entity
 
     private var fullLayout:Grid;
     private var fullLayoutTiles:Tilemap;
+    private var revealedTiles:Tilemap;
     private var playerIndicator:Spritemap;
 
     public function new(fullLayout:Grid, sceneCamera:Camera) {
@@ -27,6 +28,12 @@ class DisplayMap extends Entity
         layer = -999;
         followCamera = sceneCamera;
         fullLayoutTiles = new Tilemap(
+            "graphics/displaymaptiles.png",
+            fullLayout.columns * TILE_SIZE,
+            fullLayout.rows * TILE_SIZE,
+            TILE_SIZE, TILE_SIZE
+        );
+        revealedTiles = new Tilemap(
             "graphics/displaymaptiles.png",
             fullLayout.columns * TILE_SIZE,
             fullLayout.rows * TILE_SIZE,
@@ -46,10 +53,15 @@ class DisplayMap extends Entity
         playerIndicator.add("idle", [0, 1], 4);
         playerIndicator.play("idle");
 
+
         addGraphic(background);
         fullLayoutTiles.x = (background.width - fullLayoutTiles.width) / 2;
         fullLayoutTiles.y = (background.height - fullLayoutTiles.height) / 2;
-        addGraphic(fullLayoutTiles);
+        revealedTiles.x = (background.width - fullLayoutTiles.width) / 2;
+        revealedTiles.y = (background.height - fullLayoutTiles.height) / 2;
+        //fullLayoutTiles.alpha = 0.4;
+        //addGraphic(fullLayoutTiles);
+        addGraphic(revealedTiles);
         addGraphic(playerIndicator);
         graphic.x = 20;
         graphic.y = 20;
@@ -64,6 +76,15 @@ class DisplayMap extends Entity
         playerIndicator.y = (
             gameScene.currentScreenY * 20 + fullLayoutTiles.y - 2
         );
+        for(tileX in 0...20) {
+            for(tileY in 0...20) {
+                var revealedTileX = gameScene.currentScreenX * 20 + tileX;
+                var revealedTileY = gameScene.currentScreenY * 20 + tileY;
+                if(fullLayout.getTile(revealedTileX, revealedTileY)) {
+                    revealedTiles.setTile(revealedTileX, revealedTileY, 1);
+                }
+            }
+        }
         super.update();
     }
 }
