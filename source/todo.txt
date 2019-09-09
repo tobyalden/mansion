@@ -1,10 +1,11 @@
 + non-procedural level loading
 + design mansion
+
 + map
 + flasks
-- controller support
-- thought console
++ controller support
 
+- thought console
 - main menu
 - implement dialogue
 - save rooms (don't forget to save/load map!)
