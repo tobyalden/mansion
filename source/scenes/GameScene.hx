@@ -11,6 +11,7 @@ import haxepunk.tweens.motion.*;
 import haxepunk.utils.*;
 import entities.*;
 import entities.Level;
+import entities.DialogBox;
 import openfl.Assets;
 
 // TODO: Maybe doors lock on room enter 50% of the time?
@@ -31,6 +32,7 @@ class GameScene extends Scene
     public var currentLevel(default, null):Level;
     public var currentScreenX(default, null):Int;
     public var currentScreenY(default, null):Int;
+    public var isDialogMode(default, null):Bool;
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
     private var shaftMapBlueprint:Grid;
@@ -40,6 +42,7 @@ class GameScene extends Scene
     private var proceduralPlacementMap:Grid;
     private var allLevels:Array<Level>;
     private var player:Player;
+    private var dialogBox:DialogBox;
     private var viewport:Viewport;
     private var start:Level;
     private var openSpots:Array<IntPairWithLevel>;
@@ -63,6 +66,11 @@ class GameScene extends Scene
         );
         onScreenBox.layer = -999999;
         add(onScreenBox);
+
+        isDialogMode = false;
+
+        dialogBox = new DialogBox(camera);
+        add(dialogBox);
 
         Key.define("restart", [Key.R]);
         Key.define("zoomout", [Key.Q]);
@@ -158,6 +166,16 @@ class GameScene extends Scene
             player.cancelRoll();
         });
         addTween(playerPusher);
+    }
+
+    public function converse(conversation:NPCConversation) {
+        isDialogMode = true;
+        dialogBox.loadConversation(conversation);
+        dialogBox.fadeIn();
+    }
+
+    public function endConversation() {
+        isDialogMode = false;
     }
 
     public function onDeath() {
@@ -357,6 +375,7 @@ class GameScene extends Scene
         }
         onScreenBox.x = camera.x + 20;
         onScreenBox.y = camera.y + 20;
+        debug();
     }
 
     private function loadStaticLevel(levelName:String) {
@@ -669,5 +688,25 @@ class GameScene extends Scene
             }
             count++;
         }
+    }
+
+    private function debug() {
+        if(Main.inputPressed("testdialog")) {
+            var json:DialogFile = haxe.Json.parse(
+                Assets.getText('dialog/test.json')
+            );
+            var conversation = loadConversation(json);
+            converse(conversation);
+        }
+    }
+
+    private function loadConversation(json:DialogFile) {
+        var conversation = new NPCConversation();
+        for(jsonLine in json.conversation) {
+            conversation.push({
+                portrait: jsonLine.portrait, text: jsonLine.text
+            });
+        }
+        return conversation;
     }
 }

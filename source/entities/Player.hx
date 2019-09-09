@@ -274,6 +274,7 @@ class Player extends Entity
             && !knockbackTimer.active
             && !isDead
             && !isFalling
+            && !cast(scene, GameScene).isDialogMode
         );
     }
 
@@ -286,6 +287,10 @@ class Player extends Entity
                 velocity.x = 0;
                 velocity.y = 0;
             }
+        }
+        else if(cast(scene, GameScene).isDialogMode) {
+            velocity.x = 0;
+            velocity.y = 0;
         }
         else if(knockbackTimer.active || isFalling) {
             // Do nothing
@@ -510,7 +515,15 @@ class Player extends Entity
         if(!stunCooldown.active) {
             sprite.flipX = facing == "left";
         }
-        if(isFalling) {
+        if(cast(scene, GameScene).isDialogMode) {
+            if(facing == "left") {
+                sprite.play("idle_right");
+            }
+            else {
+                sprite.play('idle_${facing}');
+            }
+        }
+        else if(isFalling) {
             // Do nothing
         }
         else if(isDead) {
