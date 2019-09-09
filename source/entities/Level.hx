@@ -224,7 +224,7 @@ class Level extends Entity {
         );
         for(tileX in 0...walls.columns) {
             for(tileY in 0...walls.rows) {
-                var wholeLevelTile = wholeLevelWalls.getTile(
+                var wholeLevelTile:Null<Bool> = wholeLevelWalls.getTile(
                     Std.int(tileOffsetX + tileX),
                     Std.int(tileOffsetY + tileY)
                 );
@@ -249,7 +249,7 @@ class Level extends Entity {
         );
         for(tileX in 0...pits.columns) {
             for(tileY in 0...pits.rows) {
-                var wholeLevelPitTile = wholeLevelPits.getTile(
+                var wholeLevelPitTile:Null<Bool> = wholeLevelPits.getTile(
                     Std.int(tileOffsetX + tileX),
                     Std.int(tileOffsetY + tileY)
                 );

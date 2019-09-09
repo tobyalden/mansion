@@ -1,12 +1,12 @@
 {
     "conversation": [
         {
-            "portrait": "momsilhouette",
-            "text": "MAYA! DINNER'S READY!"
+            "portrait": "mc",
+            "text": "This is a test of the dialogue system."
         },
         {
-            "portrait": "mayahouseangry",
-            "text": "I'M COMING!"
+            "portrait": "mc",
+            "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
         }
     ]
 }
