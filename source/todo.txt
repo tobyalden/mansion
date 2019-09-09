@@ -1,13 +1,13 @@
 + non-procedural level loading
 + design mansion
-- map
++ map
 - flasks
 - controller support
 - thought console
 
 - main menu
 - implement dialogue
-- save rooms
+- save rooms (don't forget to save/load map!)
 - final boss
 - revise mansion
 - pieces of heart

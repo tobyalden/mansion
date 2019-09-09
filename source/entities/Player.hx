@@ -19,7 +19,7 @@ class Player extends Entity
     public static inline var ROLL_SPEED = 350;
     public static inline var ROLL_TIME = 0.25;
     public static inline var STUN_TIME = 0.3;
-    public static inline var CAST_COOLDOWN = 0.4;
+    public static inline var CAST_COOLDOWN = 0.2;
     public static inline var HEAL_TIME = 2.5;
 
     public static inline var MAX_STAMINA = 125;
@@ -41,11 +41,13 @@ class Player extends Entity
     public static inline var DEATH_DECCEL = 0.95;
 
     public static inline var PITFALL_RESET_TIME = 1;
+    public static inline var STARTING_NUMBER_OF_FLASKS = 3;
 
     public var stamina(default, null):Float;
     public var health(default, null):Int;
     public var sword(default, null):Sword;
     public var facing(default, null):String;
+    public var flaskCount(default, null):Int;
     private var velocity:Vector2;
     private var rollCooldown:Alarm;
     private var stunCooldown:Alarm;
@@ -136,6 +138,7 @@ class Player extends Entity
             "fall" => new Sfx("audio/fall.wav")
         ];
         facing = "up";
+        flaskCount = STARTING_NUMBER_OF_FLASKS;
         isRunning = false;
         stamina = MAX_STAMINA;
         health = MAX_HEALTH;
@@ -167,6 +170,7 @@ class Player extends Entity
         healTimer = new Alarm(HEAL_TIME);
         healTimer.onComplete.bind(function() {
             health += 1;
+            flaskCount -= 1;
         });
         addTween(healTimer);
     }
@@ -191,7 +195,7 @@ class Player extends Entity
         if(Input.pressed("sword")) {
             sword.swing();
         }
-        if(Input.check("cast") && canControl() && stamina >= CAST_COST) {
+        if(Input.pressed("cast") && (canControl() || castCooldown.percent > 0.5) && stamina >= CAST_COST) {
             stamina -= CAST_COST;
             staminaRecoveryDelay.start();
             castSpell();
@@ -233,7 +237,7 @@ class Player extends Entity
         }
 
         if(canControl() && velocity.length == 0) {
-            if(!healTimer.active && health < MAX_HEALTH) {
+            if(!healTimer.active && health < MAX_HEALTH && flaskCount > 0) {
                 healTimer.start();
             }
         }
