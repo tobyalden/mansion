@@ -23,7 +23,6 @@ class DisplayMap extends Entity
 
     public function new(fullLayout:Grid, sceneCamera:Camera) {
         super();
-        Key.define("showmap", [Key.TAB, Key.M]);
         this.fullLayout = fullLayout;
         layer = -999;
         followCamera = sceneCamera;
@@ -68,7 +67,7 @@ class DisplayMap extends Entity
     }
 
     override public function update() {
-        visible = Input.check("showmap");
+        visible = Main.inputCheck("showmap");
         var gameScene = cast(scene, GameScene);
         playerIndicator.x = (
             gameScene.currentScreenX * 20 + fullLayoutTiles.x - 2

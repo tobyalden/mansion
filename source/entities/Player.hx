@@ -45,7 +45,6 @@ class Player extends Entity
 
     public var stamina(default, null):Float;
     public var health(default, null):Int;
-    public var sword(default, null):Sword;
     public var facing(default, null):String;
     public var flaskCount(default, null):Int;
     private var velocity:Vector2;
@@ -74,16 +73,8 @@ class Player extends Entity
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
         layer = -10;
-        sword = new Sword(this);
         type = "player";
         name = "player";
-        Key.define("up", [Key.UP, Key.I]);
-        Key.define("down", [Key.DOWN, Key.K]);
-        Key.define("left", [Key.LEFT, Key.J]);
-        Key.define("right", [Key.RIGHT, Key.L]);
-        Key.define("roll", [Key.Z]);
-        Key.define("cast", [Key.X]);
-        Key.define("sword", [Key.C]);
         boundingBox = new Hitbox(16, 16);
         mask = boundingBox;
         sprite = new Spritemap("graphics/player.png", 16, 16);
@@ -192,10 +183,7 @@ class Player extends Entity
     }
 
     override public function update() {
-        if(Input.pressed("sword")) {
-            sword.swing();
-        }
-        if(Input.pressed("cast") && (canControl() || castCooldown.percent > 0.5) && stamina >= CAST_COST) {
+        if(Main.inputPressed("cast") && (canControl() || castCooldown.percent > 0.5) && stamina >= CAST_COST) {
             stamina -= CAST_COST;
             staminaRecoveryDelay.start();
             castSpell();
@@ -303,7 +291,7 @@ class Player extends Entity
             // Do nothing
         }
         else if(
-            Input.pressed("roll")
+            Main.inputPressed("roll")
             && stamina >= ROLL_COST
             && (canControl() || castCooldown.active)
         ) {
@@ -314,10 +302,10 @@ class Player extends Entity
             sfx['roll${HXP.choose(1, 2, 3)}'].play();
             rollCooldown.start();
             castCooldown.active = false;
-            if(Input.check("left")) {
+            if(Main.inputCheck("left")) {
                 velocity.x = -1;
             }
-            else if(Input.check("right")) {
+            else if(Main.inputCheck("right")) {
                 velocity.x = 1;
             }
             else if(facing == "left") {
@@ -326,10 +314,10 @@ class Player extends Entity
             else if(facing == "right") {
                 velocity.x = 1;
             }
-            if(Input.check("up")) {
+            if(Main.inputCheck("up")) {
                 velocity.y = -1;
             }
-            else if(Input.check("down")) {
+            else if(Main.inputCheck("down")) {
                 velocity.y = 1;
             }
             else if(facing == "up") {
@@ -341,50 +329,50 @@ class Player extends Entity
         }
         else if(rollCooldown.active) {
             velocity.normalize(ROLL_SPEED);
-            if(Input.check("left")) {
+            if(Main.inputCheck("left")) {
                 facing = "left";
             }
-            else if(Input.check("right")) {
+            else if(Main.inputCheck("right")) {
                 facing = "right";
             }
-            if(Input.check("up")) {
+            if(Main.inputCheck("up")) {
                 facing = "up";
             }
-            else if(Input.check("down")) {
+            else if(Main.inputCheck("down")) {
                 facing = "down";
             }
         }
         else if(!canControl()) {
-            if(Input.check("left")) {
+            if(Main.inputCheck("left")) {
                 facing = "left";
             }
-            else if(Input.check("right")) {
+            else if(Main.inputCheck("right")) {
                 facing = "right";
             }
-            if(Input.check("up")) {
+            if(Main.inputCheck("up")) {
                 facing = "up";
             }
-            else if(Input.check("down")) {
+            else if(Main.inputCheck("down")) {
                 facing = "down";
             }
         }
         else {
-            if(Input.check("left")) {
+            if(Main.inputCheck("left")) {
                 velocity.x = -1;
                 facing = "left";
             }
-            else if(Input.check("right")) {
+            else if(Main.inputCheck("right")) {
                 velocity.x = 1;
                 facing = "right";
             }
             else {
                 velocity.x = 0;
             }
-            if(Input.check("up")) {
+            if(Main.inputCheck("up")) {
                 velocity.y = -1;
                 facing = "up";
             }
-            else if(Input.check("down")) {
+            else if(Main.inputCheck("down")) {
                 velocity.y = 1;
                 facing = "down";
             }
@@ -392,7 +380,7 @@ class Player extends Entity
                 velocity.y = 0;
             }
             var speed = SPEED;
-            if(!Input.check("roll") || stamina <= 0) {
+            if(!Main.inputCheck("roll") || stamina <= 0) {
                 isRunning = false;
             }
             if(isRunning) {
