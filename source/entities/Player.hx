@@ -52,6 +52,7 @@ class Player extends Entity
     private var stunCooldown:Alarm;
     private var castCooldown:Alarm;
     private var sprite:Spritemap;
+    private var shadow:Image;
     private var sfx:Map<String, Sfx>;
     private var isRunning:Bool;
     private var staminaRecoveryDelay:Alarm;
@@ -95,7 +96,9 @@ class Player extends Entity
         sprite.add("stun", [18]);
         sprite.add("fall", [18, 19, 20, 22], 8, false);
         sprite.add("dead", [21]);
-        graphic = sprite;
+        shadow = new Spritemap("graphics/shadow.png", 16, 16);
+        addGraphic(shadow);
+        addGraphic(sprite);
         healSigil = new Image("graphics/healsigil.png");
         addGraphic(healSigil);
         velocity = new Vector2();
@@ -512,6 +515,8 @@ class Player extends Entity
     }
 
     private function animation() {
+        sprite.y = rollCooldown.active ? -5 : 0;
+        shadow.visible = rollCooldown.active;
         if(!stunCooldown.active) {
             sprite.flipX = facing == "left";
         }
