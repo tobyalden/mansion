@@ -22,11 +22,11 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var PLAYFIELD_SIZE = 320;
-    public static inline var NUMBER_OF_ENEMIES = 75;
+    public static inline var NUMBER_OF_ENEMIES = 150;
     public static inline var CAMERA_PAN_TIME = 1;
     public static inline var LOCK_CHANCE = 0.5;
 
-    public static var isProcedural = false;
+    public static var isProcedural = true;
 
     public var isLevelLocked(default, null):Bool;
     public var currentLevel(default, null):Level;

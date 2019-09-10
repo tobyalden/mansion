@@ -4,23 +4,24 @@
 + map
 + flasks
 + controller support
++ implement dialogue
 
 - thought console
 - main menu
-- implement dialogue
 - save rooms (don't forget to save/load map!)
 - final boss
 - revise mansion
-- pieces of heart
 - write dialogue
 - write thoughts
 - nymph
 - music
-- all sfx
 - ending
 - credits
 - intro
-- graphics
+~ all sfx
+~ graphics
+
+- pieces of heart
 
 - Protag: Aria
 - Butler: Arthur

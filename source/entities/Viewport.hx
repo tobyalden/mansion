@@ -9,10 +9,14 @@ import haxepunk.math.*;
 class Viewport extends Entity
 {
     public static inline var BOSS_HEALTH_BAR_LENGTH = 200;
+    public static inline var THOUGHT_CONSOLE_WIDTH = 236;
+    public static inline var THOUGHT_CONSOLE_HEIGHT = 100;
 
     private var healthBar:Image;
     private var bossHealthBar:ColoredRect;
     private var flaskCount:Text;
+    private var thoughtConsole:Text;
+    private var thoughtConsoleBox:ColoredRect;
 
     public function new(sceneCamera:Camera) {
         super();
@@ -33,6 +37,18 @@ class Viewport extends Entity
 
         flaskCount = new Text("", 382, 150);
         addGraphic(flaskCount);
+
+        //thoughtConsoleBox = new ColoredRect(
+            //THOUGHT_CONSOLE_WIDTH, THOUGHT_CONSOLE_HEIGHT, 0x000000
+        //);
+        //thoughtConsoleBox.x = 370;
+        //thoughtConsoleBox.y = 200;
+        //addGraphic(thoughtConsoleBox);
+
+        //thoughtConsole = new Text(
+            //"I have many thoughts.",
+            //0, 0, THOUGHT_CONSOLE_WIDTH - 20, BOX_HEIGHT
+        //);
     }
 
     override public function update() {

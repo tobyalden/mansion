@@ -20,6 +20,7 @@ class Player extends Entity
     public static inline var ROLL_TIME = 0.25;
     public static inline var STUN_TIME = 0.3;
     public static inline var CAST_COOLDOWN = 0.2;
+    //public static inline var CAST_COOLDOWN = 0.4;
     public static inline var HEAL_TIME = 2.5;
 
     public static inline var MAX_STAMINA = 125;
@@ -191,7 +192,8 @@ class Player extends Entity
     }
 
     override public function update() {
-        if(Main.inputPressed("cast") && (canControl() || castCooldown.percent > 0.5) && stamina >= CAST_COST) {
+        if(Main.inputPressed("cast") && (canControl() || castCooldown.percent > 0.5)) {
+        //if(Main.inputCheck("cast") && canControl()) {
             stamina -= CAST_COST;
             staminaRecoveryDelay.start();
             castSpell();
