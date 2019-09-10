@@ -69,7 +69,7 @@ class Player extends Entity
     private var boundingBox:Hitbox;
     private var lastSafeSpot:Vector2;
     private var healTimer:Alarm;
-    private var healSigil:Image;
+    private var healSigil:Spritemap;
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -97,10 +97,15 @@ class Player extends Entity
         sprite.add("fall", [18, 19, 20, 22], 8, false);
         sprite.add("dead", [21]);
         shadow = new Spritemap("graphics/shadow.png", 16, 16);
+
+        healSigil = new Spritemap("graphics/spells.png", 20, 20);
+        healSigil.add("idle", [11, 7, 8, 9, 10], 5 / HEAL_TIME, false);
+        healSigil.x = -2;
+        healSigil.y = -2;
+
+        addGraphic(healSigil);
         addGraphic(shadow);
         addGraphic(sprite);
-        healSigil = new Image("graphics/healsigil.png");
-        addGraphic(healSigil);
         velocity = new Vector2();
 
         rollCooldown = new Alarm(ROLL_TIME, TweenType.Persist);
@@ -230,6 +235,7 @@ class Player extends Entity
         if(canControl() && velocity.length == 0) {
             if(!healTimer.active && health < MAX_HEALTH && flaskCount > 0) {
                 healTimer.start();
+                healSigil.play("idle", true);
             }
         }
         else {
@@ -237,13 +243,6 @@ class Player extends Entity
         }
 
         healSigil.visible = healTimer.active;
-        healSigil.centerOrigin();
-        healSigil.scaleX = (1 - healTimer.percent);
-        healSigil.scaleY = (1 - healTimer.percent);
-        healSigil.x = 8;
-        healSigil.y = 8;
-        healSigil.alpha = healTimer.percent;
-
         super.update();
     }
 
