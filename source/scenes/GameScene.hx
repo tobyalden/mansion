@@ -33,6 +33,7 @@ class GameScene extends Scene
     public var currentScreenX(default, null):Int;
     public var currentScreenY(default, null):Int;
     public var isDialogMode(default, null):Bool;
+    public var pausePlayer(default, null):Bool;
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
     private var shaftMapBlueprint:Grid;
@@ -68,6 +69,7 @@ class GameScene extends Scene
         add(onScreenBox);
 
         isDialogMode = false;
+        pausePlayer = false;
 
         dialogBox = new DialogBox(camera);
         add(dialogBox);
@@ -692,12 +694,18 @@ class GameScene extends Scene
         );
         var conversation = loadConversation(json);
         isDialogMode = true;
+        pausePlayer = true;
         dialogBox.loadConversation(conversation);
         dialogBox.fadeIn();
     }
 
+    public function setPausePlayer(newPausePlayer:Bool) {
+        pausePlayer = newPausePlayer;
+    }
+
     public function endConversation() {
         isDialogMode = false;
+        pausePlayer = false;
     }
 
     private function loadConversation(json:DialogFile) {

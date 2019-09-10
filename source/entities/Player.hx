@@ -196,7 +196,7 @@ class Player extends Entity
         if(
             Main.inputPressed("cast")
             && (canControl() || castCooldown.percent > 0.5)
-            && !gameScene.isDialogMode
+            && !gameScene.pausePlayer
         ) {
             stamina -= CAST_COST;
             staminaRecoveryDelay.start();
@@ -282,7 +282,7 @@ class Player extends Entity
             && !knockbackTimer.active
             && !isDead
             && !isFalling
-            && !cast(scene, GameScene).isDialogMode
+            && !cast(scene, GameScene).pausePlayer
         );
     }
 
@@ -296,7 +296,7 @@ class Player extends Entity
                 velocity.y = 0;
             }
         }
-        else if(cast(scene, GameScene).isDialogMode) {
+        else if(cast(scene, GameScene).pausePlayer) {
             velocity.x = 0;
             velocity.y = 0;
         }
@@ -488,6 +488,9 @@ class Player extends Entity
     }
 
     public function takeHit(damageSource:Entity) {
+        if(cast(scene, GameScene).pausePlayer) {
+            return;
+        }
         health -= 1;
         if(health <= 0) {
             die();
@@ -525,7 +528,7 @@ class Player extends Entity
         if(!stunCooldown.active) {
             sprite.flipX = facing == "left";
         }
-        if(cast(scene, GameScene).isDialogMode) {
+        if(cast(scene, GameScene).pausePlayer) {
             if(facing == "left") {
                 sprite.play("idle_right");
             }

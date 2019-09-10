@@ -83,6 +83,7 @@ class SuperWizard extends Enemy
     private var enrageNextPhase:Bool;
 
     private var fightStarted:Bool;
+    private var isDying:Bool;
 
     private var sfx:Map<String, Sfx>;
 
@@ -131,6 +132,7 @@ class SuperWizard extends Enemy
         isEnraged = false;
         enrageNextPhase = false;
         fightStarted = false;
+        isDying = false;
 
         generatePhaseLocations();
 
@@ -269,9 +271,16 @@ class SuperWizard extends Enemy
                 enrageNextPhase = true;
             }
         }
-        collidable = fightStarted;
+        collidable = (fightStarted && !isDead);
         var gameScene = cast(scene, GameScene);
-        if(!fightStarted || gameScene.isDialogMode) {
+        if(isDying) {
+            // Do nothing
+            if(!gameScene.pausePlayer) {
+                isDead = true;
+                scene.remove(this);
+            }
+        }
+        else if(!fightStarted || gameScene.isDialogMode) {
             // Do nothing
             var player = scene.getInstance("player");
             if(player.y - bottom < 50 && !gameScene.isDialogMode) {
@@ -404,6 +413,9 @@ class SuperWizard extends Enemy
     }
 
     override function die() {
+        for(tween in tweens) {
+            tween.active = false;
+        }
         var hazards = new Array<Entity>();
         scene.getType("hazard", hazards);
         for(hazard in hazards) {
@@ -414,6 +426,14 @@ class SuperWizard extends Enemy
                 scene.remove(hazard);
             }
         }
-        super.die();
+        isDying = true;
+        collidable = false;
+        var gameScene = cast(scene, GameScene);
+        gameScene.setPausePlayer(true);
+        var deathConversationDelay = new Alarm(1, function() {
+            var gameScene = cast(scene, GameScene);
+            gameScene.converse("superwizarddeath");
+        });
+        addTween(deathConversationDelay, true);
     }
 }
