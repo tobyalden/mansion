@@ -6,14 +6,11 @@
 + controller support
 + implement dialogue
 
-- thought console
 - main menu
 - save rooms (don't forget to save/load map!)
-- final boss
 - revise mansion
+- final boss
 - write dialogue
-- write thoughts
-- nymph
 - music
 - ending
 - credits
@@ -21,7 +18,10 @@
 ~ all sfx
 ~ graphics
 
+- write thoughts
+- nymph
 - pieces of heart
+- thought console
 
 - Protag: Aria
 - Butler: Arthur

@@ -24,9 +24,9 @@ class GameScene extends Scene
     public static inline var PLAYFIELD_SIZE = 320;
     public static inline var NUMBER_OF_ENEMIES = 150;
     public static inline var CAMERA_PAN_TIME = 1;
-    public static inline var LOCK_CHANCE = 0.5;
+    public static inline var LOCK_CHANCE = 1;
 
-    public static var isProcedural = true;
+    public static var isProcedural = false;
 
     public var isLevelLocked(default, null):Bool;
     public var currentLevel(default, null):Level;
@@ -145,7 +145,7 @@ class GameScene extends Scene
             currentLevel = start;
         }
         else {
-            loadStaticLevel("mansion");
+            loadStaticLevel("mansion_small");
         }
         viewport = new Viewport(camera);
         add(viewport);
@@ -166,16 +166,6 @@ class GameScene extends Scene
             player.cancelRoll();
         });
         addTween(playerPusher);
-    }
-
-    public function converse(conversation:NPCConversation) {
-        isDialogMode = true;
-        dialogBox.loadConversation(conversation);
-        dialogBox.fadeIn();
-    }
-
-    public function endConversation() {
-        isDialogMode = false;
     }
 
     public function onDeath() {
@@ -692,12 +682,22 @@ class GameScene extends Scene
 
     private function debug() {
         if(Main.inputPressed("testdialog")) {
-            var json:DialogFile = haxe.Json.parse(
-                Assets.getText('dialog/test.json')
-            );
-            var conversation = loadConversation(json);
-            converse(conversation);
+            converse('test');
         }
+    }
+
+    public function converse(conversationName:String) {
+        var json:DialogFile = haxe.Json.parse(
+            Assets.getText('dialog/${conversationName}.json')
+        );
+        var conversation = loadConversation(json);
+        isDialogMode = true;
+        dialogBox.loadConversation(conversation);
+        dialogBox.fadeIn();
+    }
+
+    public function endConversation() {
+        isDialogMode = false;
     }
 
     private function loadConversation(json:DialogFile) {

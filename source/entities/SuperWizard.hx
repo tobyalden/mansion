@@ -82,17 +82,20 @@ class SuperWizard extends Enemy
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
 
+    private var fightStarted:Bool;
+
     private var sfx:Map<String, Sfx>;
 
     public function new(startX:Float, startY:Float) {
-        super(startX, startY);
+        super(startX - SIZE / 2, startY - SIZE / 2);
         name = "superwizard";
         isBoss = true;
         mask = new Hitbox(SIZE, SIZE);
-        x -= width / 2;
-        y -= height / 2;
+        //x -= width / 2;
+        //y -= height / 2;
         screenCenter = new Vector2(x, y);
         y -= 50;
+        startPosition.y -= 50;
         sprite = new Spritemap("graphics/superwizard.png", SIZE, SIZE);
         sprite.add("idle", [0]);
         sprite.play("idle");
@@ -127,6 +130,7 @@ class SuperWizard extends Enemy
 
         isEnraged = false;
         enrageNextPhase = false;
+        fightStarted = false;
 
         generatePhaseLocations();
 
@@ -186,6 +190,7 @@ class SuperWizard extends Enemy
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
         ];
+        collidable = false;
     }
 
     private function generatePhaseLocations() {
@@ -264,7 +269,17 @@ class SuperWizard extends Enemy
                 enrageNextPhase = true;
             }
         }
-        if(betweenPhases) {
+        collidable = fightStarted;
+        var gameScene = cast(scene, GameScene);
+        if(!fightStarted || gameScene.isDialogMode) {
+            // Do nothing
+            var player = scene.getInstance("player");
+            if(player.y - bottom < 50 && !gameScene.isDialogMode) {
+                gameScene.converse("superwizard");
+                fightStarted = true;
+            }
+        }
+        else if(betweenPhases) {
             if(preAdvancePhaseTimer.active) {
                 // Do nothing
             }
@@ -326,6 +341,7 @@ class SuperWizard extends Enemy
                 // where LinearMotion instances return (0, 0) after starting
                 // until a frame has passed
                 moveTo(zigZag.x, zigZag.y);
+                laser.moveTo(centerX - laser.width / 2, bottom);
             }
         }
         else if(currentPhase == "enrage") {

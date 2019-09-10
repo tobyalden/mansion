@@ -57,6 +57,7 @@ class DialogBox extends Entity
         box = new ColoredRect(BOX_WIDTH, 0, 0x000000);
         portrait = new Spritemap("graphics/portraits.png", 160, 160);
         portrait.add("mc", [0]);
+        portrait.add("butler", [1]);
         portrait.x = BOX_WIDTH - 150;
         portrait.y = -160;
         text = new Text(
@@ -142,6 +143,12 @@ class DialogBox extends Entity
             fadeOut();
         }
         else {
+            if(conversation[conversationIndex].portrait == "mc") {
+                portrait.x = BOX_WIDTH - 150;
+            }
+            else {
+                portrait.x = 10;
+            }
             portrait.play(conversation[conversationIndex].portrait);
         }
     }
@@ -210,6 +217,12 @@ class DialogBox extends Entity
         cursor.visible = false;
         displayCharCount = 0;
         conversationIndex = 0;
+        if(conversation[conversationIndex].portrait == "mc") {
+            portrait.x = BOX_WIDTH - 150;
+        }
+        else {
+            portrait.x = 10;
+        }
         portrait.play(conversation[conversationIndex].portrait);
     }
 

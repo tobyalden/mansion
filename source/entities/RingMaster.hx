@@ -68,7 +68,7 @@ class RingMaster extends Enemy
     private var isEndingEnragePhase:Bool;
 
     public function new(startX:Float, startY:Float) {
-        super(startX, startY);
+        super(startX - SIZE / 2, startY - SIZE / 2);
         rings = [
             new Ring(this), new Ring(this),
             new Ring(this), new Ring(this),
@@ -77,10 +77,11 @@ class RingMaster extends Enemy
         name = "ringmaster";
         isBoss = true;
         mask = new Hitbox(SIZE, SIZE);
-        x -= width / 2;
-        y -= height / 2;
+        //x -= width / 2;
+        //y -= height / 2;
         screenCenter = new Vector2(x, y);
         y -= 50;
+        startPosition.y -= 50;
         sprite = new Spritemap("graphics/ringmaster.png", SIZE, SIZE);
         sprite.add("idle", [0]);
         sprite.play("idle");

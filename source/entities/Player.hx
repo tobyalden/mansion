@@ -192,8 +192,12 @@ class Player extends Entity
     }
 
     override public function update() {
-        if(Main.inputPressed("cast") && (canControl() || castCooldown.percent > 0.5)) {
-        //if(Main.inputCheck("cast") && canControl()) {
+        var gameScene = cast(scene, GameScene);
+        if(
+            Main.inputPressed("cast")
+            && (canControl() || castCooldown.percent > 0.5)
+            && !gameScene.isDialogMode
+        ) {
             stamina -= CAST_COST;
             staminaRecoveryDelay.start();
             castSpell();

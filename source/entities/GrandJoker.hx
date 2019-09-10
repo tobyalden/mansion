@@ -71,14 +71,15 @@ class GrandJoker extends Enemy
     private var sfx:Map<String, Sfx>;
 
     public function new(startX:Float, startY:Float) {
-        super(startX, startY);
+        super(startX - SIZE / 2, startY - SIZE / 2);
         name = "grandjoker";
         isBoss = true;
         mask = new Hitbox(SIZE, SIZE);
-        x -= width / 2;
-        y -= height / 2;
+        //x -= width / 2;
+        //y -= height / 2;
         screenCenter = new Vector2(x, y);
         y -= 50;
+        startPosition.y -= 50;
         sprite = new Spritemap("graphics/grandjoker.png", SIZE, SIZE);
         sprite.add("idle", [0]);
         sprite.play("idle");

@@ -95,7 +95,7 @@ class Enemy extends Entity
             }
             else {
                 age += HXP.elapsed;
-                if(age >= PAUSE_ON_ROOM_ENTER) {
+                if(age >= PAUSE_ON_ROOM_ENTER || isBoss) {
                     act();
                 }
             }
