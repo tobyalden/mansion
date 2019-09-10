@@ -143,28 +143,28 @@ class Enemy extends Entity
     }
 
     public function isOnTopWall() {
-        if(collideMultiple(["walls", "enemywalls", "enemy"], x, y - 1) != null) {
+        if(collideMultiple(["walls", "enemywalls", "enemy", "pits"], x, y - 1) != null) {
             return true;
         }
         return false;
     }
 
     public function isOnBottomWall() {
-        if(collideMultiple(["walls", "enemywalls", "enemy"], x, y + 1) != null) {
+        if(collideMultiple(["walls", "enemywalls", "enemy", "pits"], x, y + 1) != null) {
             return true;
         }
         return false;
     }
 
     public function isOnLeftWall() {
-        if(collideMultiple(["walls", "enemywalls", "enemy"], x - 1, y) != null) {
+        if(collideMultiple(["walls", "enemywalls", "enemy", "pits"], x - 1, y) != null) {
             return true;
         }
         return false;
     }
 
     public function isOnRightWall() {
-        if(collideMultiple(["walls", "enemywalls", "enemy"], x + 1, y) != null) {
+        if(collideMultiple(["walls", "enemywalls", "enemy", "pits"], x + 1, y) != null) {
             return true;
         }
         return false;
