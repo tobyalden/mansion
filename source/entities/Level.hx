@@ -371,7 +371,7 @@ class Level extends Entity {
             walls.width, walls.height, walls.tileWidth, walls.tileHeight
         );
         pitTiles = new Tilemap(
-            'graphics/pits.png',
+            'graphics/hole.png',
             walls.width, walls.height, walls.tileWidth, walls.tileHeight
         );
         lockTiles = new Tilemap(
@@ -395,7 +395,7 @@ class Level extends Entity {
                         !pits.getTile(tileX - 1, tileY)
                         && !pits.getTile(tileX, tileY - 1)
                     ) {
-                        pitTiles.setTile(tileX, tileY, 5);
+                        pitTiles.setTile(tileX, tileY, 6);
                     }
                     else if(
                         !pits.getTile(tileX + 1, tileY)
@@ -407,28 +407,28 @@ class Level extends Entity {
                         !pits.getTile(tileX - 1, tileY)
                         && !pits.getTile(tileX, tileY + 1)
                     ) {
-                        pitTiles.setTile(tileX, tileY, 21);
+                        pitTiles.setTile(tileX, tileY, 5);
                     }
                     else if(
                         !pits.getTile(tileX + 1, tileY)
                         && !pits.getTile(tileX, tileY + 1)
                     ) {
-                        pitTiles.setTile(tileX, tileY, 23);
+                        pitTiles.setTile(tileX, tileY, 8);
                     }
                     else if(!pits.getTile(tileX + 1, tileY)) {
-                        pitTiles.setTile(tileX, tileY, 15);
+                        pitTiles.setTile(tileX, tileY, 2);
                     }
                     else if(!pits.getTile(tileX - 1, tileY)) {
-                        pitTiles.setTile(tileX, tileY, 13);
+                        pitTiles.setTile(tileX, tileY, 3);
                     }
                     else if(!pits.getTile(tileX, tileY + 1)) {
-                        pitTiles.setTile(tileX, tileY, 22);
+                        pitTiles.setTile(tileX, tileY, 0);
                     }
                     else if(!pits.getTile(tileX, tileY - 1)) {
-                        pitTiles.setTile(tileX, tileY, 6);
+                        pitTiles.setTile(tileX, tileY, 1);
                     }
                     else {
-                        pitTiles.setTile(tileX, tileY, 14);
+                        pitTiles.setTile(tileX, tileY, 4);
                     }
                 }
                 else if(getTile(tileX, tileY)) {
