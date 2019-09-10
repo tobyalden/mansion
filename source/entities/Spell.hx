@@ -15,12 +15,33 @@ class Spell extends Entity
 
     public var velocity(default, null):Vector2;
     private var sfx:Map<String, Sfx>;
+    private var sprite:Spritemap;
 
     public function new(startX:Float, startY:Float, velocity:Vector2) {
         super(startX - 4, startY - 4);
         this.velocity = velocity;
         type = "spell";
-        graphic = new Image("graphics/spell.png");
+        sprite = new Spritemap("graphics/spells.png", 20, 20);
+        sprite.add("idle_vertical", [0, 1], 4);
+        sprite.add("idle_horizontal", [2, 3], 4);
+        sprite.add("explode", [4, 5, 6], 16, false);
+        sprite.x = -(20 - 8) / 2;
+        sprite.y = -(20 - 8) / 2;
+        if(velocity.y < 0) {
+            sprite.play("idle_vertical");
+        }
+        else if(velocity.y > 0) {
+            sprite.play("idle_vertical");
+            sprite.flipY = true;
+        }
+        else if(velocity.x < 0) {
+            sprite.play("idle_horizontal");
+            sprite.flipX = true;
+        }
+        else if(velocity.x > 0) {
+            sprite.play("idle_horizontal");
+        }
+        graphic = sprite;
         mask = new Hitbox(8, 8);
         sfx = [
             "hit1" => new Sfx("audio/hit1.wav"),
@@ -41,7 +62,10 @@ class Spell extends Entity
             velocity.y * HXP.elapsed,
             ["walls", "enemy", "tail", "lock"]
         );
-        if(!cast(scene, GameScene).isEntityOnscreen(this)) {
+        if(collidable && !cast(scene, GameScene).isEntityOnscreen(this)) {
+            scene.remove(this);
+        }
+        else if(!collidable && sprite.complete) {
             scene.remove(this);
         }
         super.update();
@@ -59,7 +83,9 @@ class Spell extends Entity
         else if(e.type == "walls" || e.type == "lock") {
             sfx['hitwall${HXP.choose(1, 2, 3, 4)}'].play();
         }
-        scene.remove(this);
+        sprite.play("explode");
+        collidable = false;
+        velocity = new Vector2();
     }
 
     override public function moveCollideX(e:Entity) {
