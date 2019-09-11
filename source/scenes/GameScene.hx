@@ -152,7 +152,7 @@ class GameScene extends Scene
         viewport = new Viewport(camera);
         add(viewport);
         curtain = new Curtain(camera);
-        //add(curtain);
+        add(curtain);
         curtain.fadeIn();
         currentScreenX = Math.floor((player.centerX) / PLAYFIELD_SIZE);
         currentScreenY = Math.floor((player.centerY) / PLAYFIELD_SIZE);
@@ -284,6 +284,19 @@ class GameScene extends Scene
     override public function update() {
         if(Input.check("restart")) {
             HXP.scene = new GameScene();
+        }
+        var _exit = player.collide("exit", player.x, player.y);
+        if(_exit != null && !pausePlayer) {
+            var exit = cast(_exit, Exit);
+            pausePlayer = true;
+            curtain.fadeOut();
+            var movePlayerTween = new Alarm(Curtain.FADE_SPEED, function() {
+                player.x = exit.destination.x;
+                player.y = exit.destination.y;
+                curtain.fadeIn();
+                pausePlayer = false;
+            });
+            addTween(movePlayerTween, true);
         }
         var allEntities = new Array<Entity>();
         getAll(allEntities);
@@ -490,6 +503,22 @@ class GameScene extends Scene
                 Std.parseInt(grandJoker.att.y)
             );
             allEnemies.push(grandJoker);
+        }
+        for(exit in fastXml.node.objects.nodes.exit) {
+            var nodes = new Array<Vector2>();
+            for(n in exit.nodes.node) {
+                nodes.push(
+                    new Vector2(Std.parseInt(n.att.x), Std.parseInt(n.att.y))
+                );
+            }
+            var exit = new Exit(
+                Std.parseInt(exit.att.x),
+                Std.parseInt(exit.att.y),
+                Std.parseInt(exit.att.width),
+                Std.parseInt(exit.att.height),
+                nodes[0]
+            );
+            add(exit);
         }
         for(enemy in allEnemies) {
             add(enemy);
