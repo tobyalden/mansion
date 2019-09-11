@@ -1,0 +1,29 @@
+<level>
+  <width>3200</width>
+  <height>3200</height>
+  <walls>
+    <rect x="0" y="0" w="3200" h="1616"/>
+    <rect x="0" y="1616" w="656" h="320"/>
+    <rect x="0" y="1936" w="496" h="1264"/>
+    <rect x="496" y="1952" w="48" h="16"/>
+    <rect x="496" y="1984" w="48" h="16"/>
+    <rect x="496" y="2016" w="48" h="16"/>
+    <rect x="496" y="2224" w="2704" h="976"/>
+    <rect x="624" y="1936" w="32" h="208"/>
+    <rect x="624" y="2192" w="32" h="32"/>
+    <rect x="656" y="1904" w="112" h="32"/>
+    <rect x="832" y="1904" w="2368" h="32"/>
+    <rect x="944" y="1616" w="2256" h="288"/>
+    <rect x="944" y="1936" w="2256" h="288"/>
+  </walls>
+  <rooms>
+    <room x="320" y="1920" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="640" y="1920" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="640" y="1600" width="320" height="320" alwaysLock="false" neverLock="false"/>
+  </rooms>
+  <objects>
+    <player x="1432" y="3048"/>
+    <stalker x="1520" y="2304"/>
+    <ringmaster x="800" y="1760"/>
+  </objects>
+</level>

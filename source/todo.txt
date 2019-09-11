@@ -5,10 +5,12 @@
 + flasks
 + controller support
 + implement dialogue
++ revise mansion
 
+- staircases
+- tutorial
 - main menu
 - save rooms (don't forget to save/load map!)
-- revise mansion
 - final boss
 - write dialogue
 - music
