@@ -52,12 +52,14 @@ class GameScene extends Scene
     private var playerPusher:LinearMotion;
     private var allEnemies:Array<Entity>;
     private var onScreenBox:Entity;
+    private var isMovingDuringFade:Bool;
 
     public function setIsLevelLocked(newIsLevelLocked:Bool)  {
         isLevelLocked = newIsLevelLocked;
     }
 
     override public function begin() {
+        isMovingDuringFade = false;
         var onScreenBoxSprite = new ColoredRect(
             PLAYFIELD_SIZE, PLAYFIELD_SIZE, 0xFF0000
         );
@@ -147,7 +149,7 @@ class GameScene extends Scene
             currentLevel = start;
         }
         else {
-            loadStaticLevel("mansion_small");
+            loadStaticLevel("mansion_1F");
         }
         viewport = new Viewport(camera);
         add(viewport);
@@ -279,6 +281,7 @@ class GameScene extends Scene
             Ease.sineInOut
         );
         cameraPanner.start();
+        isMovingDuringFade = false;
     }
 
     override public function update() {
@@ -289,12 +292,16 @@ class GameScene extends Scene
         if(_exit != null && !pausePlayer) {
             var exit = cast(_exit, Exit);
             pausePlayer = true;
-            curtain.fadeOut();
-            var movePlayerTween = new Alarm(Curtain.FADE_SPEED, function() {
+            curtain.fadeOut(6);
+            var movePlayerTween = new Alarm(0.2, function() {
                 player.x = exit.destination.x;
                 player.y = exit.destination.y;
-                curtain.fadeIn();
-                pausePlayer = false;
+                curtain.fadeIn(6);
+                var enableMoveTimer = new Alarm(0.5, function() {
+                    pausePlayer = false;
+                });
+                addTween(enableMoveTimer, true);
+                isMovingDuringFade = true;
             });
             addTween(movePlayerTween, true);
         }
@@ -322,7 +329,10 @@ class GameScene extends Scene
                 currentLevel.y,
                 currentLevel.y + currentLevel.height - PLAYFIELD_SIZE
             );
-            panCamera(cameraDestinationX, cameraDestinationY);
+            panCamera(
+                cameraDestinationX, cameraDestinationY,
+                isMovingDuringFade ? CAMERA_PAN_TIME / 4 : CAMERA_PAN_TIME
+            );
 
             var playerDestinationX = player.x;
             var playerDestinationY = player.y;

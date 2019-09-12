@@ -2,66 +2,214 @@
   <width>3200</width>
   <height>3200</height>
   <walls>
-    <rect x="0" y="0" w="3200" h="976"/>
-    <rect x="0" y="976" w="1936" h="320"/>
-    <rect x="0" y="1296" w="1616" h="640"/>
-    <rect x="0" y="1936" w="496" h="1264"/>
-    <rect x="496" y="2128" w="48" h="16"/>
-    <rect x="496" y="2160" w="48" h="16"/>
-    <rect x="496" y="2192" w="48" h="16"/>
-    <rect x="496" y="2224" w="352" h="32"/>
-    <rect x="496" y="2256" w="160" h="944"/>
-    <rect x="624" y="1936" w="32" h="32"/>
-    <rect x="624" y="2016" w="32" h="208"/>
-    <rect x="656" y="2544" w="752" h="352"/>
-    <rect x="656" y="2896" w="640" h="304"/>
-    <rect x="912" y="2224" w="176" h="32"/>
-    <rect x="944" y="1936" w="32" h="288"/>
-    <rect x="1152" y="2224" w="256" h="32"/>
-    <rect x="1264" y="2256" w="32" h="288"/>
-    <rect x="1296" y="3184" w="1904" h="16"/>
-    <rect x="1360" y="1952" w="160" h="16"/>
-    <rect x="1360" y="1984" w="160" h="16"/>
-    <rect x="1360" y="2016" w="160" h="16"/>
-    <rect x="1472" y="2224" w="576" h="32"/>
-    <rect x="1472" y="2544" w="1728" h="352"/>
-    <rect x="1584" y="2256" w="352" h="288"/>
-    <rect x="1584" y="2896" w="1616" h="288"/>
-    <rect x="1616" y="1904" w="400" h="32"/>
-    <rect x="1904" y="1936" w="32" h="112"/>
-    <rect x="1904" y="2112" w="32" h="112"/>
-    <rect x="1936" y="1264" w="112" h="32"/>
-    <rect x="1936" y="2416" w="1264" h="128"/>
-    <rect x="2112" y="1264" w="1088" h="32"/>
-    <rect x="2112" y="2224" w="256" h="32"/>
-    <rect x="2144" y="1904" w="1056" h="32"/>
-    <rect x="2224" y="976" w="976" h="288"/>
-    <rect x="2224" y="1936" w="32" h="288"/>
-    <rect x="2432" y="2224" w="768" h="32"/>
-    <rect x="2544" y="1296" w="656" h="608"/>
-    <rect x="2544" y="1936" w="656" h="288"/>
-    <rect x="2544" y="2256" w="656" h="160"/>
+    <rect x="0" y="0" w="3200" h="16"/>
+    <rect x="0" y="16" w="2256" h="960"/>
+    <rect x="0" y="976" w="656" h="384"/>
+    <rect x="0" y="1360" w="448" h="1840"/>
+    <rect x="448" y="1504" w="1168" h="464"/>
+    <rect x="448" y="1968" w="944" h="32"/>
+    <rect x="448" y="2000" w="320" h="1200"/>
+    <rect x="480" y="1360" w="240" h="48"/>
+    <rect x="528" y="1408" w="192" h="32"/>
+    <rect x="528" y="1472" w="192" h="32"/>
+    <rect x="560" y="1440" w="128" h="32"/>
+    <rect x="656" y="1264" w="112" h="32"/>
+    <rect x="656" y="1296" w="64" h="64"/>
+    <rect x="768" y="2144" w="352" h="128"/>
+    <rect x="768" y="2272" w="256" h="16"/>
+    <rect x="768" y="2288" w="224" h="912"/>
+    <rect x="800" y="2096" w="224" h="48"/>
+    <rect x="832" y="1264" w="896" h="32"/>
+    <rect x="848" y="1488" w="768" h="16"/>
+    <rect x="848" y="2000" w="176" h="32"/>
+    <rect x="848" y="2064" w="176" h="32"/>
+    <rect x="864" y="1296" w="752" h="192"/>
+    <rect x="880" y="2032" w="128" h="32"/>
+    <rect x="944" y="976" w="672" h="288"/>
+    <rect x="992" y="2400" w="2208" h="800"/>
+    <rect x="1056" y="2272" w="128" h="16"/>
+    <rect x="1120" y="2160" w="208" h="112"/>
+    <rect x="1152" y="2144" w="176" h="16"/>
+    <rect x="1216" y="2000" w="208" h="48"/>
+    <rect x="1216" y="2048" w="112" h="96"/>
+    <rect x="1216" y="2272" w="848" h="16"/>
+    <rect x="1248" y="2288" w="176" h="16"/>
+    <rect x="1248" y="2304" w="144" h="96"/>
+    <rect x="1328" y="2176" w="32" h="96"/>
+    <rect x="1360" y="2192" w="576" h="80"/>
+    <rect x="1392" y="2176" w="96" h="16"/>
+    <rect x="1392" y="2384" w="1808" h="16"/>
+    <rect x="1456" y="2288" w="608" h="16"/>
+    <rect x="1472" y="2000" w="208" h="32"/>
+    <rect x="1472" y="2032" w="192" h="16"/>
+    <rect x="1488" y="2304" w="240" h="80"/>
+    <rect x="1504" y="1968" w="176" h="32"/>
+    <rect x="1520" y="2176" w="224" h="16"/>
+    <rect x="1568" y="2048" w="96" h="16"/>
+    <rect x="1568" y="2096" w="112" h="80"/>
+    <rect x="1584" y="2064" w="96" h="32"/>
+    <rect x="1616" y="1872" w="112" h="96"/>
+    <rect x="1728" y="1888" w="1472" h="48"/>
+    <rect x="1728" y="1936" w="208" h="16"/>
+    <rect x="1728" y="2368" w="1472" h="16"/>
+    <rect x="1760" y="2304" w="304" h="16"/>
+    <rect x="1776" y="2176" w="160" h="16"/>
+    <rect x="1792" y="1264" w="1408" h="32"/>
+    <rect x="1792" y="1872" w="1408" h="16"/>
+    <rect x="1792" y="1952" w="144" h="16"/>
+    <rect x="1840" y="1968" w="96" h="208"/>
+    <rect x="1904" y="976" w="1296" h="288"/>
+    <rect x="1904" y="1296" w="1296" h="576"/>
+    <rect x="1936" y="2224" w="128" h="48"/>
+    <rect x="2096" y="2224" w="1104" h="96"/>
+    <rect x="2128" y="2320" w="1072" h="48"/>
+    <rect x="2224" y="1936" w="976" h="288"/>
+    <rect x="2256" y="304" w="128" h="32"/>
+    <rect x="2256" y="336" w="32" h="640"/>
+    <rect x="2288" y="528" w="16" h="448"/>
+    <rect x="2304" y="544" w="896" h="144"/>
+    <rect x="2304" y="688" w="16" h="16"/>
+    <rect x="2304" y="848" w="336" h="128"/>
+    <rect x="2336" y="528" w="688" h="16"/>
+    <rect x="2352" y="688" w="848" h="16"/>
+    <rect x="2368" y="704" w="832" h="32"/>
+    <rect x="2368" y="736" w="272" h="48"/>
+    <rect x="2416" y="304" w="784" h="32"/>
+    <rect x="2512" y="336" w="688" h="96"/>
+    <rect x="2512" y="432" w="464" h="96"/>
+    <rect x="2512" y="784" w="128" h="16"/>
+    <rect x="2512" y="832" w="128" h="16"/>
+    <rect x="2528" y="800" w="96" h="32"/>
+    <rect x="2544" y="16" w="656" h="288"/>
+    <rect x="2640" y="896" w="560" h="80"/>
+    <rect x="2688" y="768" w="64" h="80"/>
+    <rect x="2704" y="736" w="32" h="32"/>
+    <rect x="2800" y="736" w="400" h="32"/>
+    <rect x="2800" y="768" w="224" h="16"/>
+    <rect x="2800" y="784" w="144" h="16"/>
+    <rect x="2800" y="832" w="144" h="64"/>
+    <rect x="2816" y="800" w="96" h="32"/>
+    <rect x="2944" y="848" w="256" h="48"/>
+    <rect x="3056" y="528" w="144" h="16"/>
+    <rect x="3056" y="768" w="144" h="16"/>
+    <rect x="3088" y="784" w="112" h="64"/>
+    <rect x="3104" y="432" w="96" h="96"/>
   </walls>
   <pits>
-    <rect x="1408" y="2704" w="64" h="32"/>
+    <rect x="3008" y="1840" w="16" h="16"/>
   </pits>
   <rooms>
-    <room x="1280" y="2560" width="320" height="320" alwaysLock="false" neverLock="false"/>
     <room x="1280" y="2240" width="320" height="320" alwaysLock="false" neverLock="false"/>
-    <room x="1280" y="2880" width="320" height="320" alwaysLock="false" neverLock="false"/>
-    <room x="960" y="1920" width="960" height="320" alwaysLock="false" neverLock="false"/>
-    <room x="640" y="2240" width="640" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="1280" y="1920" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="960" y="2240" width="320" height="320" alwaysLock="false" neverLock="false"/>
     <room x="640" y="1920" width="320" height="320" alwaysLock="false" neverLock="false"/>
-    <room x="320" y="1920" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="1600" y="1280" width="320" height="640" alwaysLock="false" neverLock="false"/>
+    <room x="1600" y="960" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="960" y="1920" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="1600" y="1920" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="1600" y="2240" width="640" height="320" alwaysLock="false" neverLock="false"/>
     <room x="1920" y="1920" width="320" height="320" alwaysLock="false" neverLock="false"/>
-    <room x="1600" y="1280" width="960" height="640" alwaysLock="false" neverLock="false"/>
-    <room x="1920" y="960" width="320" height="320" alwaysLock="false" neverLock="false"/>
-    <room x="1920" y="2240" width="640" height="320" alwaysLock="false" neverLock="false"/>
-    <room x="2240" y="1920" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="2240" y="0" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="2240" y="320" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="2240" y="640" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="2560" y="640" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="2880" y="640" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="2880" y="320" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="320" y="1280" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="640" y="1280" width="320" height="320" alwaysLock="false" neverLock="false"/>
+    <room x="640" y="960" width="320" height="320" alwaysLock="false" neverLock="false"/>
   </rooms>
   <objects>
-    <player x="1432" y="3048"/>
-    <stalker x="1520" y="2304"/>
-    <superwizard x="2400" y="2080"/>
+    <player x="1432" y="2360"/>
+    <exit x="3024" y="528" width="32" height="16">
+      <node x="3032" y="784"/>
+    </exit>
+    <exit x="3024" y="768" width="32" height="16">
+      <node x="3032" y="512"/>
+    </exit>
+    <exit x="2912" y="800" width="16" height="32">
+      <node x="2784" y="808"/>
+    </exit>
+    <exit x="2800" y="800" width="16" height="32">
+      <node x="2928" y="808"/>
+    </exit>
+    <exit x="2624" y="800" width="16" height="32">
+      <node x="2496" y="808"/>
+    </exit>
+    <exit x="2512" y="800" width="16" height="32">
+      <node x="2640" y="808"/>
+    </exit>
+    <exit x="2320" y="688" width="32" height="16">
+      <node x="2312" y="512"/>
+    </exit>
+    <exit x="2304" y="528" width="32" height="16">
+      <node x="2328" y="704"/>
+    </exit>
+    <exit x="1424" y="2288" width="32" height="16">
+      <node x="1496" y="2160"/>
+    </exit>
+    <exit x="1488" y="2176" width="32" height="16">
+      <node x="1432" y="2304"/>
+    </exit>
+    <exit x="1360" y="2176" width="32" height="16">
+      <node x="1192" y="2288"/>
+    </exit>
+    <exit x="1184" y="2272" width="32" height="16">
+      <node x="1368" y="2160"/>
+    </exit>
+    <exit x="1728" y="1952" width="64" height="16">
+      <node x="1752" y="1856"/>
+    </exit>
+    <exit x="1728" y="1872" width="64" height="16">
+      <node x="1752" y="1968"/>
+    </exit>
+    <exit x="1744" y="2176" width="32" height="16">
+      <node x="1736" y="2320"/>
+    </exit>
+    <exit x="1728" y="2304" width="32" height="16">
+      <node x="1752" y="2160"/>
+    </exit>
+    <exit x="1024" y="2272" width="32" height="16">
+      <node x="1128" y="2128"/>
+    </exit>
+    <exit x="1120" y="2144" width="32" height="16">
+      <node x="1032" y="2288"/>
+    </exit>
+    <exit x="1008" y="2032" width="16" height="32">
+      <node x="848" y="2040"/>
+    </exit>
+    <exit x="864" y="2032" width="16" height="32">
+      <node x="1024" y="2040"/>
+    </exit>
+    <exit x="544" y="1440" width="16" height="32">
+      <node x="704" y="1440"/>
+    </exit>
+    <exit x="688" y="1440" width="16" height="32">
+      <node x="528" y="1440"/>
+    </exit>
+    <exit x="448" y="1360" width="32" height="48">
+      <node x="776" y="2072"/>
+    </exit>
+    <exit x="768" y="2096" width="32" height="48">
+      <node x="456" y="1416"/>
+    </exit>
+    <exit x="1488" y="1968" width="16" height="32">
+      <node x="2760" y="744"/>
+    </exit>
+    <exit x="1392" y="1968" width="16" height="32">
+      <node x="2664" y="744"/>
+    </exit>
+    <exit x="2688" y="736" width="16" height="32">
+      <node x="1416" y="1976"/>
+    </exit>
+    <exit x="2736" y="736" width="16" height="32">
+      <node x="1472" y="1976"/>
+    </exit>
+    <exit x="1568" y="2064" width="16" height="32">
+      <node x="1680" y="2040"/>
+    </exit>
+    <exit x="1664" y="2032" width="16" height="32">
+      <node x="1552" y="2072"/>
+    </exit>
   </objects>
 </level>
