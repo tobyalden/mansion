@@ -195,7 +195,11 @@ class Player extends Entity
         var gameScene = cast(scene, GameScene);
         if(
             Main.inputPressed("cast")
-            && (canControl() || castCooldown.percent > 0.5)
+            && (
+                canControl()
+                || canControlExceptCastCooldown()
+                && castCooldown.percent > 0.5
+            )
             && !gameScene.pausePlayer
         ) {
             stamina -= CAST_COST;
@@ -278,7 +282,17 @@ class Player extends Entity
             !rollCooldown.active
             && !stunCooldown.active
             && !castCooldown.active
-            && !castCooldown.active
+            && !knockbackTimer.active
+            && !isDead
+            && !isFalling
+            && !cast(scene, GameScene).pausePlayer
+        );
+    }
+
+    private function canControlExceptCastCooldown() {
+        return (
+            !rollCooldown.active
+            && !stunCooldown.active
             && !knockbackTimer.active
             && !isDead
             && !isFalling
