@@ -167,7 +167,7 @@ class GameScene extends Scene
         addTween(cameraPanner);
         playerPusher = new LinearMotion();
         playerPusher.onComplete.bind(function() {
-            player.cancelRoll();
+            //player.cancelRoll();
         });
         addTween(playerPusher);
     }

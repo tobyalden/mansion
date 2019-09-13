@@ -6,8 +6,8 @@
 + controller support
 + implement dialogue
 + revise mansion
++ staircases
 
-- staircases
 - tutorial
 - main menu
 - save rooms (don't forget to save/load map!)
