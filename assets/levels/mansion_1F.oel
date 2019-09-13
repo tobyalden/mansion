@@ -118,7 +118,7 @@
     <room x="640" y="960" width="320" height="320" alwaysLock="false" neverLock="false"/>
   </rooms>
   <objects>
-    <player x="1432" y="2360"/>
+    <player x="1752" y="1360"/>
     <exit x="3024" y="528" width="32" height="16">
       <node x="3032" y="784"/>
     </exit>
@@ -209,5 +209,6 @@
     <exit x="2688" y="704" width="16" height="32">
       <node x="1416" y="1976"/>
     </exit>
+    <grandfather x="1760" y="1120"/>
   </objects>
 </level>

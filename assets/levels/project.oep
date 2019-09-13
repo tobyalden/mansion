@@ -34,6 +34,7 @@
 		<object name="ringmaster" image="ringmaster.png" width="80" height="80"></object>
 		<object name="superwizard" image="superwizard.png" width="80" height="80"></object>
 		<object name="grandjoker" image="grandjoker.png" width="80" height="80"></object>
+		<object name="grandfather" image="grandfather.png" width="80" height="80"></object>
 		<object name="exit" image="exit.png" width="16" height="16" resizableX="true" resizableY="true" tile="false">
 		    <nodes drawObject="true" limit="2" lineMode="2"/>
         </object>

@@ -508,11 +508,18 @@ class GameScene extends Scene
             }
         }
         for(grandJoker in fastXml.node.objects.nodes.grandjoker) {
-            var grandJoker = new SuperWizard(
+            var grandJoker = new GrandJoker(
                 Std.parseInt(grandJoker.att.x),
                 Std.parseInt(grandJoker.att.y)
             );
             allEnemies.push(grandJoker);
+        }
+        for(grandfather in fastXml.node.objects.nodes.grandfather) {
+            var grandfather = new Grandfather(
+                Std.parseInt(grandfather.att.x),
+                Std.parseInt(grandfather.att.y)
+            );
+            allEnemies.push(grandfather);
         }
         for(exit in fastXml.node.objects.nodes.exit) {
             var nodes = new Array<Vector2>();

@@ -55,7 +55,9 @@ class Spit extends Entity
             ["player"]
             //["walls", "player", "lock"]
         );
-        if(!cast(scene, GameScene).isEntityOnscreen(this)) {
+        var player = scene.getInstance("player");
+        //if(!cast(scene, GameScene).isEntityOnscreen(this)) {
+        if(distanceFrom(player) > GameScene.PLAYFIELD_SIZE * 2) {
             scene.remove(this);
         }
         super.update();
