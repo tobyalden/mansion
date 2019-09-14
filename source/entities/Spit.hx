@@ -55,6 +55,9 @@ class Spit extends Entity
             velocity.x += accel.x * HXP.elapsed;
             velocity.y += accel.y * HXP.elapsed;
         }
+        else {
+            velocity.normalize(speed);
+        }
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,

@@ -23,7 +23,7 @@ class Grandfather extends Enemy
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
     public static inline var PHASE_DURATION = 12.5;
-    public static inline var ENRAGE_PHASE_DURATION = 10;
+    public static inline var ENRAGE_PHASE_DURATION = 15;
     public static inline var CURTAIN_PHASE_DURATION_MULTIPLIER = 1.5;
     public static inline var WAVE_PHASE_DURATION_MULTIPLIER = 1.5;
 
@@ -42,6 +42,9 @@ class Grandfather extends Enemy
 
     public static inline var TENTACLE_SHOT_SPEED = 200;
     public static inline var TENTACLE_SHOT_INTERVAL = 0.01;
+
+    public static inline var ENRAGE_SHOT_SPEED = 100;
+    public static inline var ENRAGE_SHOT_INTERVAL = 0.01;
 
     private var sprite:Spritemap;
 
@@ -64,6 +67,8 @@ class Grandfather extends Enemy
     private var waveShotTimer:Alarm;
 
     private var tentacleShotTimer:Alarm;
+
+    private var enrageShotTimer:Alarm;
 
     private var sfx:Map<String, Sfx>;
 
@@ -92,7 +97,7 @@ class Grandfather extends Enemy
         addTween(phaseRelocater);
 
         //currentPhase = HXP.choose("curtain");
-        currentPhase = "tentacles";
+        currentPhase = "enrage";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -134,9 +139,16 @@ class Grandfather extends Enemy
 
         preEnrage = new Alarm(PRE_ENRAGE_TIME);
         preEnrage.onComplete.bind(function() {
-            // Start enrage phase timers
+            phaseTimer.reset(ENRAGE_PHASE_DURATION);
+            enrageShotTimer.start();
         });
         addTween(preEnrage);
+
+        enrageShotTimer = new Alarm(ENRAGE_SHOT_INTERVAL, TweenType.Looping);
+        enrageShotTimer.onComplete.bind(function() {
+            enrageShot();
+        });
+        addTween(enrageShotTimer);
 
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
@@ -147,7 +159,8 @@ class Grandfather extends Enemy
         phaseLocations = [
             "curtain" => new Vector2(screenCenter.x, screenCenter.y - 95),
             "waves" => new Vector2(screenCenter.x, screenCenter.y - 95),
-            "tentacles" => new Vector2(screenCenter.x, screenCenter.y - 95)
+            "tentacles" => new Vector2(screenCenter.x, screenCenter.y - 95),
+            "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95)
         ];
     }
 
@@ -242,6 +255,15 @@ class Grandfather extends Enemy
                     (isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION)
                 );
                 tentacleShotTimer.reset(TENTACLE_SHOT_INTERVAL);
+            }
+        }
+        else if(currentPhase == "enrage") {
+            if(
+                !preEnrage.active
+                && !enrageShotTimer.active
+            ) {
+                preEnrage.start();
+                sfx["enrage"].play();
             }
         }
     }
@@ -358,6 +380,24 @@ class Grandfather extends Enemy
         scene.add(new Spit(
             this, shotVector, TENTACLE_SHOT_SPEED, false, accel
         ));
+    }
+
+    private function enrageShot() {
+        var shotAngle = getAngleTowardsPlayer();
+        var shotVector = new Vector2(
+            Math.cos(shotAngle), Math.sin(shotAngle)
+        );
+        var spit = new Spit(this, shotVector, ENRAGE_SHOT_SPEED, false);
+        scene.add(spit);
+        spit = new Spit(this, shotVector, ENRAGE_SHOT_SPEED / 2, false);
+        scene.add(spit);
+        shotVector = new Vector2(
+            -Math.cos(shotAngle), Math.sin(shotAngle)
+        );
+        spit = new Spit(this, shotVector, ENRAGE_SHOT_SPEED, false);
+        scene.add(spit);
+        spit = new Spit(this, shotVector, ENRAGE_SHOT_SPEED / 2, false);
+        scene.add(spit);
     }
 
     private function atPhaseLocation() {
