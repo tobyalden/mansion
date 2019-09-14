@@ -19,15 +19,18 @@ class Spit extends Entity
     private var sfx:Map<String, Sfx>;
     private var speed:Float;
     private var sprite:Image;
+    private var accel:Vector2;
 
     public function new(
         spitter:Entity, velocity:Vector2, speed:Float = DEFAULT_SPEED,
-        isBig:Bool = false
+        isBig:Bool = false, accel:Vector2 = null
     ) {
         var size = isBig ? BIG_SIZE : SIZE;
         super(spitter.centerX - size / 2, spitter.centerY - size / 2);
         this.velocity = velocity;
         this.speed = speed;
+        velocity.normalize(speed);
+        this.accel = accel;
         type = "hazard";
         mask = new Hitbox(size, size);
         if(isBig) {
@@ -48,7 +51,10 @@ class Spit extends Entity
     }
 
     override public function update() {
-        velocity.normalize(speed);
+        if(accel != null) {
+            velocity.x += accel.x * HXP.elapsed;
+            velocity.y += accel.y * HXP.elapsed;
+        }
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,

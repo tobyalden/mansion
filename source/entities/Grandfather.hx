@@ -25,6 +25,7 @@ class Grandfather extends Enemy
     public static inline var PHASE_DURATION = 12.5;
     public static inline var ENRAGE_PHASE_DURATION = 10;
     public static inline var CURTAIN_PHASE_DURATION_MULTIPLIER = 1.5;
+    public static inline var WAVE_PHASE_DURATION_MULTIPLIER = 1.5;
 
     public static inline var STARTING_HEALTH = 100;
     public static inline var ENRAGE_THRESHOLD = 40;
@@ -34,6 +35,10 @@ class Grandfather extends Enemy
     public static inline var ENRAGE_CURTAIN_SHOT_INTERVAL = 0.5;
     public static inline var CURTAIN_AIMED_SHOT_INTERVAL = 1;
     public static inline var CURTAIN_AIMED_SHOT_SPEED = 200;
+
+    public static inline var WAVE_SHOT_SPEED = 185;
+    public static inline var WAVE_SHOT_INTERVAL = 2;
+    public static inline var ENRAGE_WAVE_SHOT_INTERVAL = 1.5;
 
     private var sprite:Spritemap;
 
@@ -52,6 +57,8 @@ class Grandfather extends Enemy
 
     private var curtainShotTimer:Alarm;
     private var curtainAimedShotTimer:Alarm;
+
+    private var waveShotTimer:Alarm;
 
     private var sfx:Map<String, Sfx>;
 
@@ -79,7 +86,8 @@ class Grandfather extends Enemy
         phaseRelocater = new LinearMotion();
         addTween(phaseRelocater);
 
-        currentPhase = HXP.choose("curtain");
+        //currentPhase = HXP.choose("curtain");
+        currentPhase = "waves";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -107,6 +115,12 @@ class Grandfather extends Enemy
         });
         addTween(curtainAimedShotTimer);
 
+        waveShotTimer = new Alarm(WAVE_SHOT_INTERVAL, TweenType.Looping);
+        waveShotTimer.onComplete.bind(function() {
+            waveShot();
+        });
+        addTween(waveShotTimer);
+
         preEnrage = new Alarm(PRE_ENRAGE_TIME);
         preEnrage.onComplete.bind(function() {
             // Start enrage phase timers
@@ -120,7 +134,8 @@ class Grandfather extends Enemy
 
     private function generatePhaseLocations() {
         phaseLocations = [
-            "curtain" => new Vector2(screenCenter.x, screenCenter.y - 95)
+            "curtain" => new Vector2(screenCenter.x, screenCenter.y - 95),
+            "waves" => new Vector2(screenCenter.x, screenCenter.y - 95)
         ];
     }
 
@@ -196,6 +211,18 @@ class Grandfather extends Enemy
                 curtainAimedShotTimer.start();
             }
         }
+        else if(currentPhase == "waves") {
+            if(!waveShotTimer.active) {
+                phaseTimer.reset(
+                    (isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION)
+                    * WAVE_PHASE_DURATION_MULTIPLIER
+                );
+                waveShotTimer.reset(
+                    isEnraged ?
+                    ENRAGE_WAVE_SHOT_INTERVAL : WAVE_SHOT_INTERVAL
+                );
+            }
+        }
     }
 
     private function curtainShot() {
@@ -245,6 +272,34 @@ class Grandfather extends Enemy
             Math.cos(shotAngle), Math.sin(shotAngle)
         );
         scene.add(new Spit(this, shotVector, CURTAIN_AIMED_SHOT_SPEED, true));
+    }
+
+    private function waveShot() {
+        var fromSide = HXP.choose(true, false);
+        var fromLeft = HXP.choose(true, false);
+        for(i in -50...50) {
+            var shotVector = new Vector2(0, 1);
+            var accel = new Vector2(0, -70);
+            var spit = new Spit(
+                this, shotVector, WAVE_SHOT_SPEED, false, accel
+            );
+            spit.x += i * 3;
+            spit.y -= 10;
+            if(!fromSide) {
+                scene.add(spit);
+            }
+
+            shotVector = new Vector2(fromLeft ? 1 : -1, 0);
+            accel = new Vector2(fromLeft ? -60 : 60, 0);
+            spit = new Spit(
+                this, shotVector, WAVE_SHOT_SPEED, false, accel
+            );
+            spit.x -= fromLeft ? 150 : -150;
+            spit.y += i * 3 + 100;
+            if(fromSide) {
+                scene.add(spit);
+            }
+        }
     }
 
     private function atPhaseLocation() {
