@@ -76,7 +76,9 @@ class RingMaster extends Enemy
         ];
         name = "ringmaster";
         isBoss = true;
-        mask = new Hitbox(SIZE, SIZE);
+        var hitbox = new Hitbox(49, 80);
+        hitbox.x = 18;
+        mask = hitbox;
         //x -= width / 2;
         //y -= height / 2;
         screenCenter = new Vector2(x, y);
