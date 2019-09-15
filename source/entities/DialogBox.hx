@@ -35,6 +35,7 @@ class DialogBox extends Entity
 
     private var text:Text;
     private var box:ColoredRect;
+    private var frame:Image;
     private var portrait:Spritemap;
     private var cursor:Spritemap;
     private var conversation:Array<NPCDialogLine>;
@@ -55,27 +56,30 @@ class DialogBox extends Entity
         layer = -99;
         followCamera = sceneCamera;
         box = new ColoredRect(BOX_WIDTH, 0, 0x000000);
+        frame = new Image("graphics/dialogueborder.png");
+        frame.visible = false;
         portrait = new Spritemap("graphics/portraits.png", 160, 160);
         portrait.add("mc", [0]);
         portrait.add("butler", [1]);
         portrait.x = BOX_WIDTH - 150;
         portrait.y = -160;
         text = new Text(
-            "", 0, 0, BOX_WIDTH - 20, BOX_HEIGHT
+            "", 5, 5, BOX_WIDTH - 20, BOX_HEIGHT - 5
         );
         text.size = 12;
         text.font = "font/tmnt-the-hyperstone-heist-italic.ttf";
         text.resizable = false;
         text.wordWrap = true;
-        text.leading = 10;
+        text.leading = 5;
         cursor = new Spritemap("graphics/cursor.png", 11, 6);
         cursor.add("idle", [0]);
         cursor.add("blink", [0, 1], 3);
         cursor.play("blink");
-        cursor.x = BOX_WIDTH - 15;
-        cursor.y = BOX_HEIGHT - 10;
+        cursor.x = BOX_WIDTH - 20;
+        cursor.y = BOX_HEIGHT - 12;
         cursorStartY = cursor.y;
         addGraphic(box);
+        addGraphic(frame);
         addGraphic(text);
         addGraphic(cursor);
         addGraphic(portrait);
@@ -237,6 +241,7 @@ class DialogBox extends Entity
             box.y = (BOX_HEIGHT/2) * (1 - (box.height / BOX_HEIGHT));
             if(box.height == BOX_HEIGHT) {
                 isFadingIn = false;
+                frame.visible = true;
             }
         }
         else if(isFadingOut) {
@@ -246,6 +251,7 @@ class DialogBox extends Entity
                 isFadingOut = false;
                 cast(scene, GameScene).endConversation();
                 visible = false;
+                frame.visible = false;
             }
         }
 
