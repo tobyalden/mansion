@@ -82,8 +82,10 @@ class RingMaster extends Enemy
         screenCenter = new Vector2(x, y);
         y -= 50;
         startPosition.y -= 50;
-        sprite = new Spritemap("graphics/ringmaster.png", SIZE, SIZE);
-        sprite.add("idle", [0]);
+        sprite = new Spritemap("graphics/bosses.png", SIZE, SIZE);
+        sprite.add("idle", [3]);
+        sprite.add("tossone", [4]);
+        sprite.add("tossboth", [5]);
         sprite.play("idle");
         graphic = sprite;
         health = STARTING_HEALTH;
@@ -135,6 +137,8 @@ class RingMaster extends Enemy
         );
         scatterShotTimer.onComplete.bind(function() {
             scatterShot();
+            sprite.play("tossboth");
+            returnToIdleAfterPause();
         });
         addTween(scatterShotTimer);
 
@@ -150,6 +154,8 @@ class RingMaster extends Enemy
                 }
                 else if(chaseCount < numChases) {
                     ring.chase(lastChasingRing);
+                    sprite.play("tossone");
+                    returnToIdleAfterPause();
                     chaseCount++;
                     return;
                 }
@@ -157,6 +163,8 @@ class RingMaster extends Enemy
             // If we're out of rings, start shooting and moving
             if(!scatterShotTimer.active) {
                 scatterShot();
+                sprite.play("tossboth");
+                returnToIdleAfterPause();
                 if(isEnraged) {
                     scatterShotTimer.reset(ENRAGED_SCATTER_SHOT_INTERVAL);
                 }
@@ -202,6 +210,9 @@ class RingMaster extends Enemy
                 rings[4].enrageToss(true, tossSpeed);
                 rings[5].enrageToss(false, tossSpeed);
             }
+            sprite.play("tossboth");
+            sprite.flipX = !sprite.flipX;
+            returnToIdleAfterPause();
         });
         addTween(enrageTossTimer);
 
@@ -226,28 +237,48 @@ class RingMaster extends Enemy
         ];
     }
 
+    private function returnToIdleAfterPause() {
+        var returnToIdlePause = new Alarm(0.75);
+        returnToIdlePause.onComplete.bind(function() {
+            sprite.play("idle");
+        });
+        addTween(returnToIdlePause, true);
+    }
+
     private function tossRing() {
         if(isEnraged) {
             if(tossCount == 4) {
                 rings[0].toss(false);
                 rings[1].toss(true);
+                sprite.play("tossboth");
+                sprite.flipX = !sprite.flipX;
             }
             else {
-                rings[tossCount % 4].toss(tossCount % 2 == 0 ? true : false);
+                var tossRight = tossCount % 2 == 0 ? true : false;
+                rings[tossCount % 4].toss(tossRight);
+                sprite.play("tossone");
+                sprite.flipX = tossRight;
             }
         }
         else {
             if(tossCount == 0) {
                 rings[0].toss(false);
+                sprite.flipX = false;
+                sprite.play("tossone");
             }
             else if(tossCount == 1) {
                 rings[1].toss(true);
+                sprite.flipX = true;
+                sprite.play("tossone");
             }
             else {
                 rings[0].toss(false);
                 rings[1].toss(true);
+                sprite.play("tossboth");
+                sprite.flipX = !sprite.flipX;
             }
         }
+        returnToIdleAfterPause();
         tossCount++;
     }
 
@@ -342,6 +373,7 @@ class RingMaster extends Enemy
             }
         }
         if(betweenPhases) {
+            sprite.play("idle");
             if(preAdvancePhaseTimer.active) {
                 // Do nothing
             }
@@ -378,6 +410,8 @@ class RingMaster extends Enemy
             }
         }
         else if(currentPhase == "chaserings") {
+            var player = scene.getInstance("player");
+            sprite.flipX = centerX < player.centerX;
             if(!chaseTimer.active) {
                 if(isEnraged) {
                     chaseTimer.reset(
@@ -389,6 +423,8 @@ class RingMaster extends Enemy
                 }
                 var player = scene.getInstance("player");
                 rings[0].chase(player);
+                sprite.play("tossone");
+                returnToIdleAfterPause();
                 chaseCount = 1;
             }
             if(circlePerimeter.active && circlePerimeter.x != 0) {
@@ -396,6 +432,7 @@ class RingMaster extends Enemy
             }
         }
         else if(currentPhase == "bouncerings") {
+            sprite.play("tossboth");
             if(!bounceTimer.active && !rings[0].isReturning) {
                 bounceTimer.start();
                 var bounceCount = 0;

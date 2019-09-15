@@ -118,7 +118,6 @@
     <room x="640" y="960" width="320" height="320" alwaysLock="false" neverLock="false"/>
   </rooms>
   <objects>
-    <player x="2072" y="2336"/>
     <exit x="3024" y="528" width="32" height="16">
       <node x="3032" y="784"/>
     </exit>
@@ -211,5 +210,7 @@
     </exit>
     <grandfather x="1760" y="1120"/>
     <superwizard x="2080" y="2080"/>
+    <player x="792" y="1368"/>
+    <ringmaster x="800" y="1120"/>
   </objects>
 </level>
