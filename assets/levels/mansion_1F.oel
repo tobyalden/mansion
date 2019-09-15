@@ -211,7 +211,8 @@
     <grandfather x="1760" y="1120"/>
     <superwizard x="2080" y="2080"/>
     <ringmaster x="800" y="1120"/>
-    <player x="2392" y="424"/>
     <grandjoker x="2400" y="160"/>
+    <butler x="1392" y="2064"/>
+    <player x="1440" y="2136"/>
   </objects>
 </level>

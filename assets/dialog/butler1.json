@@ -1,0 +1,37 @@
+{
+    "conversation": [
+        {
+            "portrait": "butler",
+            "text": "Welcome home, Miss Aria."
+        },
+        {
+            "portrait": "mc",
+            "text": "Hey, Arthur. It's good to see you."
+        },
+        {
+            "portrait": "butler",
+            "text": "And you as well, Miss."
+        },
+        {
+            "portrait": "butler",
+            "text": "It's been some time."
+        },
+        {
+            "portrait": "butler",
+            "text": "Will you be staying long?"
+        },
+        {
+            "portrait": "mc",
+            "text": "I don't think so, no. Just tying up some loose ends."
+        },
+        {
+            "portrait": "butler",
+            "text": "I see."
+        },
+        {
+            "portrait": "butler",
+            "text": "Well, do let me know if you require any assistance."
+        }
+    ]
+}
+

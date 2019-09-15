@@ -82,6 +82,7 @@ class GameScene extends Scene
         allEnemies = new Array<Entity>();
         player = new Player(0, 0);
         add(player);
+        add(player.sword);
         if(isProcedural) {
             loadMaps(0);
             placeLevels();
@@ -94,7 +95,6 @@ class GameScene extends Scene
             HXP.shuffle(openSpots);
             player.x = start.x + PLAYFIELD_SIZE / 2 - 8 + 100;
             player.y = start.y + PLAYFIELD_SIZE / 2 - 8 + 100;
-            //add(player.sword);
             var boss = new RingMaster(
                 start.x + PLAYFIELD_SIZE / 2,
                 start.y + PLAYFIELD_SIZE / 2
@@ -520,6 +520,13 @@ class GameScene extends Scene
                 Std.parseInt(grandfather.att.y)
             );
             allEnemies.push(grandfather);
+        }
+        for(butler in fastXml.node.objects.nodes.butler) {
+            var butler = new Butler(
+                Std.parseInt(butler.att.x),
+                Std.parseInt(butler.att.y)
+            );
+            add(butler);
         }
         for(exit in fastXml.node.objects.nodes.exit) {
             var nodes = new Array<Vector2>();

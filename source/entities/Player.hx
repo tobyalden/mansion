@@ -48,6 +48,7 @@ class Player extends Entity
     public var health(default, null):Int;
     public var facing(default, null):String;
     public var flaskCount(default, null):Int;
+    public var sword(default, null):Sword;
     private var velocity:Vector2;
     private var rollCooldown:Alarm;
     private var stunCooldown:Alarm;
@@ -74,6 +75,7 @@ class Player extends Entity
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
+        sword = new Sword(this);
         layer = -10;
         type = "player";
         name = "player";
@@ -202,9 +204,16 @@ class Player extends Entity
             )
             && !gameScene.pausePlayer
         ) {
-            stamina -= CAST_COST;
-            staminaRecoveryDelay.start();
-            castSpell();
+            //stamina -= CAST_COST;
+            //staminaRecoveryDelay.start();
+            var conversationPartner = sword.getConversationPartner();
+            if(conversationPartner != null) {
+                var gameScene = cast(scene, GameScene);
+                gameScene.converse(conversationPartner.getConversation());
+            }
+            else {
+                castSpell();
+            }
         }
         movement();
         animation();
@@ -419,7 +428,7 @@ class Player extends Entity
         moveBy(
             velocity.x * HXP.elapsed,
             velocity.y * HXP.elapsed,
-            ["walls", "lock"]
+            ["walls", "lock", "npc"]
         );
     }
 
