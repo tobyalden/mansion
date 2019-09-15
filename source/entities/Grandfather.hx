@@ -46,6 +46,9 @@ class Grandfather extends Enemy
     public static inline var ENRAGE_SHOT_SPEED = 100;
     public static inline var ENRAGE_SHOT_INTERVAL = 0.01;
 
+    public static inline var CHARGE_DISTANCE = 160;
+    public static inline var CHARGE_TIME = 2;
+
     private var sprite:Spritemap;
 
     private var preEnrage:Alarm;
@@ -69,6 +72,9 @@ class Grandfather extends Enemy
     private var tentacleShotTimer:Alarm;
 
     private var enrageShotTimer:Alarm;
+
+    private var chargeAttack:LinearMotion;
+    private var chargeRetreat:LinearMotion;
 
     private var sfx:Map<String, Sfx>;
 
@@ -96,8 +102,23 @@ class Grandfather extends Enemy
         phaseRelocater = new LinearMotion();
         addTween(phaseRelocater);
 
-        //currentPhase = HXP.choose("curtain");
-        currentPhase = "enrage";
+        chargeAttack = new LinearMotion();
+        chargeAttack.onComplete.bind(function() {
+            chargeRetreat.setMotion(
+                x, y, x, y - CHARGE_DISTANCE, CHARGE_TIME, Ease.sineInOut
+            );
+            chargeRetreat.start();
+        });
+        addTween(chargeAttack);
+        chargeRetreat = new LinearMotion();
+        chargeRetreat.onComplete.bind(function() {
+            preAdvancePhase();
+        });
+
+        addTween(chargeRetreat);
+
+        //currentPhase = HXP.choose("waves");
+        currentPhase = "charge";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -157,6 +178,7 @@ class Grandfather extends Enemy
 
     private function generatePhaseLocations() {
         phaseLocations = [
+            "charge" => new Vector2(screenCenter.x, screenCenter.y - 95),
             "curtain" => new Vector2(screenCenter.x, screenCenter.y - 95),
             "waves" => new Vector2(screenCenter.x, screenCenter.y - 95),
             "tentacles" => new Vector2(screenCenter.x, screenCenter.y - 95),
@@ -184,11 +206,16 @@ class Grandfather extends Enemy
             for(phaseName in phaseLocations.keys()) {
                 allPhases.push(phaseName);
             }
-            //allPhases.remove(currentPhase);
+            allPhases.remove(currentPhase);
             allPhases.remove("enrage");
-            currentPhase = allPhases[
-                Std.int(Math.floor(Math.random() * allPhases.length))
-            ];
+            if(currentPhase == "charge") {
+                currentPhase = allPhases[
+                    Std.int(Math.floor(Math.random() * allPhases.length))
+                ];
+            }
+            else {
+                currentPhase = "charge";
+            }
         }
     }
 
@@ -221,6 +248,22 @@ class Grandfather extends Enemy
                     phaseRelocater.start();
                 }
                 moveTo(phaseRelocater.x, phaseRelocater.y);
+            }
+        }
+        else if(currentPhase == "charge") {
+            if(!chargeAttack.active && !chargeRetreat.active) {
+                chargeAttack.setMotion(
+                    x, y, x, y + CHARGE_DISTANCE, CHARGE_TIME, Ease.sineInOut
+                );
+                chargeAttack.start();
+            }
+            else {
+                if(chargeAttack.active) {
+                    moveTo(chargeAttack.x, chargeAttack.y);
+                }
+                else {
+                    moveTo(chargeRetreat.x, chargeRetreat.y);
+                }
             }
         }
         else if(currentPhase == "curtain") {
