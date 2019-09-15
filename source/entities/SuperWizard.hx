@@ -97,8 +97,10 @@ class SuperWizard extends Enemy
         screenCenter = new Vector2(x, y);
         y -= 50;
         startPosition.y -= 50;
-        sprite = new Spritemap("graphics/superwizard.png", SIZE, SIZE);
+        sprite = new Spritemap("graphics/bosses.png", SIZE, SIZE);
         sprite.add("idle", [0]);
+        sprite.add("laser", [1]);
+        sprite.add("shoot", [2]);
         sprite.play("idle");
         graphic = sprite;
         health = STARTING_HEALTH;
@@ -289,6 +291,7 @@ class SuperWizard extends Enemy
             }
         }
         else if(betweenPhases) {
+            sprite.play("idle");
             if(preAdvancePhaseTimer.active) {
                 // Do nothing
             }
@@ -314,6 +317,7 @@ class SuperWizard extends Enemy
             }
         }
         else if(currentPhase == "spiral") {
+            sprite.play("shoot");
             if(!spiralShotInterval.active) {
                 spiralShotInterval.start();
                 spiralShotStartAngle = getAngleTowardsPlayer();
@@ -322,6 +326,7 @@ class SuperWizard extends Enemy
             }
         }
         else if(currentPhase == "rippleAndSpout") {
+            sprite.play("shoot");
             if(!rippleShotInterval.active) {
                 rippleShotInterval.reset(
                     isEnraged ?
@@ -338,6 +343,7 @@ class SuperWizard extends Enemy
             }
         }
         else if(currentPhase == "zigZag") {
+            sprite.play("laser");
             if(
                 !preLaser.active && !preZigZag.active
                 && !zigZag.active && !postZigZag.active
@@ -354,6 +360,7 @@ class SuperWizard extends Enemy
             }
         }
         else if(currentPhase == "enrage") {
+            sprite.play("shoot");
             if(
                 !preEnrage.active
                 && !enrageRippleInterval.active
