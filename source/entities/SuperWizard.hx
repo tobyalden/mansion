@@ -91,7 +91,9 @@ class SuperWizard extends Enemy
         super(startX - SIZE / 2, startY - SIZE / 2);
         name = "superwizard";
         isBoss = true;
-        mask = new Hitbox(SIZE, SIZE);
+        var hitbox = new Hitbox(50, SIZE);
+        hitbox.x = 16;
+        mask = hitbox;
         //x -= width / 2;
         //y -= height / 2;
         screenCenter = new Vector2(x, y);

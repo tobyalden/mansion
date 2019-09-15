@@ -210,7 +210,7 @@
     </exit>
     <grandfather x="1760" y="1120"/>
     <superwizard x="2080" y="2080"/>
-    <player x="792" y="1368"/>
     <ringmaster x="800" y="1120"/>
+    <player x="2072" y="2272"/>
   </objects>
 </level>
