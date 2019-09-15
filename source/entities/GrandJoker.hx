@@ -69,19 +69,26 @@ class GrandJoker extends Enemy
     private var enrageShotTimer:Alarm;
 
     private var sfx:Map<String, Sfx>;
+    private var hitbox:Hitbox;
 
     public function new(startX:Float, startY:Float) {
         super(startX - SIZE / 2, startY - SIZE / 2);
         name = "grandjoker";
+        layer = -10;
         isBoss = true;
-        mask = new Hitbox(SIZE, SIZE);
+        hitbox = new Hitbox(52, 64);
+        hitbox.x = 3;
+        hitbox.y = 16;
+        //hitbox.x = 25;
+        mask = hitbox;
         //x -= width / 2;
         //y -= height / 2;
         screenCenter = new Vector2(x, y);
         y -= 50;
         startPosition.y -= 50;
-        sprite = new Spritemap("graphics/grandjoker.png", SIZE, SIZE);
-        sprite.add("idle", [0]);
+        sprite = new Spritemap("graphics/bosses.png", SIZE, SIZE);
+        sprite.add("idle", [6, 7], 4);
+        sprite.add("shoot", [8, 9], 2);
         sprite.play("idle");
         graphic = sprite;
         health = STARTING_HEALTH;
@@ -123,6 +130,7 @@ class GrandJoker extends Enemy
         curtainBarrierShotTimer = new Alarm(0.05, TweenType.Looping);
         curtainBarrierShotTimer.onComplete.bind(function() {
             curtainBarrierShot();
+            sprite.play("shoot");
         });
         addTween(curtainBarrierShotTimer);
 
@@ -136,6 +144,7 @@ class GrandJoker extends Enemy
         preEnrage.onComplete.bind(function() {
             age = 0;
             enrageShotTimer.start();
+            sprite.play("shoot");
         });
         addTween(preEnrage);
 
@@ -224,6 +233,10 @@ class GrandJoker extends Enemy
             }
         }
         if(betweenPhases) {
+            var player = scene.getInstance("player");
+            sprite.play("idle");
+            sprite.flipX = centerX > player.centerX;
+            hitbox.x = sprite.flipX ? 25 : 3;
             if(preAdvancePhaseTimer.active) {
                 // Do nothing
             }
@@ -250,6 +263,7 @@ class GrandJoker extends Enemy
         }
         else if(currentPhase == "clock") {
             if(!clockShotTimer.active) {
+                sprite.play("shoot");
                 phaseTimer.reset(
                     isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION
                 );
@@ -272,6 +286,10 @@ class GrandJoker extends Enemy
             }
         }
         else if(currentPhase == "circle") {
+            var player = scene.getInstance("player");
+            sprite.play("idle");
+            sprite.flipX = centerX > player.centerX;
+            hitbox.x = sprite.flipX ? 25 : 3;
             if(!circlePerimeter.active && !preAdvancePhaseTimer.active) {
                 circlePerimeter.setMotion(
                     isEnraged ?
