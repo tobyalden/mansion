@@ -180,6 +180,7 @@ class SuperWizard extends Enemy
         addTween(enrageSpoutInterval);
 
         currentPhase = HXP.choose("spiral", "rippleAndSpout", "zigZag");
+        currentPhase = "zigZag";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -358,7 +359,7 @@ class SuperWizard extends Enemy
                 // where LinearMotion instances return (0, 0) after starting
                 // until a frame has passed
                 moveTo(zigZag.x, zigZag.y);
-                laser.moveTo(centerX - laser.width / 2, bottom);
+                laser.moveTo(centerX - laser.width / 2, bottom - 40);
             }
         }
         else if(currentPhase == "enrage") {

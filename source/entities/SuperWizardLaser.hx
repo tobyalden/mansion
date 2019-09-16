@@ -21,10 +21,11 @@ class SuperWizardLaser extends Entity {
         super();
         this.wizard = wizard;
         type = "hazard";
-        sprite = new Spritemap("graphics/superwizardlaser.png", 30, 200);
-        sprite.add("on", [0]);
-        sprite.add("warmingup", [1]);
-        sprite.add("off", [2]);
+        layer = -9;
+        sprite = new Spritemap("graphics/superwizardlaser.png", 30, 300);
+        sprite.add("on", [0, 3], 4);
+        sprite.add("warmingup", [1, 2], 4);
+        sprite.add("off", [4]);
         sprite.play("off");
         graphic = sprite;
         mask = new Hitbox(30, 200);
@@ -54,7 +55,7 @@ class SuperWizardLaser extends Entity {
     }
 
     override public function update() {
-        moveTo(wizard.centerX - width / 2, wizard.bottom);
+        moveTo(wizard.centerX - width / 2, wizard.bottom - 40);
         super.update();
     }
 }
