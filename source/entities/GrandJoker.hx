@@ -160,6 +160,7 @@ class GrandJoker extends Enemy
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
         ];
+        fightStarted = GameScene.hasGlobalFlag("grandJokerFightStarted");
     }
 
     private function generatePhaseLocations() {
@@ -252,6 +253,7 @@ class GrandJoker extends Enemy
             var player = scene.getInstance("player");
             if(player.y - bottom < 50 && !gameScene.isDialogMode) {
                 gameScene.converse("grandjoker");
+                GameScene.addGlobalFlag("grandJokerFightStarted");
             }
         }
         else if(betweenPhases) {

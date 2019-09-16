@@ -196,6 +196,7 @@ class SuperWizard extends Enemy
             "enrage" => new Sfx("audio/enrage.wav")
         ];
         collidable = false;
+        fightStarted = GameScene.hasGlobalFlag("superWizardFightStarted");
     }
 
     private function generatePhaseLocations() {
@@ -289,6 +290,7 @@ class SuperWizard extends Enemy
             var player = scene.getInstance("player");
             if(player.y - bottom < 50 && !gameScene.isDialogMode) {
                 gameScene.converse("superwizard");
+                GameScene.addGlobalFlag("superWizardFightStarted");
             }
         }
         else if(betweenPhases) {

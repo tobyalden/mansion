@@ -27,6 +27,25 @@ class GameScene extends Scene
     public static inline var LOCK_CHANCE = 1;
 
     public static var isProcedural = false;
+    public static var currentGlobalFlags(default, null):Array<String>;
+    private static var globalFlagsAtStart:Array<String> = [];
+
+    public static function hasGlobalFlag(flag:String) {
+        return currentGlobalFlags.indexOf(flag) != -1;
+    }
+
+    public static function addGlobalFlag(flag:String) {
+        if(currentGlobalFlags.indexOf(flag) == -1 && flag != "") {
+            currentGlobalFlags.push(flag);
+            trace('added currentGlobal flag: ${flag}');
+        }
+    }
+
+    public static function removeGlobalFlag(flag:String) {
+        if(currentGlobalFlags.remove(flag)) {
+            trace('removed currentGlobal flag: ${flag}');
+        }
+    }
 
     public var isLevelLocked(default, null):Bool;
     public var currentLevel(default, null):Level;
@@ -60,6 +79,9 @@ class GameScene extends Scene
     }
 
     override public function begin() {
+        currentGlobalFlags = Data.read(
+            "globalFlags", globalFlagsAtStart
+        );
         isMovingDuringFade = false;
         lastConversationName = "";
         var onScreenBoxSprite = new ColoredRect(

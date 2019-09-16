@@ -240,6 +240,7 @@ class RingMaster extends Enemy
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
         ];
+        fightStarted = GameScene.hasGlobalFlag("ringMasterFightStarted");
     }
 
     private function returnToIdleAfterPause() {
@@ -392,6 +393,7 @@ class RingMaster extends Enemy
             var player = scene.getInstance("player");
             if(player.y - bottom < 50 && !gameScene.isDialogMode) {
                 gameScene.converse("ringmaster");
+                GameScene.addGlobalFlag("ringMasterFightStarted");
             }
         }
         else if(betweenPhases) {
