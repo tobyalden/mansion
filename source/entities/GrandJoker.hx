@@ -469,6 +469,7 @@ class GrandJoker extends Enemy
     }
 
     override function die() {
+        GameScene.addGlobalFlag("grandJokerDefeated");
         for(tween in tweens) {
             tween.active = false;
         }

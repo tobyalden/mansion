@@ -514,6 +514,9 @@ class GameScene extends Scene
             allEnemies.push(booster);
         }
         for(superWizard in fastXml.node.objects.nodes.superwizard) {
+            if(hasGlobalFlag("superWizardDefeated")) {
+                break;
+            }
             var superWizard = new SuperWizard(
                 Std.parseInt(superWizard.att.x),
                 Std.parseInt(superWizard.att.y)
@@ -522,6 +525,9 @@ class GameScene extends Scene
             add(superWizard.laser);
         }
         for(ringMaster in fastXml.node.objects.nodes.ringmaster) {
+            if(hasGlobalFlag("ringMasterDefeated")) {
+                break;
+            }
             var ringMaster = new RingMaster(
                 Std.parseInt(ringMaster.att.x),
                 Std.parseInt(ringMaster.att.y)
@@ -532,6 +538,9 @@ class GameScene extends Scene
             }
         }
         for(grandJoker in fastXml.node.objects.nodes.grandjoker) {
+            if(hasGlobalFlag("grandJokerDefeated")) {
+                break;
+            }
             var grandJoker = new GrandJoker(
                 Std.parseInt(grandJoker.att.x),
                 Std.parseInt(grandJoker.att.y)
@@ -539,6 +548,9 @@ class GameScene extends Scene
             allEnemies.push(grandJoker);
         }
         for(grandfather in fastXml.node.objects.nodes.grandfather) {
+            if(hasGlobalFlag("grandfatherDefeated")) {
+                break;
+            }
             var grandfather = new Grandfather(
                 Std.parseInt(grandfather.att.x),
                 Std.parseInt(grandfather.att.y)

@@ -423,6 +423,7 @@ class SuperWizard extends Enemy
     }
 
     override function die() {
+        GameScene.addGlobalFlag("superWizardDefeated");
         for(tween in tweens) {
             tween.active = false;
         }
