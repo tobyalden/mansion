@@ -180,7 +180,6 @@ class SuperWizard extends Enemy
         addTween(enrageSpoutInterval);
 
         currentPhase = HXP.choose("spiral", "rippleAndSpout", "zigZag");
-        currentPhase = "zigZag";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
