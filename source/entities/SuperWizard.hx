@@ -86,7 +86,6 @@ class SuperWizard extends Enemy
 
     private var sfx:Map<String, Sfx>;
 
-
     public function new(startX:Float, startY:Float) {
         super(startX - SIZE / 2, startY - SIZE / 2);
         name = "superwizard";

@@ -16,6 +16,8 @@ class SuperWizardLaser extends Entity {
     private var sprite:Spritemap;
     private var warmUpTimer:Alarm;
     private var turnOffTimer:Alarm;
+    private var isOn:Bool;
+    private var sfx:Map<String, Sfx>;
 
     public function new(wizard:SuperWizard) {
         super();
@@ -34,6 +36,7 @@ class SuperWizardLaser extends Entity {
         warmUpTimer.onComplete.bind(function() {
             sprite.play("on");
             collidable = true;
+            isOn = true;
         });
         addTween(warmUpTimer);
         turnOffTimer = new Alarm(TURN_OFF_TIME);
@@ -41,20 +44,33 @@ class SuperWizardLaser extends Entity {
             sprite.play("off");
         });
         addTween(turnOffTimer);
+        sfx = [
+            "laser" => new Sfx("audio/laser.wav"),
+            "laserwarmup" => new Sfx("audio/laserwarmup.wav"),
+            "lasercooldown" => new Sfx("audio/lasercooldown.wav")
+        ];
+        isOn = false;
     }
 
     public function turnOn() {
         sprite.play("warmingup");
+        sfx["laserwarmup"].play();
         warmUpTimer.start(); 
     }
 
     public function turnOff() {
+        sfx["lasercooldown"].play();
+        sfx["laser"].stop();
         collidable = false;
         sprite.play("warmingup");
         turnOffTimer.start();
+        isOn = false;
     }
 
     override public function update() {
+        if(isOn && !sfx["laser"].playing) {
+            sfx["laser"].loop();
+        }
         moveTo(wizard.centerX - width / 2, wizard.bottom - 40);
         super.update();
     }
