@@ -178,7 +178,7 @@ class SuperWizard extends Enemy
         addTween(enrageSpoutInterval);
 
         currentPhase = HXP.choose("spiral", "rippleAndSpout", "zigZag");
-        //currentPhase = "rippleAndSpout";
+        //currentPhase = "spiral";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -199,7 +199,8 @@ class SuperWizard extends Enemy
             "bigshot3" => new Sfx("audio/bigshot3.wav"),
             "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
             "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
-            "rippleattack3" => new Sfx("audio/rippleattack3.wav")
+            "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
+            "flurry" => new Sfx("audio/flurry.wav")
         ];
         collidable = false;
         fightStarted = GameScene.hasGlobalFlag("superWizardFightStarted");
@@ -300,6 +301,7 @@ class SuperWizard extends Enemy
             }
         }
         else if(betweenPhases) {
+            sfx['flurry'].stop();
             sprite.play("idle");
             if(preAdvancePhaseTimer.active) {
                 // Do nothing
@@ -389,6 +391,9 @@ class SuperWizard extends Enemy
     }
 
     private function spiralShot() {
+        if(!sfx["flurry"].playing) {
+            sfx["flurry"].loop();
+        }
         var numBullets = (
             isEnraged ? SPIRAL_BULLETS_PER_SHOT + 1 : SPIRAL_BULLETS_PER_SHOT
         );
