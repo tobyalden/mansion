@@ -73,6 +73,7 @@ class GameScene extends Scene
     private var onScreenBox:Entity;
     private var isMovingDuringFade:Bool;
     private var lastConversationName:String;
+    private var tutorial:Tutorial;
 
     public function setIsLevelLocked(newIsLevelLocked:Bool)  {
         isLevelLocked = newIsLevelLocked;
@@ -99,6 +100,9 @@ class GameScene extends Scene
 
         dialogBox = new DialogBox(camera);
         add(dialogBox);
+
+        tutorial = new Tutorial(camera);
+        add(tutorial);
 
         Key.define("restart", [Key.R]);
         Key.define("zoomout", [Key.Q]);
@@ -414,6 +418,31 @@ class GameScene extends Scene
         }
         onScreenBox.x = camera.x + 20;
         onScreenBox.y = camera.y + 20;
+
+        if(player.sword.getConversationPartner() != null) {
+            tutorial.visible = !isDialogMode;
+            tutorial.teach("talk");
+        }
+        else {
+            tutorial.visible = !hasGlobalFlag("tutorialCompleted");
+            if(currentScreenX == 4 && currentScreenY == 7) {
+                tutorial.teach("movement");
+            }
+            else if(currentScreenX == 4 && currentScreenY == 6) {
+                tutorial.teach("roll");
+            }
+            else if(
+                currentScreenX == 5 && currentScreenY == 6
+                || currentScreenX == 8 && currentScreenY == 2
+                || currentScreenX == 3 && currentScreenY == 7
+            ) {
+                tutorial.teach("attack");
+            }
+            else {
+                addGlobalFlag("tutorialCompleted");
+            }
+        }
+
         debug();
     }
 
@@ -774,6 +803,9 @@ class GameScene extends Scene
     private function debug() {
         if(Main.inputPressed("testdialog")) {
             converse('test');
+        }
+        else if(Main.inputPressed("print")) {
+            trace('screenX: ${currentScreenX}. screenY" ${currentScreenY}');
         }
     }
 

@@ -30,6 +30,7 @@ class Main extends Engine
         Key.define("cast", [Key.X]);
         Key.define("showmap", [Key.M]);
         Key.define("testdialog", [Key.P]);
+        Key.define("print", [Key.O]);
 
         gamepad = Gamepad.gamepad(0);
         Gamepad.onConnect.bind(function(newGamepad:Gamepad) {

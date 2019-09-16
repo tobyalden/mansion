@@ -256,14 +256,14 @@ class DialogBox extends Entity
         }
 
         if(
-            Main.inputPressed("roll")
+            (Main.inputPressed("roll") || Main.inputPressed("cast"))
             && visible
             && text.text.length == conversation[conversationIndex].text.length
         ) {
             advanceConversation();
         }
 
-        isTypingFast = Main.inputCheck("roll");
+        isTypingFast = Main.inputCheck("roll") || Main.inputCheck("cast");
         
         x = 20 + (GameScene.PLAYFIELD_SIZE - BOX_WIDTH) / 2;
         y = 20 + GameScene.PLAYFIELD_SIZE - BOX_HEIGHT - 10;
