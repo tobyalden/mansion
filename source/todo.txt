@@ -8,7 +8,7 @@
 + revise mansion
 + staircases
 
-- tutorial
++ tutorial
 - main menu
 - save rooms (don't forget to save/load map!)
 - final boss

@@ -49,10 +49,16 @@ class DialogBox extends Entity
 
     private var isFadingIn:Bool;
     private var isFadingOut:Bool;
+    private var sfx:Map<String, Sfx>;
 
     public function new(sceneCamera:Camera) {
         super();
-        //LoveEntity.loadSfx(["type1", "type2", "type3", "typenext"]);
+        sfx = [
+            "type1" => new Sfx("audio/type1.wav"),
+            "type2" => new Sfx("audio/type2.wav"),
+            "type3" => new Sfx("audio/type3.wav"),
+            "typenext" => new Sfx("audio/typenext.wav")
+        ];
         layer = -99;
         followCamera = sceneCamera;
         box = new ColoredRect(BOX_WIDTH, 0, 0x000000);
@@ -131,7 +137,7 @@ class DialogBox extends Entity
             oldLength != text.text.length
             && (!isTypingFast || isTypingFast && text.text.length % 2 == 0)
         ) {
-            //LoveEntity.allSfx['type${HXP.choose(1, 2, 3)}'].play();
+            sfx['type${HXP.choose(1, 2, 3)}'].play();
         }
     }
 
@@ -139,7 +145,7 @@ class DialogBox extends Entity
         if(isFadingIn || isFadingOut) {
             return;
         }
-        //LoveEntity.allSfx['typenext'].play();
+        sfx['typenext'].play();
         displayCharCount = 0;
         conversationIndex++;
         text.text = "";
