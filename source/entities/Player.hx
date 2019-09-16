@@ -137,7 +137,8 @@ class Player extends Entity
             "playerhit1" => new Sfx("audio/playerhit1.wav"),
             "playerhit2" => new Sfx("audio/playerhit2.wav"),
             "playerhit3" => new Sfx("audio/playerhit3.wav"),
-            "fall" => new Sfx("audio/fall.wav")
+            "fall" => new Sfx("audio/fall.wav"),
+            "run" => new Sfx("audio/run.wav")
         ];
         facing = "up";
         flaskCount = STARTING_NUMBER_OF_FLASKS;
@@ -548,6 +549,7 @@ class Player extends Entity
     private function animation() {
         sprite.y = rollCooldown.active ? -5 : 0;
         shadow.visible = rollCooldown.active;
+        var isWalking = false;
         if(!stunCooldown.active) {
             sprite.flipX = facing == "left";
         }
@@ -585,6 +587,7 @@ class Player extends Entity
             }
         }
         else if(velocity.length > 0) {
+            isWalking = true;
             if(facing == "left") {
                 sprite.play("walk_right");
             }
@@ -599,6 +602,15 @@ class Player extends Entity
             else {
                 sprite.play('idle_${facing}');
             }
+        }
+
+        if(isWalking) {
+            if(!sfx["run"].playing) {
+                sfx["run"].loop();
+            }
+        }
+        else {
+            sfx["run"].stop();
         }
     }
 }
