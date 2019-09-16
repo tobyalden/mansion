@@ -14,6 +14,7 @@ class Enemy extends Entity
 {
     public static inline var PAUSE_ON_ROOM_ENTER = 1;
     public static inline var STUN_TIME = 0.15;
+    public static inline var BIG_EXPLOSION_INTERVAL = 0.05;
 
     static public var groundSolids = [
         "walls", "lock", "unlock", "enemy", "pits"
@@ -22,6 +23,8 @@ class Enemy extends Entity
 
     public var isDead(default, null):Bool;
     public var health(default, null):Int;
+    public var isBoss(default, null):Bool;
+    public var fightStarted(default, null):Bool;
     private var startPosition:Vector2;
     private var startingHealth:Int;
     private var tweens:Array<Tween>;
@@ -29,7 +32,11 @@ class Enemy extends Entity
     private var universalSfx:Map<String, Sfx>;
     private var age:Float;
     private var stunTimer:Alarm;
-    private var isBoss:Bool;
+    private var bigExplosionSpawner:Alarm;
+
+    public function setFightStarted(newFightStarted:Bool) {
+        fightStarted = newFightStarted;
+    }
 
     public function new(startX:Float, startY:Float) {
         super(startX, startY);
@@ -49,6 +56,15 @@ class Enemy extends Entity
         addTween(stunTimer);
         isBoss = false;
         startingHealth = -1;
+        bigExplosionSpawner = new Alarm(
+            BIG_EXPLOSION_INTERVAL, TweenType.Looping
+        );
+        bigExplosionSpawner.onComplete.bind(function() {
+            scene.add(new BigExplosion(this));
+        });
+        addTween(bigExplosionSpawner);
+        bigExplosionSpawner.start();
+        fightStarted = false;
     }
 
     override public function addTween(tween:Tween, start:Bool = false) {

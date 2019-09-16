@@ -90,6 +90,9 @@ class Level extends Entity {
     public function getAliveEnemyCount() {
         var count = 0;
         for(enemy in enemies) {
+            if(enemy.isBoss && !enemy.fightStarted) {
+                continue;
+            }
             if(!enemy.isDead) {
                 count++;
             }

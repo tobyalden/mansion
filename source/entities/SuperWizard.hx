@@ -82,10 +82,10 @@ class SuperWizard extends Enemy
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
 
-    private var fightStarted:Bool;
     private var isDying:Bool;
 
     private var sfx:Map<String, Sfx>;
+
 
     public function new(startX:Float, startY:Float) {
         super(startX - SIZE / 2, startY - SIZE / 2);
@@ -135,7 +135,6 @@ class SuperWizard extends Enemy
 
         isEnraged = false;
         enrageNextPhase = false;
-        fightStarted = false;
         isDying = false;
 
         generatePhaseLocations();
@@ -289,7 +288,6 @@ class SuperWizard extends Enemy
             var player = scene.getInstance("player");
             if(player.y - bottom < 50 && !gameScene.isDialogMode) {
                 gameScene.converse("superwizard");
-                fightStarted = true;
             }
         }
         else if(betweenPhases) {
@@ -425,6 +423,7 @@ class SuperWizard extends Enemy
         for(tween in tweens) {
             tween.active = false;
         }
+        bigExplosionSpawner.start();
         var hazards = new Array<Entity>();
         scene.getType("hazard", hazards);
         for(hazard in hazards) {

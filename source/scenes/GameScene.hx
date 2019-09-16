@@ -53,6 +53,7 @@ class GameScene extends Scene
     private var allEnemies:Array<Entity>;
     private var onScreenBox:Entity;
     private var isMovingDuringFade:Bool;
+    private var lastConversationName:String;
 
     public function setIsLevelLocked(newIsLevelLocked:Bool)  {
         isLevelLocked = newIsLevelLocked;
@@ -60,6 +61,7 @@ class GameScene extends Scene
 
     override public function begin() {
         isMovingDuringFade = false;
+        lastConversationName = "";
         var onScreenBoxSprite = new ColoredRect(
             PLAYFIELD_SIZE, PLAYFIELD_SIZE, 0xFF0000
         );
@@ -742,6 +744,7 @@ class GameScene extends Scene
     }
 
     public function converse(conversationName:String) {
+        lastConversationName = conversationName;
         var json:DialogFile = haxe.Json.parse(
             Assets.getText('dialog/${conversationName}.json')
         );
@@ -759,6 +762,9 @@ class GameScene extends Scene
     public function endConversation() {
         isDialogMode = false;
         pausePlayer = false;
+        if(lastConversationName == "superwizard") {
+            cast(getInstance("superwizard"), SuperWizard).setFightStarted(true);
+        }
     }
 
     private function loadConversation(json:DialogFile) {
