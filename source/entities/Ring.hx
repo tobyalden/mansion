@@ -22,6 +22,7 @@ class Ring extends Entity {
     public static inline var RETURN_TIME = 1.5;
     public static inline var ENRAGE_RETURN_TIME = 1;
     public static inline var ENRAGE_TOSS_DOWNWARDS_SPEED = 100;
+    public static inline var RING_FADE_MULTIPLIER = 3;
 
     public var isChasing(default, null):Bool;
     public var isReturning(default, null):Bool;
@@ -45,6 +46,7 @@ class Ring extends Entity {
         sprite = new Spritemap("graphics/ring.png", 40, 40);
         sprite.add("idle", [0]);
         sprite.play("idle");
+        //sprite.alpha = 0;
         graphic = sprite;
         mask = new Circle(20);
         tosser = new CubicMotion();
@@ -90,14 +92,15 @@ class Ring extends Entity {
         isBouncing = true;
         var player = scene.getInstance("player");
         var towardsPlayer = new Vector2(
-            Math.random() - 0.5, Math.random() - 0.5
+            Math.max(Math.random(), 0.4) * HXP.choose(1, -1),
+            Math.max(Math.random(), 0.4) * HXP.choose(1, -1)
         );
-        if(Math.abs(velocity.x) < 0.33) {
-            velocity.x = velocity.x / Math.abs(velocity.x) * 0.33;
-        }
-        if(Math.abs(velocity.y) < 0.33) {
-            velocity.y = velocity.y / Math.abs(velocity.y) * 0.33;
-        }
+        //if(Math.abs(velocity.x) < 0.33) {
+            //velocity.x = velocity.x / Math.abs(velocity.x) * 0.33;
+        //}
+        //if(Math.abs(velocity.y) < 0.33) {
+            //velocity.y = velocity.y / Math.abs(velocity.y) * 0.33;
+        //}
         towardsPlayer.normalize(BOUNCE_SPEED);
         velocity = towardsPlayer;
     }
@@ -179,6 +182,10 @@ class Ring extends Entity {
     }
 
     override public function update() {
+        //sprite.alpha = Math.min(
+            //sprite.alpha + HXP.elapsed * RING_FADE_MULTIPLIER, 1
+        //);
+        visible = true;
         if(isEnrageTossed) {
             velocity.y = Math.min(
                 velocity.y + ENRAGE_TOSS_DOWNWARDS_SPEED * HXP.elapsed,
@@ -250,6 +257,10 @@ class Ring extends Entity {
             moveTo(tosser.x, tosser.y);
         }
         else {
+            //sprite.alpha = Math.max(
+                //sprite.alpha - HXP.elapsed * RING_FADE_MULTIPLIER, 0
+            //);
+            visible = false;
             moveTo(
                 ringMaster.centerX - width / 2,
                 ringMaster.centerY - height / 2

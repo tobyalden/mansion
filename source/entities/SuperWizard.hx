@@ -282,6 +282,7 @@ class SuperWizard extends Enemy
                 isDead = true;
                 scene.remove(this);
             }
+            clearHazards();
         }
         else if(!fightStarted || gameScene.isDialogMode) {
             // Do nothing
@@ -424,16 +425,7 @@ class SuperWizard extends Enemy
             tween.active = false;
         }
         bigExplosionSpawner.start();
-        var hazards = new Array<Entity>();
-        scene.getType("hazard", hazards);
-        for(hazard in hazards) {
-            if(Type.getClass(hazard) == Spit) {
-                cast(hazard, Spit).destroy();
-            }
-            else {
-                scene.remove(hazard);
-            }
-        }
+        clearHazards();
         isDying = true;
         collidable = false;
         var gameScene = cast(scene, GameScene);

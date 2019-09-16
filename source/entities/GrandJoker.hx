@@ -57,6 +57,7 @@ class GrandJoker extends Enemy
     private var screenCenter:Vector2;
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
+    private var isDying:Bool;
 
     private var clockShotTimer:Alarm;
 
@@ -87,6 +88,7 @@ class GrandJoker extends Enemy
         y -= 50;
         startPosition.y -= 50;
         sprite = new Spritemap("graphics/bosses.png", SIZE, SIZE);
+        sprite.add("dying", [6]);
         sprite.add("idle", [6, 7], 4);
         sprite.add("shoot", [8, 9], 2);
         sprite.play("idle");
@@ -95,6 +97,7 @@ class GrandJoker extends Enemy
 
         isEnraged = false;
         enrageNextPhase = false;
+        isDying = false;
 
         generatePhaseLocations();
 
@@ -232,7 +235,26 @@ class GrandJoker extends Enemy
                 enrageNextPhase = true;
             }
         }
-        if(betweenPhases) {
+        collidable = (fightStarted && !isDead);
+        var gameScene = cast(scene, GameScene);
+        if(isDying) {
+            // Do nothing
+            sprite.play("dying");
+            if(!gameScene.pausePlayer) {
+                isDead = true;
+                scene.remove(this);
+            }
+            clearHazards();
+        }
+        else if(!fightStarted || gameScene.isDialogMode) {
+            // Do nothing
+            sprite.play("dying");
+            var player = scene.getInstance("player");
+            if(player.y - bottom < 50 && !gameScene.isDialogMode) {
+                gameScene.converse("grandjoker");
+            }
+        }
+        else if(betweenPhases) {
             var player = scene.getInstance("player");
             sprite.play("idle");
             sprite.flipX = centerX > player.centerX;
@@ -445,17 +467,19 @@ class GrandJoker extends Enemy
     }
 
     override function die() {
-        var hazards = new Array<Entity>();
-        scene.getType("hazard", hazards);
-        for(hazard in hazards) {
-            if(Type.getClass(hazard) == Spit) {
-                cast(hazard, Spit).destroy();
-            }
-            else {
-                scene.remove(hazard);
-            }
+        for(tween in tweens) {
+            tween.active = false;
         }
-        super.die();
+        bigExplosionSpawner.start();
+        clearHazards();
+        isDying = true;
+        collidable = false;
+        var gameScene = cast(scene, GameScene);
+        gameScene.setPausePlayer(true);
+        var deathConversationDelay = new Alarm(1, function() {
+            var gameScene = cast(scene, GameScene);
+            gameScene.converse("grandjokerdeath");
+        });
+        addTween(deathConversationDelay, true);
     }
 }
-

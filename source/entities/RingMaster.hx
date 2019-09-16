@@ -21,7 +21,7 @@ class RingMaster extends Enemy
     public static inline var PRE_ENRAGE_TIME = 1;
     public static inline var PHASE_DURATION = 12.5;
     public static inline var ENRAGE_PHASE_DURATION = 17;
-    public static inline var PHASE_TRANSITION_TIME = 1;
+    public static inline var PHASE_TRANSITION_TIME = 1.5;
     public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1;
     public static inline var PAUSE_BETWEEN_TOSSES = 1;
     public static inline var ENRAGED_PAUSE_BETWEEN_TOSSES = 0.75;
@@ -53,6 +53,7 @@ class RingMaster extends Enemy
     private var tossCount:Int;
 
     private var enrageNextPhase:Bool;
+    private var isDying:Bool;
 
     private var sfx:Map<String, Sfx>;
 
@@ -94,6 +95,8 @@ class RingMaster extends Enemy
 
         isEnraged = false;
         enrageNextPhase = false;
+        isDying = false;
+
         generatePhaseLocations();
         phaseRelocater = new LinearMotion();
         addTween(phaseRelocater);
@@ -374,7 +377,24 @@ class RingMaster extends Enemy
                 enrageNextPhase = true;
             }
         }
-        if(betweenPhases) {
+        collidable = (fightStarted && !isDead);
+        var gameScene = cast(scene, GameScene);
+        if(isDying) {
+            // Do nothing
+            if(!gameScene.pausePlayer) {
+                isDead = true;
+                scene.remove(this);
+            }
+            clearHazards();
+        }
+        else if(!fightStarted || gameScene.isDialogMode) {
+            // Do nothing
+            var player = scene.getInstance("player");
+            if(player.y - bottom < 50 && !gameScene.isDialogMode) {
+                gameScene.converse("ringmaster");
+            }
+        }
+        else if(betweenPhases) {
             sprite.play("idle");
             if(preAdvancePhaseTimer.active) {
                 // Do nothing
@@ -438,7 +458,7 @@ class RingMaster extends Enemy
             if(!bounceTimer.active && !rings[0].isReturning) {
                 bounceTimer.start();
                 var bounceCount = 0;
-                var numBounces = isEnraged ? 4 : 2;
+                var numBounces = isEnraged ? 4 : 3;
                 for(ring in rings) {
                     if(bounceCount >= numBounces) {
                         continue;
@@ -489,17 +509,20 @@ class RingMaster extends Enemy
     }
 
     override function die() {
-        var hazards = new Array<Entity>();
-        scene.getType("hazard", hazards);
-        for(hazard in hazards) {
-            if(Type.getClass(hazard) == Spit) {
-                cast(hazard, Spit).destroy();
-            }
-            else {
-                scene.remove(hazard);
-            }
+        for(tween in tweens) {
+            tween.active = false;
         }
-        super.die();
+        bigExplosionSpawner.start();
+        clearHazards();
+        isDying = true;
+        collidable = false;
+        var gameScene = cast(scene, GameScene);
+        gameScene.setPausePlayer(true);
+        var deathConversationDelay = new Alarm(1, function() {
+            var gameScene = cast(scene, GameScene);
+            gameScene.converse("ringmasterdeath");
+        });
+        addTween(deathConversationDelay, true);
     }
 }
 

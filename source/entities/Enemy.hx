@@ -253,6 +253,19 @@ class Enemy extends Entity
         }
     }
 
+    private function clearHazards() {
+        var hazards = new Array<Entity>();
+        scene.getType("hazard", hazards);
+        for(hazard in hazards) {
+            if(Type.getClass(hazard) == Spit) {
+                cast(hazard, Spit).destroy();
+            }
+            else {
+                scene.remove(hazard);
+            }
+        }
+    }
+
     override public function updateTweens(elapsed:Float) {
         if(stunTimer.active && !isBoss) {
             stunTimer.update(elapsed);

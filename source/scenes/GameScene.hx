@@ -763,7 +763,16 @@ class GameScene extends Scene
         isDialogMode = false;
         pausePlayer = false;
         if(lastConversationName == "superwizard") {
-            cast(getInstance("superwizard"), SuperWizard).setFightStarted(true);
+            cast(getInstance("superwizard"), Enemy).setFightStarted(true);
+        }
+        else if(lastConversationName == "ringmaster") {
+            cast(getInstance("ringmaster"), Enemy).setFightStarted(true);
+        }
+        else if(lastConversationName == "grandjoker") {
+            cast(getInstance("grandjoker"), Enemy).setFightStarted(true);
+        }
+        else if(lastConversationName == "grandfather") {
+            cast(getInstance("grandfather"), Enemy).setFightStarted(true);
         }
     }
 
