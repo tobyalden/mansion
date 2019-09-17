@@ -1,12 +1,44 @@
 {
     "conversation": [
         {
-            "portrait": "mc",
-            "text": "I've come to do battle."
+            "portrait": "duessa",
+            "text": "You've returned."
         },
         {
-            "portrait": "butler",
-            "text": "Then battle we shall do."
+            "portrait": "mc",
+            "text": "Hello, Aunt Duessa."
+        },
+        {
+            "portrait": "duessa",
+            "text": "Come to kill your grandfather?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Yes."
+        },
+        {
+            "portrait": "duessa",
+            "text": "Admirable, to be sure. But you'll have to kill me first."
+        },
+        {
+            "portrait": "mc",
+            "text": "Auntie... you've always supported me. Do we really have to fight? Is your father worth that much to you, even after all he's done?"
+        },
+        {
+            "portrait": "duessa",
+            "text": "Aria, when you grow old you start losing the luxury of choice. I've invested my life in his. I have my regrets. But he has made me very powerful. And I enjoy this power."
+        },
+        {
+            "portrait": "mc",
+            "text": "I see. Then may the best sorceress win."
+        },
+        {
+            "portrait": "duessa",
+            "text": "Heheheh... I like you, Aria. Always have."
+        },
+        {
+            "portrait": "duessa",
+            "text": "May the best win, indeed."
         }
     ]
 }
