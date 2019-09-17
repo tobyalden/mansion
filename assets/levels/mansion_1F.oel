@@ -213,6 +213,6 @@
     <ringmaster x="800" y="1120"/>
     <grandjoker x="2400" y="160"/>
     <butler x="1392" y="2064"/>
-    <player x="2072" y="2280"/>
+    <player x="784" y="1384"/>
   </objects>
 </level>

@@ -460,7 +460,7 @@ class RingMaster extends Enemy
             if(!bounceTimer.active && !rings[0].isReturning) {
                 bounceTimer.start();
                 var bounceCount = 0;
-                var numBounces = isEnraged ? 4 : 3;
+                var numBounces = isEnraged ? 5 : 3;
                 for(ring in rings) {
                     if(bounceCount >= numBounces) {
                         continue;

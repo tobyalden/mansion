@@ -1,12 +1,24 @@
 {
     "conversation": [
         {
-            "portrait": "mc",
-            "text": "Gotcha!"
+            "portrait": "munera",
+            "text": "How... how did you?"
         },
         {
-            "portrait": "butler",
-            "text": "Oooh!"
+            "portrait": "munera",
+            "text": "Gahh... it doesn't matter, anyway. Father'll pluck that imputent little head right off your shoulders."
+        },
+        {
+            "portrait": "munera",
+            "text": "Heheh... just like he was plucking a grape. Pop! Heheheh."
+        },
+        {
+            "portrait": "munera",
+            "text": "Aahh... it hurts. It hurts so damn much..."
+        },
+        {
+            "portrait": "munera",
+            "text": "I hope you're happy... brat."
         }
     ]
 }

@@ -1,12 +1,40 @@
 {
     "conversation": [
         {
-            "portrait": "mc",
-            "text": "I've come to do battle."
+            "portrait": "munera",
+            "text": "Well, well. The rebel child appears."
         },
         {
-            "portrait": "butler",
-            "text": "Then battle we shall do."
+            "portrait": "mc",
+            "text": "Aunt Munera. How you have been."
+        },
+        {
+            "portrait": "munera",
+            "text": "Cut the chat, brat. I've been around a lot longer than you, and I can say that what you're doing right now is pointless and selfish."
+        },
+        {
+            "portrait": "mc",
+            "text": "Is that so?"
+        },
+        {
+            "portrait": "munera",
+            "text": "It IS so, yes. Look around you! Father provides all this for us. Food, drink, shelter, power... and all he asks in return is a little life force. A small sum to pay, all considered."
+        },
+        {
+            "portrait": "mc",
+            "text": "Mmhmm. I'll bet you were really sold on the drink part."
+        },
+        {
+            "portrait": "munera",
+            "text": "Oh, shut up. You're not even old enough to know. What are you, sixteen?"
+        },
+        {
+            "portrait": "mc",
+            "text": "I'm twenty six."
+        },
+        {
+            "portrait": "munera",
+            "text": "Whatever. Let's get this over with."
         }
     ]
 }
