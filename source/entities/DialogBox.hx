@@ -67,6 +67,12 @@ class DialogBox extends Entity
         portrait = new Spritemap("graphics/portraits.png", 160, 160);
         portrait.add("mc", [0]);
         portrait.add("butler", [1]);
+        portrait.add("duessa", [2]);
+        portrait.add("eirena", [3]);
+        portrait.add("munera", [4]);
+        portrait.add("grandfather", [5]);
+        portrait.add("grandfathermonster", [6]);
+        portrait.add("dog", [7]);
         portrait.x = BOX_WIDTH - 150;
         portrait.y = -160;
         text = new Text(

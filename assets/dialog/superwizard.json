@@ -1,12 +1,84 @@
 {
     "conversation": [
         {
-            "portrait": "mc",
-            "text": "I've come to do battle."
+            "portrait": "eirena",
+            "text": "Hello, Aria."
         },
         {
-            "portrait": "butler",
-            "text": "Then battle we shall do."
+            "portrait": "mc",
+            "text": "Hi Mom."
+        },
+        {
+            "portrait": "eirena",
+            "text": "Have you been well? It's been a long time."
+        },
+        {
+            "portrait": "mc",
+            "text": "I'm all right."
+        },
+        {
+            "portrait": "eirena",
+            "text": "Good. I'm glad to hear it."
+        },
+        {
+            "portrait": "mc",
+            "text": "Do you know why I've come home?"
+        },
+        {
+            "portrait": "eirena",
+            "text": "You intend to kill your grandfather. Correct?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Correct."
+        },
+        {
+            "portrait": "mc",
+            "text": "And I assume you're going to try to stop me."
+        },
+        {
+            "portrait": "eirena",
+            "text": "I'm afraid I must."
+        },
+        {
+            "portrait": "mc",
+            "text": "You must? It's not a choice?"
+        },
+        {
+            "portrait": "eirena",
+            "text": "You know what his death would mean for this family. Everything we've worked so hard on, for so long, would be gone. Rendered meaningless."
+        },
+        {
+            "portrait": "mc",
+            "text": "We've worked hard on? Don't make it sound like I was given a choice, Mom. I was only a child when you started siphoning off my life energy to give to him."
+        },
+        {
+            "portrait": "eirena",
+            "text": "For the power you were granted in return! Does that mean nothing to you? Can you only see the bad? Is there no good?"
+        },
+        {
+            "portrait": "mc",
+            "text": "The bad doesn't balance out the good, Mom. It taints it."
+        },
+        {
+            "portrait": "eirena",
+            "text": "Aria..."
+        },
+        {
+            "portrait": "mc",
+            "text": "You only say that because you don't want to face your own pain. That's why you let him take it from me. To prove to yourself that it was okay. That what he did to you was ok."
+        },
+        {
+            "portrait": "eirena",
+            "text": "I don't know what to say to that. We see things differently."
+        },
+        {
+            "portrait": "mc",
+            "text": "I see clearly. I'm sorry it had to come to this."
+        },
+        {
+            "portrait": "eirena",
+            "text": "I as well. Prepare yourself, daughter."
         }
     ]
 }

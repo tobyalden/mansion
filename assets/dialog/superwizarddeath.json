@@ -1,12 +1,32 @@
 {
     "conversation": [
         {
-            "portrait": "butler",
-            "text": "Oooh! Yah got me good, kid!"
+            "portrait": "eirena",
+            "text": "Well fought, Aria. You've grown."
         },
         {
             "portrait": "mc",
-            "text": "Haha! Take that!"
+            "text": "I'm sorry, Mom. I wish it wasn't ending like this."
+        },
+        {
+            "portrait": "eirena",
+            "text": "This is only my end. Your story must continue."
+        },
+        {
+            "portrait": "eirena",
+            "text": "I'm sorry for all that I've done. You're braver than I, Aria. In many ways."
+        },
+        {
+            "portrait": "eirena",
+            "text": "And... I'm proud to call you my daughter."
+        },
+        {
+            "portrait": "mc",
+            "text": "Mom..."
+        },
+        {
+            "portrait": "eirena",
+            "text": "All my love... forever..."
         }
     ]
 }
