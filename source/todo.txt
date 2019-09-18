@@ -12,11 +12,11 @@
 - main menu
 - save rooms (don't forget to save/load map!)
 - final boss
-- write dialogue
 - music
 - ending
 - credits
 - intro
+~ write dialogue
 ~ all sfx
 - master sfx
 ~ graphics
