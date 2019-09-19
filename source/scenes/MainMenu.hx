@@ -63,7 +63,8 @@ class MainMenu extends Scene
 
         difficultyMenu = [
             new Text("Normal"),
-            new Text("Hard")
+            new Text("Hard"),
+            new Text("Nightmare")
         ];
         count = 1;
         for(menuItem in difficultyMenu) {
@@ -72,6 +73,9 @@ class MainMenu extends Scene
             menuItem.x = 125;
             menuItem.y = 50 + count * 25;
             menuItem.alpha = 0;
+            if(count == 3) {
+                menuItem.color = 0x800000;
+            }
             addGraphic(menuItem);
             count++;
         }
@@ -106,7 +110,8 @@ class MainMenu extends Scene
             "select2" => new Sfx("audio/select2.wav"),
             "select3" => new Sfx("audio/select3.wav"),
             "cantselect" => new Sfx("audio/cantselect.wav"),
-            "back" => new Sfx("audio/back.wav")
+            "back" => new Sfx("audio/back.wav"),
+            "laugh" => new Sfx("audio/laugh.wav")
         ];
     }    
 
@@ -132,6 +137,11 @@ class MainMenu extends Scene
                         }
                         else if(selected == 1) {
                             GameScene.isHardMode = true;
+                        }
+                        else if(selected == 2) {
+                            GameScene.isHardMode = true;
+                            GameScene.isNightmare = true;
+                            sfx["laugh"].play();
                         }
                         sfx["start"].play();
                         fadeToGame();
@@ -176,7 +186,10 @@ class MainMenu extends Scene
                     selected += 1;
                 }
             }
-            selected = Std.int(MathUtil.clamp(selected, 0, menu.length - 1));
+            var currentMenu = atDifficultyMenu ? difficultyMenu : menu;
+            selected = Std.int(MathUtil.clamp(
+                selected, 0, currentMenu.length - 1
+            ));
             if(selected != oldSelected) {
                 sfx['select${HXP.choose(1, 2, 3)}'].play();
             }
