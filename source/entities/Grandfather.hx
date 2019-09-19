@@ -48,6 +48,7 @@ class Grandfather extends Enemy
 
     public static inline var CHARGE_DISTANCE = 160;
     public static inline var CHARGE_TIME = 2;
+    public static inline var ENRAGE_CHARGE_TIME = 1;
 
     private var sprite:Spritemap;
 
@@ -94,7 +95,7 @@ class Grandfather extends Enemy
         graphic = sprite;
         health = STARTING_HEALTH;
 
-        isEnraged = false;
+        isEnraged = true;
         enrageNextPhase = false;
 
         generatePhaseLocations();
@@ -105,7 +106,9 @@ class Grandfather extends Enemy
         chargeAttack = new LinearMotion();
         chargeAttack.onComplete.bind(function() {
             chargeRetreat.setMotion(
-                x, y, x, y - CHARGE_DISTANCE, CHARGE_TIME, Ease.sineInOut
+                x, y, x, y - CHARGE_DISTANCE,
+                isEnraged ? ENRAGE_CHARGE_TIME : CHARGE_TIME,
+                Ease.sineInOut
             );
             chargeRetreat.start();
         });
@@ -253,7 +256,9 @@ class Grandfather extends Enemy
         else if(currentPhase == "charge") {
             if(!chargeAttack.active && !chargeRetreat.active) {
                 chargeAttack.setMotion(
-                    x, y, x, y + CHARGE_DISTANCE, CHARGE_TIME, Ease.sineInOut
+                    x, y, x, y + CHARGE_DISTANCE,
+                    isEnraged ? ENRAGE_CHARGE_TIME : CHARGE_TIME,
+                    Ease.sineInOut
                 );
                 chargeAttack.start();
             }

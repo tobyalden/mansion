@@ -9,7 +9,7 @@
 + staircases
 
 + tutorial
-- main menu
++ main menu
 - save rooms (don't forget to save/load map!)
 - final boss
 - music
