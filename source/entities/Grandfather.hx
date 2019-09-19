@@ -19,16 +19,16 @@ class Grandfather extends Enemy
     public static inline var HEIGHT = 100;
 
     public static inline var PRE_ENRAGE_TIME = 2;
-    public static inline var PRE_PHASE_ADVANCE_TIME = 2;
-    public static inline var PHASE_TRANSITION_TIME = 2;
-    public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
+    public static inline var PRE_PHASE_ADVANCE_TIME = 1.5;
+    public static inline var PHASE_TRANSITION_TIME = 1.5;
+    public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1;
     public static inline var PHASE_DURATION = 12.5;
     public static inline var ENRAGE_PHASE_DURATION = 8;
     public static inline var CURTAIN_PHASE_DURATION_MULTIPLIER = 1.5;
     public static inline var WAVE_PHASE_DURATION_MULTIPLIER = 1.5;
 
-    public static inline var STARTING_HEALTH = 100;
-    public static inline var ENRAGE_THRESHOLD = 40;
+    public static inline var STARTING_HEALTH = 200;
+    public static inline var ENRAGE_THRESHOLD = 80;
 
     public static inline var CURTAIN_SHOT_SPEED = 80;
     public static inline var CURTAIN_SHOT_INTERVAL = 0.6;
@@ -78,6 +78,8 @@ class Grandfather extends Enemy
     private var chargeAttack:LinearMotion;
     private var chargeRetreat:LinearMotion;
 
+    private var lastNonChargePhase:String;
+
     private var sfx:Map<String, Sfx>;
 
     public function new(startX:Float, startY:Float) {
@@ -122,7 +124,7 @@ class Grandfather extends Enemy
         addTween(chargeRetreat);
 
         //currentPhase = HXP.choose("waves");
-        currentPhase = "curtain";
+        currentPhase = "charge";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -212,10 +214,12 @@ class Grandfather extends Enemy
             }
             allPhases.remove(currentPhase);
             allPhases.remove("enrage");
+            allPhases.remove(lastNonChargePhase);
             if(currentPhase == "charge") {
                 currentPhase = allPhases[
                     Std.int(Math.floor(Math.random() * allPhases.length))
                 ];
+                lastNonChargePhase = currentPhase;
             }
             else {
                 currentPhase = "charge";

@@ -54,11 +54,11 @@ class Viewport extends Entity
     override public function update() {
         var player = cast(scene.getInstance("player"), Player);
         healthBar.clipRect = new Rectangle(0, 0, 25 * player.health, 25);
-        var _boss = cast(scene.getInstance("ringmaster"));
+        var _boss = cast(scene.getInstance("grandfather"));
         if(_boss != null) {
-            var boss = cast(_boss, RingMaster);
+            var boss = cast(_boss, Grandfather);
             bossHealthBar.width = (
-                boss.health / RingMaster.STARTING_HEALTH
+                boss.health / Grandfather.STARTING_HEALTH
                 * BOSS_HEALTH_BAR_LENGTH
             );
         }
