@@ -23,7 +23,7 @@ class Grandfather extends Enemy
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
     public static inline var PHASE_DURATION = 12.5;
-    public static inline var ENRAGE_PHASE_DURATION = 15;
+    public static inline var ENRAGE_PHASE_DURATION = 8;
     public static inline var CURTAIN_PHASE_DURATION_MULTIPLIER = 1.5;
     public static inline var WAVE_PHASE_DURATION_MULTIPLIER = 1.5;
 
@@ -31,9 +31,10 @@ class Grandfather extends Enemy
     public static inline var ENRAGE_THRESHOLD = 40;
 
     public static inline var CURTAIN_SHOT_SPEED = 80;
-    public static inline var CURTAIN_SHOT_INTERVAL = 0.5;
-    public static inline var ENRAGE_CURTAIN_SHOT_INTERVAL = 0.5;
-    public static inline var CURTAIN_AIMED_SHOT_INTERVAL = 1;
+    public static inline var CURTAIN_SHOT_INTERVAL = 0.6;
+    public static inline var ENRAGE_CURTAIN_SHOT_INTERVAL = 0.4;
+    public static inline var CURTAIN_AIMED_SHOT_INTERVAL = 1.1;
+    public static inline var ENRAGE_CURTAIN_AIMED_SHOT_INTERVAL = 0.9;
     public static inline var CURTAIN_AIMED_SHOT_SPEED = 200;
 
     public static inline var WAVE_SHOT_SPEED = 185;
@@ -95,7 +96,7 @@ class Grandfather extends Enemy
         graphic = sprite;
         health = STARTING_HEALTH;
 
-        isEnraged = true;
+        isEnraged = false;
         enrageNextPhase = false;
 
         generatePhaseLocations();
@@ -121,7 +122,7 @@ class Grandfather extends Enemy
         addTween(chargeRetreat);
 
         //currentPhase = HXP.choose("waves");
-        currentPhase = "charge";
+        currentPhase = "curtain";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -281,7 +282,11 @@ class Grandfather extends Enemy
                     isEnraged ?
                     ENRAGE_CURTAIN_SHOT_INTERVAL : CURTAIN_SHOT_INTERVAL
                 );
-                curtainAimedShotTimer.start();
+                curtainAimedShotTimer.reset(
+                    isEnraged ?
+                    ENRAGE_CURTAIN_AIMED_SHOT_INTERVAL
+                    : CURTAIN_AIMED_SHOT_INTERVAL
+                );
             }
         }
         else if(currentPhase == "waves") {
