@@ -32,6 +32,8 @@ class MainMenu extends Scene
     private var startPromptFader:VarTween;
     private var canControl:Bool;
     private var atDifficultyMenu:Bool;
+    private var fadeTweens:Array<Tween>;
+    private var saveGameExists:Bool;
 
     override public function begin() {
         curtain = new Curtain(camera);
@@ -51,6 +53,10 @@ class MainMenu extends Scene
             menuItem.x = 75;
             menuItem.y = 50 + count * 25;
             menuItem.alpha = 0;
+            if(count == 1 && !saveGameExists) {
+                // Gray out continue option if there's no saved game
+                menuItem.color = 0x686868;
+            }
             addGraphic(menuItem);
             count++;
         }
@@ -91,12 +97,16 @@ class MainMenu extends Scene
         curtain.fadeIn();
         canControl = true;
         atDifficultyMenu = false;
+        fadeTweens = new Array<Tween>();
+        saveGameExists = false;
         sfx = [
             "start" => new Sfx("audio/start.wav"),
             "continue" => new Sfx("audio/continue.wav"),
             "select1" => new Sfx("audio/select1.wav"),
             "select2" => new Sfx("audio/select2.wav"),
-            "select3" => new Sfx("audio/select3.wav")
+            "select3" => new Sfx("audio/select3.wav"),
+            "cantselect" => new Sfx("audio/cantselect.wav"),
+            "back" => new Sfx("audio/back.wav")
         ];
     }    
 
@@ -115,35 +125,56 @@ class MainMenu extends Scene
                     fadeFromPromptToMenu();
                 }
                 else if(atDifficultyMenu) {
-                    if(selected == 0) {
-                        // Normal
+                    if(Main.inputPressed("roll")) {
+                        Data.clear();
+                        if(selected == 0) {
+                            GameScene.isHardMode = false;
+                        }
+                        else if(selected == 1) {
+                            GameScene.isHardMode = true;
+                        }
                         sfx["start"].play();
+                        fadeToGame();
                     }
-                    else if(selected == 1) {
-                        // Hard
-                        sfx["start"].play();
+                    else {
+                        atDifficultyMenu = false;
+                        sfx["back"].play();
+                        fadeFromMenuToDifficultyMenu(true);
+                        selected = 0;
                     }
-                    fadeToGame();
                 }
                 else {
-                    if(selected == 0) {
-                        // New game
-                        atDifficultyMenu = true;
-                        fadeFromMenuToDifficultyMenu();
+                    if(Main.inputPressed("roll")) {
+                        if(selected == 0) {
+                            // New game
+                            sfx["start"].play();
+                            atDifficultyMenu = true;
+                            fadeFromMenuToDifficultyMenu();
+                        }
+                        else if(selected == 1) {
+                            // Continue
+                            if(saveGameExists) {
+                                sfx["continue"].play();
+                                fadeToGame();
+                            }
+                            else {
+                                sfx["cantselect"].play();
+                            }
+                        }
                     }
-                    else if(selected == 1) {
-                        // Continue
-                        sfx["continue"].play();
-                        fadeToGame();
+                    else {
+                        fadeFromPromptToMenu(true);
                     }
                 }
             }
             var oldSelected = selected;
-            if(Main.inputPressed("up")) {
-                selected -= 1;
-            }
-            else if(Main.inputPressed("down")) {
-                selected += 1;
+            if(!atStartPrompt) {
+                if(Main.inputPressed("up")) {
+                    selected -= 1;
+                }
+                else if(Main.inputPressed("down")) {
+                    selected += 1;
+                }
             }
             selected = Std.int(MathUtil.clamp(selected, 0, menu.length - 1));
             if(selected != oldSelected) {
@@ -156,53 +187,76 @@ class MainMenu extends Scene
     private function fadeToGame() {
         canControl = false;
         curtain.fadeOut();
+        var sceneChanger = new Alarm(2);
+        sceneChanger.onComplete.bind(function() {
+            HXP.scene = new GameScene();
+        });
+        addTween(sceneChanger, true);
     }
 
-    private function fadeFromMenuToDifficultyMenu() {
+    private function fadeFromMenuToDifficultyMenu(backwards:Bool = false) {
+        for(fadeTween in fadeTweens) {
+            fadeTween.cancel();
+        }
+        fadeTweens = new Array<Tween>();
         for(menuItem in menu) {
             if(menuItem == menu[0]) {
                 continue;
             }
             var menuItemTween = new VarTween();
             menuItemTween.tween(
-                menuItem, "alpha", 0, PROMPT_FADE_TIME / 3, Ease.sineIn
+                menuItem, "alpha", backwards ? 1 : 0,
+                PROMPT_FADE_TIME / 3, Ease.sineIn
             );
-            addTween(menuItemTween, true);
+            fadeTweens.push(menuItemTween);
         }
         for(menuItem in difficultyMenu) {
             var menuItemTween = new VarTween();
             menuItemTween.tween(
-                menuItem, "alpha", 1, PROMPT_FADE_TIME / 3, Ease.sineIn
+                menuItem, "alpha", backwards ? 0: 1,
+                PROMPT_FADE_TIME / 3, Ease.sineIn
             );
-            addTween(menuItemTween, true);
+            fadeTweens.push(menuItemTween);
+        }
+        for(fadeTween in fadeTweens) {
+            addTween(fadeTween, true);
         }
     }
 
-    private function fadeFromPromptToMenu() {
-        atStartPrompt = false;
-        sfx["start"].play();
+    private function fadeFromPromptToMenu(backwards:Bool = false) {
+        for(fadeTween in fadeTweens) {
+            fadeTween.cancel();
+        }
+        fadeTweens = new Array<Tween>();
+        atStartPrompt = backwards;
+        sfx[backwards ? "back" : "start"].play();
         for(menuItem in menu) {
             var menuItemTween = new VarTween();
             menuItemTween.tween(
-                menuItem, "alpha", 1, PROMPT_FADE_TIME, Ease.sineIn
+                menuItem, "alpha", backwards ? 0 : 1, PROMPT_FADE_TIME,
+                Ease.sineIn
             );
-            addTween(menuItemTween, true);
+            fadeTweens.push(menuItemTween);
         }
         var cursorTween = new VarTween();
         cursorTween.tween(
-            cursor, "alpha", 1, PROMPT_FADE_TIME, Ease.sineIn
+            cursor, "alpha", backwards ? 0 : 1, PROMPT_FADE_TIME, Ease.sineIn
         );
-        addTween(cursorTween, true);
+        fadeTweens.push(cursorTween);
         var logoTween = new VarTween();
         logoTween.tween(
-            logo, "alpha", 0, PROMPT_FADE_TIME, Ease.sineIn
+            logo, "alpha", backwards ? 1 : 0, PROMPT_FADE_TIME, Ease.sineIn
         );
-        addTween(logoTween, true);
+        fadeTweens.push(logoTween);
         startPromptFader.active = false;
         var startPromptTween = new VarTween();
         startPromptTween.tween(
-            startPrompt, "alpha", 0, PROMPT_FADE_TIME, Ease.sineIn
+            startPrompt, "alpha", backwards ? 1 : 0, PROMPT_FADE_TIME,
+            Ease.sineIn
         );
-        addTween(startPromptTween, true);
+        fadeTweens.push(startPromptTween);
+        for(fadeTween in fadeTweens) {
+            addTween(fadeTween, true);
+        }
     }
 }

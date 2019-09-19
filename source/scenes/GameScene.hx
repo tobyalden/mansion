@@ -26,6 +26,7 @@ class GameScene extends Scene
     public static inline var CAMERA_PAN_TIME = 1;
     public static inline var LOCK_CHANCE = 1;
 
+    public static var isHardMode = false;
     public static var isProcedural = false;
     public static var currentGlobalFlags(default, null):Array<String>;
     private static var globalFlagsAtStart:Array<String> = [];
