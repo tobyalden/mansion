@@ -2,43 +2,47 @@
     "conversation": [
         {
             "portrait": "duessa",
-            "text": "You've returned."
+            "text": "You're back."
         },
         {
             "portrait": "mc",
-            "text": "Hello, Aunt Duessa."
+            "text": "Hey, Aunt Duessa."
         },
         {
             "portrait": "duessa",
-            "text": "Come to kill your grandfather?"
+            "text": "Gonna kill your grandfather?"
         },
         {
             "portrait": "mc",
-            "text": "Yes."
+            "text": "Yeah."
         },
         {
             "portrait": "duessa",
-            "text": "Admirable, to be sure. But you'll have to kill me first."
+            "text": "You'll have to kill me first."
         },
         {
             "portrait": "mc",
-            "text": "Auntie... you've always supported me. Do we really have to fight? Is your father worth that much to you, even after all he's done?"
+            "text": "Do we really have to fight? Is your dad worth that much to you, even after all he's done?"
         },
         {
             "portrait": "duessa",
-            "text": "Aria, when you grow old you start losing the luxury of choice. I've invested my life in his. I have my regrets. But he has made me very powerful. And I enjoy this power."
+            "text": "I've lost the luxury of choice. I've invested my life in his."
         },
         {
             "portrait": "mc",
-            "text": "I see. Then may the best sorceress win."
+            "text": "Oh, that's convenient."
         },
         {
             "portrait": "duessa",
-            "text": "Heheheh... I like you, Aria. Always have."
+            "text": "Don't be condescending."
         },
         {
             "portrait": "duessa",
-            "text": "May the best win, indeed."
+            "text": "If we're going to fight, let's fight."
+        },
+        {
+            "portrait": "mc",
+            "text": "Fine. Good luck."
         }
     ]
 }

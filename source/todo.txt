@@ -10,12 +10,14 @@
 
 + tutorial
 + main menu
-- save rooms (don't forget to save/load map!)
-- final boss
+
+- saving
+- respawning
+- final boss intro/outro
 - music
 - ending
-- credits
 - intro
+- credits
 ~ write dialogue
 ~ all sfx
 - master sfx

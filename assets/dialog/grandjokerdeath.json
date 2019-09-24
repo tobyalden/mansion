@@ -2,23 +2,35 @@
     "conversation": [
         {
             "portrait": "duessa",
-            "text": "Heh... impressive. Your mother taught you well."
+            "text": "Ouch."
         },
         {
             "portrait": "mc",
-            "text": "As did you, Auntie."
+            "text": "Sorry."
         },
         {
             "portrait": "duessa",
-            "text": "It's true. You know, I think I hoped you'd try this one day. I did, once."
+            "text": "Ugh. You know, I kinda thought you'd try this one day. I did, once."
         },
         {
             "portrait": "mc",
-            "text": "You... you tried to fight grandfather?"
+            "text": "You tried to fight grandfather?"
         },
         {
             "portrait": "duessa",
-            "text": "And had my eye taken for it. But you... well, we shall see. Good luck, Aria."
+            "text": "That's why I had my eye taken."
+        },
+        {
+            "portrait": "mc",
+            "text": "Whoa."
+        },
+        {
+            "portrait": "duessa",
+            "text": "Yeah. Well..."
+        },
+        {
+            "portrait": "duessa",
+            "text": "...good luck."
         }
     ]
 }
