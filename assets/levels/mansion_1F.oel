@@ -217,5 +217,6 @@
     <grandjoker x="2400" y="160"/>
     <butler x="1392" y="2064"/>
     <player x="1432" y="2344"/>
+    <respawn x="3016" y="472"/>
   </objects>
 </level>

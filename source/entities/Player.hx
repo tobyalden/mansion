@@ -141,7 +141,7 @@ class Player extends Entity
             "fall" => new Sfx("audio/fall.wav"),
             "run" => new Sfx("audio/run.wav")
         ];
-        facing = "up";
+        facing = GameScene.hasGlobalFlag("respawnInRoom") ? "down" : "up";
         flaskCount = STARTING_NUMBER_OF_FLASKS;
         isRunning = false;
         stamina = MAX_STAMINA;

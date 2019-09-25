@@ -209,6 +209,7 @@ class GameScene extends Scene
     }
 
     public function onDeath() {
+        addGlobalFlag("respawnInRoom");
         var deathPause = new Alarm(2.5);
         deathPause.onComplete.bind(function() {
             curtain.fadeOut();
@@ -502,11 +503,21 @@ class GameScene extends Scene
             addMask(level.pits, "pits", Std.int(level.x), Std.int(level.y));
             add(new LockWalls(level.x, level.y, level));
         }
-        for(playerStart in fastXml.node.objects.nodes.player) {
-            player.x = Std.parseInt(playerStart.att.x);
-            player.y = Std.parseInt(playerStart.att.y);
-            currentLevel = getLevelFromPlayer();
-            break;
+        if(hasGlobalFlag("respawnInRoom")) {
+            for(playerStart in fastXml.node.objects.nodes.respawn) {
+                player.x = Std.parseInt(playerStart.att.x);
+                player.y = Std.parseInt(playerStart.att.y);
+                currentLevel = getLevelFromPlayer();
+                break;
+            }
+        }
+        else {
+            for(playerStart in fastXml.node.objects.nodes.player) {
+                player.x = Std.parseInt(playerStart.att.x);
+                player.y = Std.parseInt(playerStart.att.y);
+                currentLevel = getLevelFromPlayer();
+                break;
+            }
         }
         for(stalker in fastXml.node.objects.nodes.stalker) {
             var stalker = new Stalker(

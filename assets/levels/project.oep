@@ -23,6 +23,7 @@
         </object>
 		<object name="saveroom" image="saveroom.png" width="320" height="320"></object>
 		<object name="player" image="player.png" width="16" height="16"></object>
+		<object name="respawn" image="respawn.png" width="16" height="16"></object>
 		<object name="butler" image="butler.png" width="16" height="16"></object>
 		<object name="stalker" image="stalker.png" width="24" height="24"></object>
 		<object name="archer" image="archer.png" width="24" height="24"></object>
