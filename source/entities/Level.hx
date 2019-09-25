@@ -573,8 +573,8 @@ class Level extends Entity {
                 }
             }
         }
-        addGraphic(wallTiles);
-        addGraphic(groundTiles);
-        addGraphic(pitTiles);
+        //addGraphic(wallTiles);
+        //addGraphic(groundTiles);
+        //addGraphic(pitTiles);
     }
 }

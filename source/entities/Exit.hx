@@ -17,7 +17,7 @@ class Exit extends Entity {
         super(x, y);
         this.destination = destination;
         type = "exit";
-        graphic = new ColoredRect(width, height, 0x0000FF);
+        //graphic = new ColoredRect(width, height, 0x0000FF);
         mask = new Hitbox(width, height);
     }
 }

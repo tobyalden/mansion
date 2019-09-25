@@ -39,6 +39,7 @@
 		<object name="exit" image="exit.png" width="16" height="16" resizableX="true" resizableY="true" tile="false">
 		    <nodes drawObject="true" limit="2" lineMode="2"/>
         </object>
+		<object name="fullmap" image="fullmap.png" width="3200" height="3200"></object>
 	</objects>
 </project>
 

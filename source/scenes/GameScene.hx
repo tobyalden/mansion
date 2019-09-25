@@ -110,6 +110,7 @@ class GameScene extends Scene
         Key.define("zoomout", [Key.Q]);
         isLevelLocked = false;
         allEnemies = new Array<Entity>();
+        addGraphic(new Image("graphics/fullmap.png"), 20);
         player = new Player(0, 0);
         add(player);
         add(player.sword);
