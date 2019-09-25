@@ -17,11 +17,11 @@
 - music
 - ending
 - intro
-- credits
-~ write dialogue
-~ all sfx
 - master sfx
+~ all sfx
 ~ graphics
+~ write dialogue
+~ credits (just needs music)
 
 - write thoughts
 - nymph

@@ -30,7 +30,9 @@ class GameScene extends Scene
     public static var isNightmare = false;
     public static var isProcedural = false;
     public static var currentGlobalFlags(default, null):Array<String>;
-    private static var globalFlagsAtStart:Array<String> = [];
+    //private static var globalFlagsAtStart:Array<String> = [];
+    private static var globalFlagsAtStart:Array<String> = ["superWizardFightStarted"];
+    private var sfx:Map<String, Sfx>;
 
     public static function hasGlobalFlag(flag:String) {
         return currentGlobalFlags.indexOf(flag) != -1;
@@ -201,6 +203,9 @@ class GameScene extends Scene
             //player.cancelRoll();
         });
         addTween(playerPusher);
+        sfx = [
+            "playerrevive" => new Sfx("audio/playerrevive.wav")
+        ];
     }
 
     public function onDeath() {
@@ -209,11 +214,21 @@ class GameScene extends Scene
             curtain.fadeOut();
             var restartPause = new Alarm(2.5);
             restartPause.onComplete.bind(function() {
+                stopSfx();
                 HXP.scene = new GameScene();
             });
             addTween(restartPause, true);
+            sfx["playerrevive"].play();
         });
         addTween(deathPause, true);
+    }
+
+    public function stopSfx() {
+        var eirena = getInstance("superwizard");
+        if(eirena != null) {
+            cast(eirena, SuperWizard).stopSfx();
+        }
+        player.stopSfx();
     }
 
     public function isEntityOnscreen(e:Entity) {

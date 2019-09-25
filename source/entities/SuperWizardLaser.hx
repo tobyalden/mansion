@@ -52,6 +52,10 @@ class SuperWizardLaser extends Entity {
         isOn = false;
     }
 
+    public function stopSfx() {
+        sfx["laser"].stop();
+    }
+
     public function turnOn() {
         sprite.play("warmingup");
         sfx["laserwarmup"].play();

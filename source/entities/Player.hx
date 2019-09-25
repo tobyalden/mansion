@@ -137,6 +137,7 @@ class Player extends Entity
             "playerhit1" => new Sfx("audio/playerhit1.wav"),
             "playerhit2" => new Sfx("audio/playerhit2.wav"),
             "playerhit3" => new Sfx("audio/playerhit3.wav"),
+            "playerdeath" => new Sfx("audio/playerdeath.wav"),
             "fall" => new Sfx("audio/fall.wav"),
             "run" => new Sfx("audio/run.wav")
         ];
@@ -176,6 +177,10 @@ class Player extends Entity
             flaskCount -= 1;
         });
         addTween(healTimer);
+    }
+
+    public function stopSfx() {
+        sfx["run"].stop();
     }
 
     public function cancelRoll() {
@@ -462,6 +467,7 @@ class Player extends Entity
     }
 
     private function die() {
+        sfx['playerdeath'].play();
         isDead = true;
         cast(scene, GameScene).onDeath();
     }
@@ -519,6 +525,9 @@ class Player extends Entity
         if(health <= 0) {
             die();
         }
+        else {
+            sfx['playerhit${HXP.choose(1, 2, 3)}'].play();
+        }
         knockbackTimer.start();
         invincibleTimer.start();
         var awayFromDamage = new Vector2(
@@ -526,7 +535,6 @@ class Player extends Entity
         );
         awayFromDamage.normalize(KNOCKBACK_SPEED);
         velocity = awayFromDamage;
-        sfx['playerhit${HXP.choose(1, 2, 3)}'].play();
         isFlashing = true;
         stopFlasher.start();
     }

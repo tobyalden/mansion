@@ -206,6 +206,11 @@ class SuperWizard extends Enemy
         fightStarted = GameScene.hasGlobalFlag("superWizardFightStarted");
     }
 
+    public function stopSfx() {
+        sfx["flurry"].stop();
+        laser.stopSfx();
+    }
+
     private function generatePhaseLocations() {
         phaseLocations = [
             "spiral" => new Vector2(screenCenter.x, screenCenter.y),
