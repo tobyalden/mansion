@@ -1,0 +1,28 @@
+{
+    "conversation": [
+        {
+            "portrait": "mc",
+            "text": "So... how have you been, Arthur?"
+        },
+        {
+            "portrait": "butler",
+            "text": "I have been well, miss."
+        },
+        {
+            "portrait": "mc",
+            "text": "Anything exciting happen?"
+        },
+        {
+            "portrait": "butler",
+            "text": "I am not fond of excitement, Miss."
+        },
+        {
+            "portrait": "mc",
+            "text": "Gotcha."
+        }
+    ]
+}
+
+
+
+

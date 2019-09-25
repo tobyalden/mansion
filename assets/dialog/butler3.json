@@ -1,0 +1,23 @@
+{
+    "conversation": [
+        {
+            "portrait": "mc",
+            "text": "How about Duessa and Munera?"
+        },
+        {
+            "portrait": "butler",
+            "text": "Lady Duessa in the wine cellar. You will remember the stairs down are located in the kitchen pantry. The kitchen itself is just past the dining room below."
+        },
+        {
+            "portrait": "butler",
+            "text": "As for Lady Munera, you can find her in the library upstairs at the moment, up the stairs and to the left."
+        },
+        {
+            "portrait": "mc",
+            "text": "Thanks."
+        }
+    ]
+}
+
+
+
