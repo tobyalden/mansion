@@ -16,7 +16,7 @@ class MainMenu extends Scene
 {
     public static inline var BOB_AMOUNT = 5;
     public static inline var BOB_SPEED = 0.5;
-    public static inline var PROMPT_FADE_TIME = 0.5;
+    public static inline var PROMPT_FADE_TIME = 0.25;
 
     private var curtain:Curtain;
     private var background:Image;
@@ -115,16 +115,28 @@ class MainMenu extends Scene
         ];
     }    
 
+    private function isFading() {
+        for(fadeTween in fadeTweens) {
+            if(fadeTween.active) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     override public function update() {
         var controlType = Main.gamepad == null ? "keyboard" : "controller";
         startPrompt.play(controlType);
         var cursorMenu = atDifficultyMenu ? difficultyMenu : menu;
+        if(atDifficultyMenu) {
+            startPrompt.alpha = 0;
+        }
         cursor.x = cursorMenu[selected].x - 20 + bob.value;
         cursor.y = cursorMenu[selected].y + 6;
         if(canControl) {
             if(
-                Main.inputPressed("cast")
-                || Main.inputPressed("roll")
+                (Main.inputPressed("cast") || Main.inputPressed("roll"))
+                && !isFading()
             ) {
                 if(atStartPrompt) {
                     fadeFromPromptToMenu();
@@ -219,7 +231,7 @@ class MainMenu extends Scene
             var menuItemTween = new VarTween();
             menuItemTween.tween(
                 menuItem, "alpha", backwards ? 1 : 0,
-                PROMPT_FADE_TIME / 3, Ease.sineIn
+                PROMPT_FADE_TIME / 2, Ease.sineIn
             );
             fadeTweens.push(menuItemTween);
         }
@@ -227,10 +239,11 @@ class MainMenu extends Scene
             var menuItemTween = new VarTween();
             menuItemTween.tween(
                 menuItem, "alpha", backwards ? 0: 1,
-                PROMPT_FADE_TIME / 3, Ease.sineIn
+                PROMPT_FADE_TIME / 2, Ease.sineIn
             );
             fadeTweens.push(menuItemTween);
         }
+
         for(fadeTween in fadeTweens) {
             addTween(fadeTween, true);
         }
