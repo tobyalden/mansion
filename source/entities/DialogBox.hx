@@ -88,7 +88,8 @@ class DialogBox extends Entity
         cursor.add("blink", [0, 1], 3);
         cursor.play("blink");
         cursor.x = BOX_WIDTH - 20;
-        cursor.y = BOX_HEIGHT - 14;
+        //cursor.x = BOX_WIDTH - 15;
+        cursor.y = BOX_HEIGHT + 2;
         cursorStartY = cursor.y;
         addGraphic(box);
         addGraphic(frame);
