@@ -4,7 +4,7 @@
 - ending
 - intro
 
-~ all sfx
+~ all sfx (still missing: bosses, music, explosions, final boss stuff)
 ~ graphics
 ~ write dialogue
 ~ credits (just needs music)

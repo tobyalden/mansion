@@ -78,6 +78,7 @@ class GameScene extends Scene
     private var isMovingDuringFade:Bool;
     private var lastConversationName:String;
     private var tutorial:Tutorial;
+    private var currentSong:Sfx;
 
     public function setIsLevelLocked(newIsLevelLocked:Bool)  {
         isLevelLocked = newIsLevelLocked;
@@ -204,8 +205,60 @@ class GameScene extends Scene
         });
         addTween(playerPusher);
         sfx = [
-            "playerrevive" => new Sfx("audio/playerrevive.wav")
+            "playerrevive" => new Sfx("audio/playerrevive.wav"),
+            "mansion1" => new Sfx("audio/mansion1.ogg"),
         ];
+        currentSong = sfx["mansion1"];
+        currentSong.loop();
+    }
+
+    public function getCurrentSong() {
+        for(boss in ["superwizard", "ringmaster", "grandjoker", "grandfather"]) {
+            if(isPlayerOnSameScreenAsBoss(boss)) {
+                if(cast(getInstance(boss), Enemy).fightStarted) {
+                    return '${boss}fight';
+                }
+                else {
+                    return "silence";
+                }
+            }
+        }
+        return 'mansion${numberOfBossesBeaten()}';
+    }
+
+    public function numberOfBossesBeaten() {
+        var bossesBeaten = 0;
+        if(hasGlobalFlag("superWizardDefeated")) {
+            bossesBeaten += 1;
+        }
+        if(hasGlobalFlag("ringMasterDefeated")) {
+            bossesBeaten += 1;
+        }
+        if(hasGlobalFlag("grandJokerDefeated")) {
+            bossesBeaten += 1;
+        }
+        if(hasGlobalFlag("grandfatherDefeated")) {
+            bossesBeaten += 1;
+        }
+        return bossesBeaten;
+    }
+
+    public function isPlayerOnSameScreenAsBoss(bossName:String) {
+        var boss = getInstance(bossName);
+        if(boss != null) {
+            if(
+                getScreenCoordinates(player).x
+                == getScreenCoordinates(boss).x
+                && getScreenCoordinates(player).y
+                == getScreenCoordinates(boss).y
+            ) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
     }
 
     public function onDeath() {
@@ -332,6 +385,7 @@ class GameScene extends Scene
     }
 
     override public function update() {
+        trace(getCurrentSong());
         if(Input.check("restart")) {
             HXP.scene = new GameScene();
         }
