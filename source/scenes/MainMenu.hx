@@ -20,6 +20,8 @@ class MainMenu extends Scene
 
     private var curtain:Curtain;
     private var background:Image;
+    private var glow:Image;
+    private var glowFader:VarTween;
     private var logo:Image;
     private var menu:Array<Text>;
     private var difficultyMenu:Array<Text>;
@@ -38,9 +40,15 @@ class MainMenu extends Scene
     override public function begin() {
         curtain = new Curtain(camera);
         background = new Image("graphics/mainmenu.png");
+        glow = new Image("graphics/mainmenuphoneglow.png");
         logo = new Image("graphics/logo.png");
         addGraphic(background);
+        addGraphic(glow);
         addGraphic(logo);
+
+        glowFader = new VarTween(TweenType.PingPong);
+        glowFader.tween(glow, "alpha", 0, 1, Ease.sineInOut);
+        addTween(glowFader, true);
 
         menu = [
             new Text("New Game"),

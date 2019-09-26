@@ -1,16 +1,16 @@
-- cancel all boss tweens on death
 - saving
 - final boss intro/outro
 - music
 - ending
 - intro
-- master sfx
 
 ~ all sfx
 ~ graphics
 ~ write dialogue
 ~ credits (just needs music)
 
++ master sfx
++ cancel all boss tweens on death
 + non-procedural level loading
 + design mansion
 + map
