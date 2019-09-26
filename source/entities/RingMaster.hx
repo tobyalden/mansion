@@ -160,6 +160,7 @@ class RingMaster extends Enemy
                 else if(chaseCount < numChases) {
                     ring.chase(lastChasingRing);
                     sprite.play("tossone");
+                    sfx['ringtoss${HXP.choose(1, 2, 3)}'].play();
                     returnToIdleAfterPause();
                     chaseCount++;
                     return;
@@ -192,6 +193,7 @@ class RingMaster extends Enemy
             for(ring in rings) {
                 ring.returnToRingMaster();
             }
+            sfx['ringreturn'].play();
             var ringReturnTimer = new Alarm(Ring.RETURN_TIME);
             ringReturnTimer.onComplete.bind(function() {
                 preAdvancePhase();
@@ -216,6 +218,8 @@ class RingMaster extends Enemy
                 rings[5].enrageToss(false, tossSpeed);
             }
             sprite.play("tossboth");
+            sfx['ringtoss1'].play();
+            sfx['ringtoss${HXP.choose(2, 3)}'].play();
             sprite.flipX = !sprite.flipX;
             returnToIdleAfterPause();
         });
@@ -227,6 +231,7 @@ class RingMaster extends Enemy
             for(ring in rings) {
                 ring.returnToRingMaster();
             }
+            sfx['ringreturn'].play();
             isEndingEnragePhase = true;
             var ringReturnTimer = new Alarm(4);
             ringReturnTimer.onComplete.bind(function() {
@@ -238,6 +243,13 @@ class RingMaster extends Enemy
         isEndingEnragePhase = false;
 
         sfx = [
+            "ringtoss1" => new Sfx("audio/ringtoss1.wav"),
+            "ringtoss2" => new Sfx("audio/ringtoss2.wav"),
+            "ringtoss3" => new Sfx("audio/ringtoss3.wav"),
+            "ringreturn" => new Sfx("audio/ringreturn.wav"),
+            "scattershot1" => new Sfx("audio/scattershot1.wav"),
+            "scattershot2" => new Sfx("audio/scattershot2.wav"),
+            "scattershot3" => new Sfx("audio/scattershot3.wav"),
             "enrage" => new Sfx("audio/enrage.wav")
         ];
         fightStarted = GameScene.hasGlobalFlag("ringMasterFightStarted");
@@ -257,12 +269,15 @@ class RingMaster extends Enemy
                 rings[0].toss(false);
                 rings[1].toss(true);
                 sprite.play("tossboth");
+                sfx['ringtoss1'].play();
+                sfx['ringtoss2'].play();
                 sprite.flipX = !sprite.flipX;
             }
             else {
                 var tossRight = tossCount % 2 == 0 ? true : false;
                 rings[tossCount % 4].toss(tossRight);
                 sprite.play("tossone");
+                sfx['ringtoss${HXP.choose(1, 2, 3)}'].play();
                 sprite.flipX = tossRight;
             }
         }
@@ -271,16 +286,20 @@ class RingMaster extends Enemy
                 rings[0].toss(false);
                 sprite.flipX = false;
                 sprite.play("tossone");
+                sfx['ringtoss${HXP.choose(1, 2, 3)}'].play();
             }
             else if(tossCount == 1) {
                 rings[1].toss(true);
                 sprite.flipX = true;
                 sprite.play("tossone");
+                sfx['ringtoss${HXP.choose(1, 2, 3)}'].play();
             }
             else {
                 rings[0].toss(false);
                 rings[1].toss(true);
                 sprite.play("tossboth");
+                sfx['ringtoss1'].play();
+                sfx['ringtoss2'].play();
                 sprite.flipX = !sprite.flipX;
             }
         }
@@ -325,6 +344,7 @@ class RingMaster extends Enemy
                     isEnraged ? Ring.ENRAGE_RETURN_TIME : Ring.RETURN_TIME
                 );
             }
+            sfx['ringreturn'].play();
             var ringReturnTimer = new Alarm(Ring.RETURN_TIME);
             ringReturnTimer.onComplete.bind(function() {
                 preAdvancePhase();
@@ -448,6 +468,7 @@ class RingMaster extends Enemy
                 var player = scene.getInstance("player");
                 rings[0].chase(player);
                 sprite.play("tossone");
+                sfx['ringtoss${HXP.choose(1, 2, 3)}'].play();
                 returnToIdleAfterPause();
                 chaseCount = 1;
             }
@@ -458,6 +479,9 @@ class RingMaster extends Enemy
         else if(currentPhase == "bouncerings") {
             sprite.play("tossboth");
             if(!bounceTimer.active && !rings[0].isReturning) {
+                sfx['ringtoss1'].play();
+                sfx['ringtoss2'].play();
+                sfx['ringtoss3'].play();
                 bounceTimer.start();
                 var bounceCount = 0;
                 var numBounces = isEnraged ? 5 : 3;
@@ -508,6 +532,7 @@ class RingMaster extends Enemy
             var speed = SCATTER_SHOT_SPEED * HXP.choose(1, 0.95, 0.9, 0.85);
             scene.add(new Spit(this, scatter, speed, isBig));
         }
+        sfx['scattershot${HXP.choose(1, 2, 3)}'].play();
     }
 
     override function die() {

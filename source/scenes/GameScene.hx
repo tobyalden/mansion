@@ -31,7 +31,9 @@ class GameScene extends Scene
     public static var isProcedural = false;
     public static var currentGlobalFlags(default, null):Array<String>;
     //private static var globalFlagsAtStart:Array<String> = [];
-    private static var globalFlagsAtStart:Array<String> = ["superWizardFightStarted"];
+    private static var globalFlagsAtStart:Array<String> = [
+        "superWizardFightStarted", "ringMasterFightStarted"
+    ];
     private var sfx:Map<String, Sfx>;
 
     public static function hasGlobalFlag(flag:String) {

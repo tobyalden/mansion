@@ -38,6 +38,7 @@ class Ring extends Entity {
     private var enrageTossHorizontalSpeedMultiplier:Float;
     private var enrageTossRight:Bool;
     private var returnTime:Float;
+    private var sfx:Map<String, Sfx>;
 
     public function new(ringMaster:RingMaster) {
         super();
@@ -66,6 +67,11 @@ class Ring extends Entity {
         enrageTossHorizontalSpeedMultiplier = 1;
         enrageTossRight = true;
         returnTime = RETURN_TIME;
+        sfx = [
+            "ringbounce1" => new Sfx("audio/ringbounce1.wav"),
+            "ringbounce2" => new Sfx("audio/ringbounce2.wav"),
+            "ringbounce3" => new Sfx("audio/ringbounce3.wav")
+        ];
     }
 
     private function getCurveControlPoint(target:Entity, flip:Bool) {
@@ -272,11 +278,13 @@ class Ring extends Entity {
 
     override public function moveCollideX(e:Entity) {
         velocity.x = -velocity.x;
+        sfx['ringbounce${HXP.choose(1, 2, 3)}'].play();
         return true;
     }
 
     override public function moveCollideY(e:Entity) {
         velocity.y = -velocity.y;
+        sfx['ringbounce${HXP.choose(1, 2, 3)}'].play();
         return true;
     }
 }
