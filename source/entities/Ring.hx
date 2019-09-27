@@ -203,7 +203,7 @@ class Ring extends Entity {
             );
             moveBy(0, velocity.y * HXP.elapsed);
             moveTo(
-                ringMaster.x + ringMaster.width / 2 - width / 2 + velocity.x,
+                ringMaster.x + ringMaster.width / 2 - width / 2 + velocity.x + 12,
                 y
             );
             if(
