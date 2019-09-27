@@ -9,6 +9,7 @@
 	</settings>
 	<layers>
 		<grid name="walls" gridSize="16" exportAsObjects="true"/>
+		<grid name="smallwalls" gridSize="4" exportAsObjects="true"/>
 		<grid name="pits" gridSize="16" exportAsObjects="true" color="#FFFF00FF"/>
 		<grid name="optionalWalls" gridSize="16" exportAsObjects="true" color="#FFFF0000"/>
 		<objects name="rooms" gridSize="320"/>
@@ -37,6 +38,7 @@
 		<object name="superwizard" image="superwizard.png" width="80" height="80"></object>
 		<object name="grandjoker" image="grandjoker.png" width="80" height="80"></object>
 		<object name="grandfather" image="grandfather.png" width="80" height="80"></object>
+		<object name="piano" image="piano.png" width="32" height="16"></object>
 		<object name="exit" image="exit.png" width="16" height="16" resizableX="true" resizableY="true" tile="false">
 		    <nodes drawObject="true" limit="2" lineMode="2"/>
         </object>

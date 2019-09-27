@@ -21,7 +21,8 @@ typedef IntPairWithLevel = {
 }
 
 class Level extends Entity {
-    public static inline var TILE_SIZE = 16;
+    //public static inline var TILE_SIZE = 16;
+    public static inline var TILE_SIZE = 4;
     public static inline var MIN_LEVEL_WIDTH = 320;
     public static inline var MIN_LEVEL_HEIGHT = 320;
     public static inline var MIN_LEVEL_WIDTH_IN_TILES = 20;
@@ -212,7 +213,7 @@ class Level extends Entity {
             wholeLevelWidth, wholeLevelHeight, TILE_SIZE, TILE_SIZE
         );
 
-        for (r in fastXml.node.walls.nodes.rect) {
+        for (r in fastXml.node.smallwalls.nodes.rect) {
             wholeLevelWalls.setRect(
                 Std.int(Std.parseInt(r.att.x) / TILE_SIZE),
                 Std.int(Std.parseInt(r.att.y) / TILE_SIZE),

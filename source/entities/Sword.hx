@@ -48,4 +48,12 @@ class Sword extends Entity {
         }
         return cast(npc, Butler);
     }
+
+    public function getPiano():Entity {
+        var piano = collide("piano", x, y);
+        if(piano == null) {
+            return null;
+        }
+        return piano;
+    }
 }

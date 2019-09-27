@@ -3,6 +3,7 @@
 - music
 - ending
 - intro
+- difficulties
 
 ~ all sfx (still missing: bosses, music, explosions, final boss stuff)
 ~ graphics

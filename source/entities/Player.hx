@@ -58,6 +58,7 @@ class Player extends Entity
     private var sfx:Map<String, Sfx>;
     private var isRunning:Bool;
     private var staminaRecoveryDelay:Alarm;
+    private var lastPiano:Int;
 
     private var knockbackTimer:Alarm;
     private var invincibleTimer:Alarm;
@@ -139,7 +140,16 @@ class Player extends Entity
             "playerhit3" => new Sfx("audio/playerhit3.wav"),
             "playerdeath" => new Sfx("audio/playerdeath.wav"),
             "fall" => new Sfx("audio/fall.wav"),
-            "run" => new Sfx("audio/run.wav")
+            "run" => new Sfx("audio/run.wav"),
+            "piano1" => new Sfx("audio/piano1.wav"),
+            "piano2" => new Sfx("audio/piano2.wav"),
+            "piano3" => new Sfx("audio/piano3.wav"),
+            "piano4" => new Sfx("audio/piano4.wav"),
+            "piano5" => new Sfx("audio/piano5.wav"),
+            "piano6" => new Sfx("audio/piano6.wav"),
+            "piano7" => new Sfx("audio/piano7.wav"),
+            "piano8" => new Sfx("audio/piano8.wav"),
+            "piano9" => new Sfx("audio/piano9.wav")
         ];
         facing = GameScene.hasGlobalFlag("respawnInRoom") ? "down" : "up";
         flaskCount = STARTING_NUMBER_OF_FLASKS;
@@ -150,6 +160,8 @@ class Player extends Entity
             STAMINA_RECOVERY_DELAY, TweenType.Persist
         );
         addTween(staminaRecoveryDelay);
+
+        lastPiano = 1;
 
         isFlashing = false;
         flasher = new Alarm(0.05, TweenType.Looping);
@@ -213,9 +225,17 @@ class Player extends Entity
             //stamina -= CAST_COST;
             //staminaRecoveryDelay.start();
             var conversationPartner = sword.getConversationPartner();
+            var piano = sword.getPiano();
             if(conversationPartner != null) {
                 var gameScene = cast(scene, GameScene);
                 gameScene.converse(conversationPartner.getConversation());
+            }
+            else if(piano != null) {
+                sfx['piano${lastPiano}'].play();
+                lastPiano += HXP.choose(1, 2, 3);
+                if(lastPiano > 9) {
+                    lastPiano = 1;
+                }
             }
             else {
                 castSpell();

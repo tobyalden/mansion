@@ -678,6 +678,13 @@ class GameScene extends Scene
             );
             add(butler);
         }
+        for(piano in fastXml.node.objects.nodes.piano) {
+            var piano = new Piano(
+                Std.parseInt(piano.att.x),
+                Std.parseInt(piano.att.y)
+            );
+            add(piano);
+        }
         for(exit in fastXml.node.objects.nodes.exit) {
             var nodes = new Array<Vector2>();
             for(n in exit.nodes.node) {
