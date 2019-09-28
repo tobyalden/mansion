@@ -208,10 +208,6 @@ class SuperWizard extends Enemy
     public function stopSfx() {
         sfx["flurry"].stop();
         laser.stopSfx();
-        for(tween in tweens) {
-            tween.cancel();
-        }
-        active = false;
     }
 
     private function generatePhaseLocations() {

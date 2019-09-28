@@ -283,13 +283,13 @@ class GameScene extends Scene
 
     public function onDeath() {
         isDying = true;
+        stopSfx();
         addGlobalFlag("respawnInRoom");
         var deathPause = new Alarm(2.5);
         deathPause.onComplete.bind(function() {
             curtain.fadeOut();
             var restartPause = new Alarm(2.5);
             restartPause.onComplete.bind(function() {
-                stopSfx();
                 HXP.scene = new GameScene();
             });
             addTween(restartPause, true);
