@@ -1,0 +1,38 @@
+{
+    "conversation": [
+        {
+            "portrait": "sister",
+            "text": "Yo!"
+        },
+        {
+            "portrait": "mc",
+            "text": "Hey hey."
+        },
+        {
+            "portrait": "sister",
+            "text": "Whaddup?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Not much, just came home to deal with some family shit."
+        },
+        {
+            "portrait": "sister",
+            "text": "Hell yes. Are you gonna take down grandfather?"
+        },
+        {
+            "portrait": "mc",
+            "text": "That's the plan, yeah."
+        },
+        {
+            "portrait": "sister",
+            "text": "Dope. I respect that."
+        },
+        {
+            "portrait": "mc",
+            "text": "Thank you! That means a lot."
+        }
+    ]
+}
+
+
