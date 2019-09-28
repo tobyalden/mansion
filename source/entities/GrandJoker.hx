@@ -243,7 +243,10 @@ class GrandJoker extends Enemy
             sprite.play("dying");
             if(!gameScene.pausePlayer) {
                 isDead = true;
-                scene.remove(this);
+                //scene.remove(this);
+                bigExplosionSpawner.cancel();
+                visible = false;
+                collidable = false;
             }
             clearHazards();
         }
