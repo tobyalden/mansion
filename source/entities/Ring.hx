@@ -96,7 +96,7 @@ class Ring extends Entity {
 
     public function bounce() {
         isBouncing = true;
-        var player = scene.getInstance("player");
+        var player = HXP.scene.getInstance("player");
         var towardsPlayer = new Vector2(
             Math.max(Math.random(), 0.4) * HXP.choose(1, -1),
             Math.max(Math.random(), 0.4) * HXP.choose(1, -1)
@@ -153,7 +153,7 @@ class Ring extends Entity {
 
     public function toss(clockwise:Bool) {
         if(!tosser.active) {
-            var player = scene.getInstance("player");
+            var player = HXP.scene.getInstance("player");
             var controlPointA = getCurveControlPoint(player, false);
             var controlPointB = getCurveControlPoint(player, true);
             if(clockwise) {
