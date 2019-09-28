@@ -33,7 +33,8 @@ class GameScene extends Scene
     public static var currentGlobalFlags(default, null):Array<String>;
     //private static var globalFlagsAtStart:Array<String> = [];
     private static var globalFlagsAtStart:Array<String> = [
-        "superWizardFightStarted", "ringMasterFightStarted"
+        "superWizardFightStarted", "ringMasterFightStarted",
+        "grandJokerFightStarted"
     ];
     private var music:Map<String, Sfx>;
 

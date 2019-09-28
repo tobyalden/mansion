@@ -158,7 +158,11 @@ class GrandJoker extends Enemy
         addTween(enrageShotTimer);
 
         sfx = [
-            "enrage" => new Sfx("audio/enrage.wav")
+            "enrage" => new Sfx("audio/enrage.wav"),
+            "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
+            "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
+            "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
+            "flurry" => new Sfx("audio/flurry.wav")
         ];
         fightStarted = GameScene.hasGlobalFlag("grandJokerFightStarted");
     }
@@ -260,6 +264,7 @@ class GrandJoker extends Enemy
             }
         }
         else if(betweenPhases) {
+            sfx['flurry'].stop();
             var player = scene.getInstance("player");
             sprite.play("idle");
             sprite.flipX = centerX > player.centerX;
@@ -290,6 +295,9 @@ class GrandJoker extends Enemy
         }
         else if(currentPhase == "clock") {
             if(!clockShotTimer.active) {
+                if(!sfx["flurry"].playing) {
+                    sfx["flurry"].loop();
+                }
                 sprite.play("shoot");
                 phaseTimer.reset(
                     isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION
@@ -313,6 +321,9 @@ class GrandJoker extends Enemy
             }
         }
         else if(currentPhase == "circle") {
+            if(!sfx["flurry"].playing) {
+                sfx["flurry"].loop();
+            }
             var player = scene.getInstance("player");
             sprite.play("idle");
             sprite.flipX = centerX > player.centerX;
@@ -394,9 +405,13 @@ class GrandJoker extends Enemy
             spit.y -= i * slant;
             scene.add(spit);
         }
+        sfx['rippleattack${HXP.choose(1, 2, 3)}'].play();
     }
 
     private function curtainBarrierShot() {
+        if(!sfx["flurry"].playing) {
+            sfx["flurry"].loop();
+        }
         var shotVector = new Vector2(1, (Math.random() - 0.5) / 1.5);
         var shotSpeed = Math.max(
             CURTAIN_BARRIER_SHOT_SPEED * Math.random(),
@@ -445,6 +460,9 @@ class GrandJoker extends Enemy
     }
 
     private function enrageShot() {
+        if(!sfx["flurry"].playing) {
+            sfx["flurry"].loop();
+        }
         var shotAngle = -Math.PI / 2;
         if(age < ENRAGE_SINGLE_ROTATION_DURATION) {
             shotAngle += age * age;
