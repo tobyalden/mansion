@@ -119,8 +119,10 @@ class MainMenu extends Scene
             "select3" => new Sfx("audio/select3.wav"),
             "cantselect" => new Sfx("audio/cantselect.wav"),
             "back" => new Sfx("audio/back.wav"),
+            //"mainmenu" => new Sfx("audio/mainmenu.ogg"),
             "laugh" => new Sfx("audio/laugh.wav")
         ];
+        //sfx["mainmenu"].loop();
     }    
 
     private function isFading() {

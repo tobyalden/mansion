@@ -178,7 +178,6 @@ class SuperWizard extends Enemy
         addTween(enrageSpoutInterval);
 
         currentPhase = HXP.choose("spiral", "rippleAndSpout", "zigZag");
-        //currentPhase = "spiral";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -447,7 +446,7 @@ class SuperWizard extends Enemy
     }
 
     override function die() {
-        GameScene.addGlobalFlag("superWizardDefeated");
+        GameScene.addGlobalFlag("superwizardDefeated");
         for(tween in tweens) {
             tween.active = false;
         }

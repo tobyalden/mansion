@@ -536,7 +536,7 @@ class RingMaster extends Enemy
     }
 
     override function die() {
-        GameScene.addGlobalFlag("ringMasterDefeated");
+        GameScene.addGlobalFlag("ringmasterDefeated");
         for(tween in tweens) {
             tween.active = false;
         }

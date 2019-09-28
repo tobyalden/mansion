@@ -25,6 +25,7 @@ class GameScene extends Scene
     public static inline var NUMBER_OF_ENEMIES = 150;
     public static inline var CAMERA_PAN_TIME = 1;
     public static inline var LOCK_CHANCE = 1;
+    public static inline var MUSIC_FADE_SPEED = 1;
 
     public static var isHardMode = false;
     public static var isNightmare = false;
@@ -34,7 +35,7 @@ class GameScene extends Scene
     private static var globalFlagsAtStart:Array<String> = [
         "superWizardFightStarted", "ringMasterFightStarted"
     ];
-    private var sfx:Map<String, Sfx>;
+    private var music:Map<String, Sfx>;
 
     public static function hasGlobalFlag(flag:String) {
         return currentGlobalFlags.indexOf(flag) != -1;
@@ -59,6 +60,7 @@ class GameScene extends Scene
     public var currentScreenY(default, null):Int;
     public var isDialogMode(default, null):Bool;
     public var pausePlayer(default, null):Bool;
+    public var isDying(default, null):Bool;
     private var roomMapBlueprint:Grid;
     private var hallwayMapBlueprint:Grid;
     private var shaftMapBlueprint:Grid;
@@ -80,7 +82,8 @@ class GameScene extends Scene
     private var isMovingDuringFade:Bool;
     private var lastConversationName:String;
     private var tutorial:Tutorial;
-    private var currentSong:Sfx;
+    private var currentSong:String;
+    private var playerReviveSfx:Sfx;
 
     public function setIsLevelLocked(newIsLevelLocked:Bool)  {
         isLevelLocked = newIsLevelLocked;
@@ -206,18 +209,33 @@ class GameScene extends Scene
             //player.cancelRoll();
         });
         addTween(playerPusher);
-        sfx = [
-            "playerrevive" => new Sfx("audio/playerrevive.wav"),
+        // TODO: Fix bug where boss music doesn't stop after death
+        music = [
+            "mansion0" => new Sfx("audio/mansion0.ogg"),
             "mansion1" => new Sfx("audio/mansion1.ogg"),
+            "mansion2" => new Sfx("audio/mansion2.ogg"),
+            "mansion3" => new Sfx("audio/mansion3.ogg"),
+            "mansion4" => new Sfx("audio/mansion4.ogg"),
+            "superwizardfight" => new Sfx("audio/superwizardfight.ogg"),
+            "ringmasterfight" => new Sfx("audio/ringmasterfight.ogg"),
+            "grandjokerfight" => new Sfx("audio/grandjokerfight.ogg"),
+            "grandfatherfight" => new Sfx("audio/grandfatherfight.ogg"),
+            "silence" => new Sfx("audio/silence.ogg")
         ];
-        currentSong = sfx["mansion1"];
-        currentSong.loop();
+        currentSong = "mansion1";
+        isDying = false;
+        playerReviveSfx = new Sfx("audio/playerrevive.wav");
+        music[currentSong].loop();
     }
 
     public function getCurrentSong() {
         for(boss in ["superwizard", "ringmaster", "grandjoker", "grandfather"]) {
             if(isPlayerOnSameScreenAsBoss(boss)) {
-                if(cast(getInstance(boss), Enemy).fightStarted) {
+                if(
+                    cast(getInstance(boss), Enemy).fightStarted
+                    && !hasGlobalFlag('${boss}Defeated')
+                    && !isDying
+                ) {
                     return '${boss}fight';
                 }
                 else {
@@ -230,13 +248,13 @@ class GameScene extends Scene
 
     public function numberOfBossesBeaten() {
         var bossesBeaten = 0;
-        if(hasGlobalFlag("superWizardDefeated")) {
+        if(hasGlobalFlag("superwizardDefeated")) {
             bossesBeaten += 1;
         }
-        if(hasGlobalFlag("ringMasterDefeated")) {
+        if(hasGlobalFlag("ringmasterDefeated")) {
             bossesBeaten += 1;
         }
-        if(hasGlobalFlag("grandJokerDefeated")) {
+        if(hasGlobalFlag("grandjokerDefeated")) {
             bossesBeaten += 1;
         }
         if(hasGlobalFlag("grandfatherDefeated")) {
@@ -264,6 +282,7 @@ class GameScene extends Scene
     }
 
     public function onDeath() {
+        isDying = true;
         addGlobalFlag("respawnInRoom");
         var deathPause = new Alarm(2.5);
         deathPause.onComplete.bind(function() {
@@ -274,7 +293,7 @@ class GameScene extends Scene
                 HXP.scene = new GameScene();
             });
             addTween(restartPause, true);
-            sfx["playerrevive"].play();
+            playerReviveSfx.play();
         });
         addTween(deathPause, true);
     }
@@ -285,6 +304,9 @@ class GameScene extends Scene
             cast(eirena, SuperWizard).stopSfx();
         }
         player.stopSfx();
+        for(musicName in music.keys()) {
+            music[musicName].stop();
+        }
     }
 
     public function isEntityOnscreen(e:Entity) {
@@ -387,7 +409,6 @@ class GameScene extends Scene
     }
 
     override public function update() {
-        trace(getCurrentSong());
         if(Input.check("restart")) {
             HXP.scene = new GameScene();
         }
@@ -518,6 +539,21 @@ class GameScene extends Scene
             }
         }
 
+        for(musicName in music.keys()) {
+            if(musicName != getCurrentSong()) {
+                music[musicName].volume = Math.max(
+                    music[musicName].volume - MUSIC_FADE_SPEED * HXP.elapsed, 0
+                );
+                if(music[musicName].volume == 0) {
+                    music[musicName].stop();
+                }
+            }
+        }
+        if(!music[getCurrentSong()].playing && !isDying) {
+            music[getCurrentSong()].volume = 1;
+            music[getCurrentSong()].loop();
+        }
+
         debug();
     }
 
@@ -628,7 +664,7 @@ class GameScene extends Scene
             allEnemies.push(booster);
         }
         for(superWizard in fastXml.node.objects.nodes.superwizard) {
-            if(hasGlobalFlag("superWizardDefeated")) {
+            if(hasGlobalFlag("superwizardDefeated")) {
                 break;
             }
             var superWizard = new SuperWizard(
@@ -639,7 +675,7 @@ class GameScene extends Scene
             add(superWizard.laser);
         }
         for(ringMaster in fastXml.node.objects.nodes.ringmaster) {
-            if(hasGlobalFlag("ringMasterDefeated")) {
+            if(hasGlobalFlag("ringmasterDefeated")) {
                 break;
             }
             var ringMaster = new RingMaster(
@@ -652,7 +688,7 @@ class GameScene extends Scene
             }
         }
         for(grandJoker in fastXml.node.objects.nodes.grandjoker) {
-            if(hasGlobalFlag("grandJokerDefeated")) {
+            if(hasGlobalFlag("grandjokerDefeated")) {
                 break;
             }
             var grandJoker = new GrandJoker(
