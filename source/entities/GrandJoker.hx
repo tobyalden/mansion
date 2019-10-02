@@ -167,6 +167,10 @@ class GrandJoker extends Enemy
         fightStarted = GameScene.hasGlobalFlag("grandJokerFightStarted");
     }
 
+    public function stopSfx() {
+        sfx["flurry"].stop();
+    }
+
     private function generatePhaseLocations() {
         phaseLocations = [
             "clock" => new Vector2(screenCenter.x, screenCenter.y),

@@ -304,6 +304,10 @@ class GameScene extends Scene
         if(eirena != null) {
             cast(eirena, SuperWizard).stopSfx();
         }
+        var duessa = getInstance("grandjoker");
+        if(duessa != null) {
+            cast(duessa, GrandJoker).stopSfx();
+        }
         player.stopSfx();
         for(musicName in music.keys()) {
             music[musicName].stop();
