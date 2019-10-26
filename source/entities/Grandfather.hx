@@ -27,7 +27,8 @@ class Grandfather extends Enemy
     public static inline var CURTAIN_PHASE_DURATION_MULTIPLIER = 1.5;
     public static inline var WAVE_PHASE_DURATION_MULTIPLIER = 1.5;
 
-    public static inline var STARTING_HEALTH = 200;
+    //public static inline var STARTING_HEALTH = 200;
+    public static inline var STARTING_HEALTH = 2;
     public static inline var ENRAGE_THRESHOLD = 80;
 
     public static inline var CURTAIN_SHOT_SPEED = 80;
@@ -65,6 +66,7 @@ class Grandfather extends Enemy
     private var screenCenter:Vector2;
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
+    private var isDying:Bool;
 
     private var curtainShotTimer:Alarm;
     private var curtainAimedShotTimer:Alarm;
@@ -94,12 +96,14 @@ class Grandfather extends Enemy
         startPosition.y -= 50;
         sprite = new Spritemap("graphics/grandfather.png", WIDTH, HEIGHT);
         sprite.add("idle", [0]);
+        sprite.add("dying", [0]);
         sprite.play("idle");
         graphic = sprite;
         health = STARTING_HEALTH;
 
         isEnraged = false;
         enrageNextPhase = false;
+        isDying = false;
 
         generatePhaseLocations();
 
@@ -180,6 +184,7 @@ class Grandfather extends Enemy
         sfx = [
             "enrage" => new Sfx("audio/enrage.wav")
         ];
+        fightStarted = GameScene.hasGlobalFlag("grandfatherFightStarted");
     }
 
     private function generatePhaseLocations() {
@@ -233,7 +238,30 @@ class Grandfather extends Enemy
                 enrageNextPhase = true;
             }
         }
-        if(betweenPhases) {
+        collidable = (fightStarted && !isDead);
+        var gameScene = cast(scene, GameScene);
+        if(isDying) {
+            // Do nothing
+            sprite.play("dying");
+            if(!gameScene.pausePlayer) {
+                isDead = true;
+                //scene.remove(this);
+                bigExplosionSpawner.cancel();
+                visible = false;
+                collidable = false;
+            }
+            clearHazards();
+        }
+        else if(!fightStarted || gameScene.isDialogMode) {
+            // Do nothing
+            sprite.play("dying");
+            var player = scene.getInstance("player");
+            if(player.y - bottom < 50 && !gameScene.isDialogMode) {
+                gameScene.converse("grandfather");
+                GameScene.addGlobalFlag("grandfatherFightStarted");
+            }
+        }
+        else if(betweenPhases) {
             if(preAdvancePhaseTimer.active) {
                 // Do nothing
             }
@@ -465,17 +493,21 @@ class Grandfather extends Enemy
     }
 
     override function die() {
-        var hazards = new Array<Entity>();
-        scene.getType("hazard", hazards);
-        for(hazard in hazards) {
-            if(Type.getClass(hazard) == Spit) {
-                cast(hazard, Spit).destroy();
-            }
-            else {
-                scene.remove(hazard);
-            }
+        GameScene.addGlobalFlag("grandfatherDefeated");
+        for(tween in tweens) {
+            tween.active = false;
         }
-        super.die();
+        bigExplosionSpawner.start();
+        clearHazards();
+        isDying = true;
+        collidable = false;
+        var gameScene = cast(scene, GameScene);
+        gameScene.setPausePlayer(true);
+        var deathConversationDelay = new Alarm(1, function() {
+            var gameScene = cast(scene, GameScene);
+            gameScene.converse("grandfatherdeath");
+        });
+        addTween(deathConversationDelay, true);
     }
 }
 

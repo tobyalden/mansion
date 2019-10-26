@@ -31,11 +31,11 @@ class GameScene extends Scene
     public static var isNightmare = false;
     public static var isProcedural = false;
     public static var currentGlobalFlags(default, null):Array<String>;
-    //private static var globalFlagsAtStart:Array<String> = [];
-    private static var globalFlagsAtStart:Array<String> = [
-        "superWizardFightStarted", "ringMasterFightStarted",
-        "grandJokerFightStarted"
-    ];
+    private static var globalFlagsAtStart:Array<String> = [];
+    //private static var globalFlagsAtStart:Array<String> = [
+        //"superWizardFightStarted", "ringMasterFightStarted",
+        //"grandJokerFightStarted"
+    //];
     private var music:Map<String, Sfx>;
 
     public static function hasGlobalFlag(flag:String) {

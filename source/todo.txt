@@ -1,29 +1,26 @@
-- saving
-- final boss intro/outro
+- saving / loading
 - music
 - ending
 - intro
 - difficulties
 - unlock door
+- add dog
+- add sister
+- add dad
+- add remaining sfx
+    + doors opening
+    + grass footsteps
+- add new spell graphics
+- bugfix controller
+- add UI
+- add flask-giving sequence
+- add inspections for random stuff around house
+- fix bug where spamming X at end of eirena conversation causes crash (in love eternal?)
+- eirena sfx doesn't end on death
+- rewrite dialog
 
-~ all sfx (still missing: bosses, music, explosions, final boss stuff)
-~ graphics
-~ write dialogue
-~ credits (just needs music)
-
-+ master sfx
-+ cancel all boss tweens on death
-+ non-procedural level loading
-+ design mansion
-+ map
-+ flasks
-+ controller support
-+ implement dialogue
-+ revise mansion
-+ staircases
-+ tutorial
-+ main menu
-+ respawning
++ add rest of collision
++ final boss intro/outro
 
 - Protag: Aria
 - Butler: Arthur
