@@ -271,6 +271,8 @@ class DialogBox extends Entity
         if(
             (Main.inputPressed("roll") || Main.inputPressed("cast"))
             && visible
+            && !isFadingIn
+            && !isFadingOut
             && text.text.length == conversation[conversationIndex].text.length
         ) {
             advanceConversation();

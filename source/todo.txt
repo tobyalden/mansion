@@ -15,11 +15,11 @@
 - add UI
 - add flask-giving sequence
 - add inspections for random stuff around house
-- fix bug where spamming X at end of eirena conversation causes crash (in love eternal?)
 - eirena sfx doesn't end on death
 - rewrite dialog
 
 + add rest of collision
++ fix bug where spamming X at end of eirena conversation causes crash (in love eternal?)
 + final boss intro/outro
 
 - Protag: Aria
