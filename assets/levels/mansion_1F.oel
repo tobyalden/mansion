@@ -429,5 +429,6 @@
     <respawn x="3016" y="472"/>
     <piano x="1344" y="2048"/>
     <interactable x="1392" y="2040" width="16" height="8" dialogpath="deadplant"/>
+    <interactable x="1432" y="1952" width="32" height="8" dialogpath="familyportrait"/>
   </objects>
 </level>
