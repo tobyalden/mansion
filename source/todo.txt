@@ -1,24 +1,32 @@
-- add inspections for random stuff around house
-- music
+BIG:
 - ending
+- add inspections for random stuff around house
+- bugfix controller
 - difficulties
+- add UI
+- rewrite dialog
+- saving / loading
+
+MEDIUM:
+- music
 - unlock door
 - add dog
 - add sister
 - add dad
-- fix ring color
 - add remaining sfx
     + doors opening
     + grass footsteps
-- add new spell graphics
-- bugfix controller
-- add UI
 - add flask-giving sequence
 - eirena sfx doesn't end on death
-- rewrite dialog
-- move exits further back in hallways
-- saving / loading
 
+SMALL:
+- move exits further back in hallways
+- add new spell graphics
+- fix ring color
+
+------------------------------------------------------------------------------
+
+FINISHED:
 + add interactables
 + intro
 + add rest of collision
