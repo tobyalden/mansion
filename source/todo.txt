@@ -1,12 +1,12 @@
-- saving / loading
+- add inspections for random stuff around house
 - music
 - ending
-- intro
 - difficulties
 - unlock door
 - add dog
 - add sister
 - add dad
+- fix ring color
 - add remaining sfx
     + doors opening
     + grass footsteps
@@ -14,10 +14,12 @@
 - bugfix controller
 - add UI
 - add flask-giving sequence
-- add inspections for random stuff around house
 - eirena sfx doesn't end on death
 - rewrite dialog
+- move exits further back in hallways
+- saving / loading
 
++ intro
 + add rest of collision
 + fix bug where spamming X at end of eirena conversation causes crash (in love eternal?)
 + final boss intro/outro

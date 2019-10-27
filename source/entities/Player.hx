@@ -226,6 +226,7 @@ class Player extends Entity
             //staminaRecoveryDelay.start();
             var conversationPartner = sword.getConversationPartner();
             var piano = sword.getPiano();
+            var interactable = sword.getInteractable();
             if(conversationPartner != null) {
                 var gameScene = cast(scene, GameScene);
                 gameScene.converse(conversationPartner.getConversation());
@@ -236,6 +237,10 @@ class Player extends Entity
                 if(lastPiano > 9) {
                     lastPiano = 1;
                 }
+            }
+            else if(interactable != null) {
+                var gameScene = cast(scene, GameScene);
+                gameScene.converse(interactable.getConversation());
             }
             else {
                 castSpell();

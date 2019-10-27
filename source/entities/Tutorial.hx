@@ -25,6 +25,8 @@ class Tutorial extends Entity
         tutorialDisplay.add("attack_controller", [5]);
         tutorialDisplay.add("talk_keyboard", [6]);
         tutorialDisplay.add("talk_controller", [7]);
+        tutorialDisplay.add("interact_keyboard", [8]);
+        tutorialDisplay.add("interact_controller", [9]);
         tutorialDisplay.play("movement_keyboard");
         addGraphic(tutorialDisplay);
     }

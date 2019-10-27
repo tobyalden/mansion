@@ -49,6 +49,14 @@ class Sword extends Entity {
         return cast(npc, Butler);
     }
 
+    public function getInteractable():Interactable {
+        var interactable = collide("interactable", x, y);
+        if(interactable == null) {
+            return null;
+        }
+        return cast(interactable, Interactable);
+    }
+
     public function getPiano():Entity {
         var piano = collide("piano", x, y);
         if(piano == null) {

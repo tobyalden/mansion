@@ -524,6 +524,10 @@ class GameScene extends Scene
             tutorial.visible = !isDialogMode;
             tutorial.teach("talk");
         }
+        else if(player.sword.getInteractable() != null) {
+            tutorial.visible = !isDialogMode;
+            tutorial.teach("interact");
+        }
         else {
             tutorial.visible = !hasGlobalFlag("tutorialCompleted");
             if(currentScreenX == 4 && currentScreenY == 7) {
@@ -718,6 +722,16 @@ class GameScene extends Scene
                 Std.parseInt(butler.att.y)
             );
             add(butler);
+        }
+        for(interactable in fastXml.node.objects.nodes.interactable) {
+            var interactable = new Interactable(
+                Std.parseInt(interactable.att.x),
+                Std.parseInt(interactable.att.y),
+                Std.parseInt(interactable.att.width),
+                Std.parseInt(interactable.att.height),
+                interactable.att.dialogpath
+            );
+            add(interactable);
         }
         for(piano in fastXml.node.objects.nodes.piano) {
             var piano = new Piano(

@@ -45,7 +45,7 @@ class Main extends Engine
         lastHorizontalAxis = 0;
 
         HXP.scene = new GameScene();
-        //HXP.scene = new MainMenu();
+        //HXP.scene = new Intro();
     }
 
 	override public function update() {
