@@ -51,8 +51,7 @@ class MainMenu extends Scene
         addTween(glowFader, true);
 
         Data.load(GameScene.SAVE_FILENAME);
-        var savedGlobalFlags = Data.read("globalFlags", []);
-        saveGameExists = savedGlobalFlags.length > 0;
+        saveGameExists = Data.read("saveGameExists", false);
 
         menu = [
             new Text("New Game"),
@@ -170,6 +169,10 @@ class MainMenu extends Scene
                             GameScene.isNightmare = true;
                             sfx["laugh"].play();
                         }
+                        Data.write("saveGameExists", true);
+                        Data.write("isHardMode", GameScene.isHardMode);
+                        Data.write("isNightmare", GameScene.isNightmare);
+                        Data.save(GameScene.SAVE_FILENAME);
                         sfx["start"].play();
                         fadeToGame();
                     }

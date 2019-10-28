@@ -1,5 +1,4 @@
 BIG:
-- difficulties (don't forget to save this)
 - add inspections for random stuff around house
 - add UI
 - rewrite dialog
@@ -26,6 +25,7 @@ SMALL:
 ------------------------------------------------------------------------------
 
 FINISHED:
++ difficulties (don't forget to save this)
 + bugfix controller (couldn't replicate?)
 + saving / loading
 + ending

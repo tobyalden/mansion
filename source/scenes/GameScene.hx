@@ -106,9 +106,9 @@ class GameScene extends Scene
 
     override public function begin() {
         Data.load(SAVE_FILENAME);
-        currentGlobalFlags = Data.read(
-            "globalFlags", globalFlagsAtStart
-        );
+        currentGlobalFlags = Data.read("globalFlags", globalFlagsAtStart);
+        isHardMode = Data.read("isHardMode", isHardMode);
+        isNightmare = Data.read("isNightmare", isNightmare);
         isMovingDuringFade = false;
         lastConversationName = "";
         var onScreenBoxSprite = new ColoredRect(
@@ -309,6 +309,7 @@ class GameScene extends Scene
         isDying = true;
         stopSfx();
         addGlobalFlag("respawnInRoom");
+        saveGame();
         var deathPause = new Alarm(2.5);
         deathPause.onComplete.bind(function() {
             curtain.fadeOut();
@@ -975,15 +976,16 @@ class GameScene extends Scene
             converse('test');
         }
         else if(Main.inputPressed("print")) {
+            trace('isHardMode: ${isHardMode}. isNightmare: ${isNightmare}');
             //trace('screenX: ${currentScreenX}. screenY" ${currentScreenY}');
-            for(boss in [
-                "ringmaster", "grandfather", "superwizard", "grandjoker"
-            ]) {
-                trace(
-                    '${boss}
-                    has ${cast(getInstance(boss), Enemy).health} HP
-                ');
-            }
+            //for(boss in [
+                //"ringmaster", "grandfather", "superwizard", "grandjoker"
+            //]) {
+                //trace(
+                    //'${boss}
+                    //has ${cast(getInstance(boss), Enemy).health} HP
+                //');
+            //}
         }
     }
 
