@@ -54,19 +54,19 @@ class Intro extends Scene
         });
         cutscene = addGraphic(cutsceneSprite);
         cutscene.x = HXP.width / 2 - 100;
-        cutscene.y = HXP.height / 2 - 100;
+        cutscene.y = HXP.height / 2 - 100 - 50;
 
         cutsceneBorder = new Image("graphics/cutsceneborder.png");
         cutsceneBorder.x = cutscene.x;
         cutsceneBorder.y = cutscene.y;
         addGraphic(cutsceneBorder);
 
-        introText = new Text("After years away, I've finally come home.");
+        introText = new Text("As decreed by nature,\nthe firstborn of blood lineage\nshall return home\nto slay her mother's line...");
         introText.size = 12;
         introText.font = "font/tmnt-the-hyperstone-heist-italic.ttf";
         introText.x = HXP.width / 2 - introText.textWidth / 2;
         introText.y = cutscene.y + 220;
-        //addGraphic(introText);
+        addGraphic(introText);
         sfx = [
             "intro" => new Sfx("audio/intro.wav"),
         ];

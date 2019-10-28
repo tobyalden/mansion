@@ -2,7 +2,7 @@
     "conversation": [
         {
             "portrait": "mc",
-            "text": "So... how have you been, Arthur?"
+            "text": "So how you been, Arthur?"
         },
         {
             "portrait": "butler",
@@ -10,15 +10,11 @@
         },
         {
             "portrait": "mc",
-            "text": "Anything exciting happen?"
+            "text": "You go to any crazy parties?"
         },
         {
             "portrait": "butler",
-            "text": "I am not fond of excitement, Miss."
-        },
-        {
-            "portrait": "mc",
-            "text": "Gotcha."
+            "text": "You continue to delight me, Miss Aria."
         }
     ]
 }

@@ -104,7 +104,7 @@ class SuperWizard extends Enemy
         sprite.add("shoot", [2]);
         sprite.play("idle");
         graphic = sprite;
-        health = STARTING_HEALTH;
+        health = 1;
 
         laser = new SuperWizardLaser(this);
 

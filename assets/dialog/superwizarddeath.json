@@ -2,71 +2,19 @@
     "conversation": [
         {
             "portrait": "eirena",
-            "text": "Well fought, Aria. You've grown."
+            "text": "Well fought, daughter. I'm proud to die at your hands."
         },
         {
             "portrait": "mc",
-            "text": "I'm sorry, Mom. I wish it wasn't ending like this."
+            "text": "Don't make this weird, mom."
         },
         {
             "portrait": "eirena",
-            "text": "Me too."
-        },
-        {
-            "portrait": "eirena",
-            "text": "I'm sorry for everything. You're a lot braver than me, Aria."
-        },
-        {
-            "portrait": "eirena",
-            "text": "I'm proud to call you my daughter."
+            "text": "May our family's name be enscribed in blood everflowing!"
         },
         {
             "portrait": "mc",
-            "text": "..."
-        },
-        {
-            "portrait": "mc",
-            "text": "...I'm sorry I said all that stuff about you letting grandfather siphon off my life force because you wanted to prove something to yourself..."
-        },
-        {
-            "portrait": "eirena",
-            "text": "..."
-        },
-        {
-            "portrait": "mc",
-            "text": "I get that it was complex."
-        },
-        {
-            "portrait": "mc",
-            "text": "And I mean... I've only had you as a parent, and you've always been loving to me. I can't imagine what it'd be like to have grandfather as a dad."
-        },
-        {
-            "portrait": "eirena",
-            "text": "..."
-        },
-        {
-            "portrait": "mc",
-            "text": "..."
-        },
-        {
-            "portrait": "eirena",
-            "text": "...I love you a lot Aria."
-        },
-        {
-            "portrait": "mc",
-            "text": "...Me too."
-        },
-        {
-            "portrait": "eirena",
-            "text": "...Well... I've got to go now."
-        },
-        {
-            "portrait": "eirena",
-            "text": "Take care."
-        },
-        {
-            "portrait": "mc",
-            "text": "You too."
+            "text": "MOM. PLEASE just die already."
         }
     ]
 }

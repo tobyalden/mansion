@@ -2,83 +2,43 @@
     "conversation": [
         {
             "portrait": "eirena",
-            "text": "Hello, Aria."
+            "text": "Welcome home, daughter."
         },
         {
             "portrait": "mc",
-            "text": "Hi Mom."
+            "text": "Hi mom."
         },
         {
             "portrait": "eirena",
-            "text": "Have you been well? It's been a long time."
+            "text": "What brings you home?"
         },
         {
             "portrait": "mc",
-            "text": "I'm all right."
+            "text": "I came here for two reasons."
+        },
+        {
+            "portrait": "mc",
+            "text": "One, I'm gonna kill you, your sisters, and your dad."
         },
         {
             "portrait": "eirena",
-            "text": "Good. I'm glad to hear it."
-        },
-        {
-            "portrait": "mc",
-            "text": "Do you know why I've come home?"
+            "text": "As befitting a blood sorceress your age."
         },
         {
             "portrait": "eirena",
-            "text": "You want to kill your grandfather. Correct?"
+            "text": "And the other reason?"
         },
         {
             "portrait": "mc",
-            "text": "Correct."
-        },
-        {
-            "portrait": "mc",
-            "text": "And I assume you're going to try to stop me."
+            "text": "I told Dad I'd help him set up the TV."
         },
         {
             "portrait": "eirena",
-            "text": "I'm afraid I must."
+            "text": "What is a TV?"
         },
         {
             "portrait": "mc",
-            "text": "You must? It's not a choice?"
-        },
-        {
-            "portrait": "eirena",
-            "text": "You know what his death would mean for this family. Everything we've worked so hard on, for so long, would be gone. Rendered meaningless."
-        },
-        {
-            "portrait": "mc",
-            "text": "We've worked hard on? Don't make it sound like I was given a choice, Mom. I was only a child when you started siphoning off my life energy to give to him."
-        },
-        {
-            "portrait": "eirena",
-            "text": "For the power you were granted in return! Does that mean nothing to you? Can you only see the bad? Is there no good?"
-        },
-        {
-            "portrait": "mc",
-            "text": "The bad doesn't balance out the good, Mom. It taints it."
-        },
-        {
-            "portrait": "eirena",
-            "text": "Aria..."
-        },
-        {
-            "portrait": "mc",
-            "text": "You only say that because you don't want to face your own pain. That's why you let him take it from me. To prove to yourself that it was okay. That what he did to you was ok."
-        },
-        {
-            "portrait": "eirena",
-            "text": "I don't know what to say to that. We see things differently."
-        },
-        {
-            "portrait": "mc",
-            "text": "I see clearly. I'm sorry it had to come to this."
-        },
-        {
-            "portrait": "eirena",
-            "text": "I as well. Prepare yourself, daughter."
+            "text": "You really need to get out more, Mom."
         }
     ]
 }

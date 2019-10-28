@@ -7,6 +7,10 @@
         {
             "portrait": "butler",
             "text": "I believe your mother is in the drawing room to the right."
+        },
+        {
+            "portrait": "mc",
+            "text": "Cool, thanks."
         }
     ]
 }

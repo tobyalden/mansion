@@ -6,7 +6,7 @@
         },
         {
             "portrait": "mc",
-            "text": "Hey, Arthur. It's good to see you."
+            "text": "Arthur. Buddy. It's good to see you."
         },
         {
             "portrait": "butler",
@@ -14,23 +14,31 @@
         },
         {
             "portrait": "butler",
-            "text": "It's been some time."
-        },
-        {
-            "portrait": "butler",
             "text": "Will you be staying long?"
         },
         {
             "portrait": "mc",
-            "text": "I don't think so, no. Just tying up some loose ends."
+            "text": "Nope. Just tying up some loose ends."
+        },
+        {
+            "portrait": "mc",
+            "text": "By the way, do you have any healing spells I can borrow?"
         },
         {
             "portrait": "butler",
-            "text": "I see."
+            "text": "Here are you, miss."
         },
         {
             "portrait": "butler",
-            "text": "Well, do let me know if I can be of any assistance."
+            "text": "If you get hurt, just stand still for a bit to cast it."
+        },
+        {
+            "portrait": "mc",
+            "text": "You're a champ, Arthur. Let's get a drink after this."
+        },
+        {
+            "portrait": "butler",
+            "text": "I would love that, Miss Aria."
         }
     ]
 }
