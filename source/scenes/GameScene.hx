@@ -36,8 +36,8 @@ class GameScene extends Scene
     public static var currentGlobalFlags(default, null):Array<String>;
     private static var globalFlagsAtStart:Array<String> = [];
     //private static var globalFlagsAtStart:Array<String> = [
-        //"superWizardFightStarted", "ringMasterFightStarted",
-        //"grandJokerFightStarted"
+        //"superwizardDefeated", "ringmasterDefeated",
+        //"grandjokerDefeated"
     //];
     public static var saveIndicator:Entity;
 
@@ -444,6 +444,7 @@ class GameScene extends Scene
         var _exit = player.collide("exit", player.x, player.y);
         if(_exit != null && !pausePlayer) {
             var exit = cast(_exit, Exit);
+            exit.playSfx();
             pausePlayer = true;
             curtain.fadeOut(6);
             var movePlayerTween = new Alarm(0.2, function() {
@@ -757,6 +758,15 @@ class GameScene extends Scene
             );
             add(interactable);
         }
+        for(lock in fastXml.node.objects.nodes.lock) {
+            var lock = new Lock(
+                Std.parseInt(lock.att.x),
+                Std.parseInt(lock.att.y),
+                Std.parseInt(lock.att.width),
+                Std.parseInt(lock.att.height)
+            );
+            add(lock);
+        }
         for(piano in fastXml.node.objects.nodes.piano) {
             var piano = new Piano(
                 Std.parseInt(piano.att.x),
@@ -776,7 +786,8 @@ class GameScene extends Scene
                 Std.parseInt(exit.att.y),
                 Std.parseInt(exit.att.width),
                 Std.parseInt(exit.att.height),
-                nodes[0]
+                nodes[0],
+                exit.att.sfx
             );
             add(exit);
         }

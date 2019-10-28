@@ -41,12 +41,16 @@
 		<object name="piano" image="piano.png" width="32" height="16"></object>
 		<object name="exit" image="exit.png" width="16" height="16" resizableX="true" resizableY="true" tile="false">
 		    <nodes drawObject="true" limit="2" lineMode="2"/>
+            <values>
+                <string name="sfx" default=""/>
+            </values>
         </object>
 		<object name="interactable" image="interactable.png" width="8" height="8" resizableX="true" resizableY="true" tile="false">
             <values>
                 <string name="dialogpath" default=""/>
             </values>
         </object>
+		<object name="lock" image="lock.png" width="8" height="8" resizableX="true" resizableY="true" tile="false"></object>
 		<object name="fullmap" image="fullmap.png" width="3200" height="3200"></object>
 	</objects>
 </project>

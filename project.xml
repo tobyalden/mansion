@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<meta title="haxepunk_template" package="com.example.app" version="1.0.0" company=""/>
+	<meta title="Family Mansion" package="com.example.app" version="1.0.0" company=""/>
 
 	<app file="Main" main="Main" path="export"/>
 	<icon path="HaxePunk-icon.svg"/>

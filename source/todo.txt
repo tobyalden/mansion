@@ -1,11 +1,12 @@
 BIG:
-- add inspections for random stuff around house
 - add UI
+
+- add inspections for random stuff around house
 - rewrite dialog
 
 MEDIUM:
-- music
 - unlock door
+- music
 - add dog
 - add sister
 - add dad

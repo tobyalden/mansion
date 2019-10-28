@@ -330,94 +330,94 @@
     <fullmap x="0" y="0"/>
   </rooms>
   <objects>
-    <exit x="3024" y="512" width="32" height="16">
+    <exit x="3024" y="512" width="32" height="16" sfx="smalldoor">
       <node x="3032" y="776"/>
     </exit>
-    <exit x="3024" y="760" width="32" height="16">
+    <exit x="3024" y="760" width="32" height="16" sfx="smalldoor">
       <node x="3032" y="496"/>
     </exit>
-    <exit x="2912" y="800" width="16" height="32">
+    <exit x="2912" y="800" width="16" height="32" sfx="">
       <node x="2784" y="808"/>
     </exit>
-    <exit x="2800" y="800" width="16" height="32">
+    <exit x="2800" y="800" width="16" height="32" sfx="">
       <node x="2928" y="808"/>
     </exit>
-    <exit x="2624" y="800" width="16" height="32">
+    <exit x="2624" y="800" width="16" height="32" sfx="">
       <node x="2496" y="808"/>
     </exit>
-    <exit x="2512" y="800" width="16" height="32">
+    <exit x="2512" y="800" width="16" height="32" sfx="">
       <node x="2640" y="808"/>
     </exit>
-    <exit x="2320" y="688" width="32" height="16">
+    <exit x="2320" y="688" width="32" height="16" sfx="">
       <node x="2312" y="512"/>
     </exit>
-    <exit x="2304" y="528" width="32" height="16">
+    <exit x="2304" y="528" width="32" height="16" sfx="">
       <node x="2328" y="704"/>
     </exit>
-    <exit x="1424" y="2288" width="32" height="16">
+    <exit x="1424" y="2288" width="32" height="16" sfx="">
       <node x="1496" y="2160"/>
     </exit>
-    <exit x="1488" y="2176" width="32" height="16">
+    <exit x="1488" y="2176" width="32" height="16" sfx="">
       <node x="1432" y="2304"/>
     </exit>
-    <exit x="1360" y="2176" width="32" height="16">
+    <exit x="1360" y="2176" width="32" height="16" sfx="">
       <node x="1192" y="2288"/>
     </exit>
-    <exit x="1184" y="2272" width="32" height="16">
+    <exit x="1184" y="2272" width="32" height="16" sfx="">
       <node x="1368" y="2160"/>
     </exit>
-    <exit x="1728" y="1960" width="64" height="16">
+    <exit x="1728" y="1960" width="64" height="16" sfx="bigdoor">
       <node x="1752" y="1856"/>
     </exit>
-    <exit x="1728" y="1872" width="64" height="16">
+    <exit x="1728" y="1872" width="64" height="16" sfx="bigdoor">
       <node x="1752" y="1984"/>
     </exit>
-    <exit x="1744" y="2176" width="32" height="16">
+    <exit x="1744" y="2176" width="32" height="16" sfx="">
       <node x="1736" y="2320"/>
     </exit>
-    <exit x="1728" y="2304" width="32" height="16">
+    <exit x="1728" y="2304" width="32" height="16" sfx="">
       <node x="1752" y="2160"/>
     </exit>
-    <exit x="1024" y="2272" width="32" height="16">
+    <exit x="1024" y="2272" width="32" height="16" sfx="">
       <node x="1136" y="2128"/>
     </exit>
-    <exit x="1120" y="2144" width="32" height="16">
+    <exit x="1120" y="2144" width="32" height="16" sfx="">
       <node x="1032" y="2288"/>
     </exit>
-    <exit x="1024" y="2032" width="16" height="32">
+    <exit x="1024" y="2032" width="16" height="32" sfx="">
       <node x="824" y="2040"/>
     </exit>
-    <exit x="840" y="2032" width="16" height="32">
+    <exit x="840" y="2032" width="16" height="32" sfx="">
       <node x="1040" y="2040"/>
     </exit>
-    <exit x="544" y="1440" width="16" height="32">
+    <exit x="544" y="1440" width="16" height="32" sfx="">
       <node x="704" y="1440"/>
     </exit>
-    <exit x="688" y="1440" width="16" height="32">
+    <exit x="688" y="1440" width="16" height="32" sfx="">
       <node x="528" y="1440"/>
     </exit>
-    <exit x="448" y="1328" width="32" height="48">
+    <exit x="448" y="1328" width="32" height="48" sfx="">
       <node x="776" y="2112"/>
     </exit>
-    <exit x="768" y="2128" width="32" height="48">
+    <exit x="768" y="2128" width="32" height="48" sfx="">
       <node x="456" y="1376"/>
     </exit>
-    <exit x="1488" y="1968" width="16" height="32">
+    <exit x="1488" y="1968" width="16" height="32" sfx="">
       <node x="2760" y="712"/>
     </exit>
-    <exit x="1392" y="1968" width="16" height="32">
+    <exit x="1392" y="1968" width="16" height="32" sfx="">
       <node x="2664" y="712"/>
     </exit>
-    <exit x="1568" y="2064" width="16" height="32">
+    <exit x="1568" y="2064" width="16" height="32" sfx="">
       <node x="1680" y="2040"/>
     </exit>
-    <exit x="1664" y="2032" width="16" height="32">
+    <exit x="1664" y="2032" width="16" height="32" sfx="">
       <node x="1552" y="2072"/>
     </exit>
-    <exit x="2736" y="704" width="16" height="32">
+    <exit x="2736" y="704" width="16" height="32" sfx="">
       <node x="1464" y="1976"/>
     </exit>
-    <exit x="2688" y="704" width="16" height="32">
+    <exit x="2688" y="704" width="16" height="32" sfx="">
       <node x="1416" y="1976"/>
     </exit>
     <grandfather x="1760" y="1120"/>
@@ -430,5 +430,7 @@
     <piano x="1344" y="2048"/>
     <interactable x="1392" y="2040" width="16" height="8" dialogpath="deadplant"/>
     <interactable x="1432" y="1952" width="32" height="8" dialogpath="familyportrait"/>
+    <lock x="1728" y="1968" width="64" height="8"/>
+    <interactable x="1728" y="1928" width="64" height="48" dialogpath="lockeddoor"/>
   </objects>
 </level>
