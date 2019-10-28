@@ -2,39 +2,43 @@
     "conversation": [
         {
             "portrait": "munera",
-            "text": "Well, well. The rebel child appears."
+            "text": "...Aria? Is that you?"
         },
         {
             "portrait": "mc",
-            "text": "Aunt Munera. How you have been."
+            "text": "Yup. What's up, Munera?"
         },
         {
             "portrait": "munera",
-            "text": "Let's cut to the chase, Aria. I've been around a lot longer than you, and I can say that what you're doing right now is pointless and selfish."
+            "text": "Uhh... not too much, I guess?"
         },
         {
             "portrait": "mc",
-            "text": "Oh yeah?"
-        },
-        {
-            "portrait": "munera",
-            "text": "Oh yeah. Look around you! Father provides all this for us. Food, drink, shelter, power... and all he asks in return is a little life force. A small sum to pay, all considered."
+            "text": "Cool, cool."
         },
         {
             "portrait": "mc",
-            "text": "Mmmmm. I'll bet you were really sold on the drink part."
+            "text": "So I'm here about that whole blood lineage prophecy..."
         },
         {
             "portrait": "munera",
-            "text": "Oh, shut up. You're not even old enough to know. What are you, sixteen?"
+            "text": "Ooh. Yeah. Ok. I forgot you were coming today. Sorry."
         },
         {
             "portrait": "mc",
-            "text": "I'm twenty six."
+            "text": "Are you for real?"
+        },
+        {
+            "portrait": "mc",
+            "text": "I texted you and mom about it like six times. You even replied."
         },
         {
             "portrait": "munera",
-            "text": "Whatever. Let's get this over with."
+            "text": "I did?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Look, maybe we should just fight now before this gets any more awkward."
         }
     ]
 }

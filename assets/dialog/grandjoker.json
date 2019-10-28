@@ -6,43 +6,35 @@
         },
         {
             "portrait": "mc",
-            "text": "Hey, Aunt Duessa."
+            "text": "Hey, Duessa."
         },
         {
             "portrait": "duessa",
-            "text": "Gonna kill your grandfather?"
+            "text": "Here to kill me?"
         },
         {
             "portrait": "mc",
-            "text": "Yeah."
+            "text": "Yeah, but I mean we don't have to do it right away if you're busy."
         },
         {
             "portrait": "duessa",
-            "text": "You'll have to kill me first."
+            "text": "No, now's good. I'm going to kill you instead, though. I'm actually very strong, even though I read so many books."
         },
         {
             "portrait": "mc",
-            "text": "Do we really have to fight? Is your dad worth that much to you, even after all he's done?"
+            "text": "How do you know I'm not also very strong?"
         },
         {
             "portrait": "duessa",
-            "text": "I've lost the luxury of choice. I've invested my life in his."
+            "text": "Are you?"
         },
         {
             "portrait": "mc",
-            "text": "Oh, that's convenient."
+            "text": "No, I'm normal strong. But I don't believe you're VERY strong. That feels like a stretch."
         },
         {
             "portrait": "duessa",
-            "text": "Don't be condescending."
-        },
-        {
-            "portrait": "duessa",
-            "text": "If we're going to fight, let's fight."
-        },
-        {
-            "portrait": "mc",
-            "text": "Fine. Good luck."
+            "text": "Don't belittle me."
         }
     ]
 }

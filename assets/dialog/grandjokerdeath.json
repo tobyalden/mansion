@@ -2,35 +2,27 @@
     "conversation": [
         {
             "portrait": "duessa",
-            "text": "Ouch."
+            "text": "Wow. You actually were strong."
         },
         {
             "portrait": "mc",
-            "text": "Sorry."
-        },
-        {
-            "portrait": "duessa",
-            "text": "Ugh. You know, I kinda thought you'd try this one day. I did, once."
+            "text": "Thanks. It was a good fight."
         },
         {
             "portrait": "mc",
-            "text": "You tried to fight grandfather?"
-        },
-        {
-            "portrait": "duessa",
-            "text": "That's why I had my eye taken."
+            "text": "When you shot those walls at me, that was good."
         },
         {
             "portrait": "mc",
-            "text": "Whoa."
+            "text": "Anyway, good fight. Glad I won."
         },
         {
             "portrait": "duessa",
-            "text": "Yeah. Well..."
+            "text": "I'm not."
         },
         {
-            "portrait": "duessa",
-            "text": "...good luck."
+            "portrait": "mc",
+            "text": "Well, you wouldn't be."
         }
     ]
 }

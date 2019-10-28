@@ -1,24 +1,20 @@
 {
     "conversation": [
         {
-            "portrait": "munera",
-            "text": "How... how did you?"
+            "portrait": "mc",
+            "text": "Munera, I have to be honest."
+        },
+        {
+            "portrait": "mc",
+            "text": "I feel like you weren't really bringing your A game to that fight."
         },
         {
             "portrait": "munera",
-            "text": "Gahh... it doesn't matter, anyway. Father'll pluck that imputent little head right off your shoulders."
+            "text": "Sorry. I ate like half of a person before we fought and got really bloated."
         },
         {
-            "portrait": "munera",
-            "text": "Heheh... just like he was plucking a grape. Pop! Heheheh."
-        },
-        {
-            "portrait": "munera",
-            "text": "Aahh... it hurts. It hurts so damn much..."
-        },
-        {
-            "portrait": "munera",
-            "text": "I hope you're happy... brat."
+            "portrait": "mc",
+            "text": "Wow! That's nasty."
         }
     ]
 }
