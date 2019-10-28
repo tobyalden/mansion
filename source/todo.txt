@@ -17,14 +17,14 @@ MEDIUM:
 - eirena sfx doesn't end on death
 
 SMALL:
-- finish credits (add will & sam)
 - move exits further back in hallways
-- add new spell graphics
-- fix ring color
+- remove debug controls
+- new game starts intro
 
 ------------------------------------------------------------------------------
 
 FINISHED:
++ finish credits (add will & sam)
 + unlock door
 + difficulties (don't forget to save this)
 + bugfix controller (couldn't replicate?)
@@ -35,6 +35,8 @@ FINISHED:
 + add rest of collision
 + fix bug where spamming X at end of eirena conversation causes crash (in love eternal?)
 + final boss intro/outro
++ add new spell graphics
++ fix ring color
 
 - Protag: Aria
 - Butler: Arthur
