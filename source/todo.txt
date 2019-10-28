@@ -1,6 +1,5 @@
 BIG:
 - add UI
-
 - add inspections for random stuff around house
 - rewrite dialog
 
@@ -15,12 +14,11 @@ MEDIUM:
     + grass footsteps
     + death explosions
     + grandfather fight
-    - grandfather transformation
+    + grandfather transformation
     - healing spell
     - enrage
 - add flask-giving sequence
 - eirena sfx doesn't end on death
-- add grandfather sprite
 
 SMALL:
 - move exits further back in hallways
@@ -30,6 +28,7 @@ SMALL:
 ------------------------------------------------------------------------------
 
 FINISHED:
++ add grandfather sprite
 + finish credits (add will & sam)
 + unlock door
 + difficulties (don't forget to save this)
