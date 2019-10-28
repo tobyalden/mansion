@@ -105,10 +105,10 @@ class Player extends Entity
         sprite.add("dead", [21]);
         shadow = new Spritemap("graphics/shadow.png", 16, 16);
 
-        healSigil = new Spritemap("graphics/spells.png", 20, 20);
-        healSigil.add("idle", [11, 7, 8, 9, 10], 5 / HEAL_TIME, false);
-        healSigil.x = -2;
-        healSigil.y = -2;
+        healSigil = new Spritemap("graphics/spells.png", 24, 24);
+        healSigil.add("idle", [12, 7, 8, 9, 10, 11], 6 / HEAL_TIME, false);
+        healSigil.x = -4;
+        healSigil.y = -4;
 
         addGraphic(healSigil);
         addGraphic(shadow);

@@ -5,15 +5,14 @@ BIG:
 - rewrite dialog
 
 MEDIUM:
-- unlock door
 - music
 - add dog
 - add sister
 - add dad
 - add remaining sfx
     + doors opening
-    + grass footsteps
-    + death explosions
+    - grass footsteps
+    - death explosions
 - add flask-giving sequence
 - eirena sfx doesn't end on death
 
@@ -26,6 +25,7 @@ SMALL:
 ------------------------------------------------------------------------------
 
 FINISHED:
++ unlock door
 + difficulties (don't forget to save this)
 + bugfix controller (couldn't replicate?)
 + saving / loading

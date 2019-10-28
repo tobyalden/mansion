@@ -25,8 +25,8 @@ class Spell extends Entity
         sprite.add("idle_vertical", [0, 1], 4);
         sprite.add("idle_horizontal", [2, 3], 4);
         sprite.add("explode", [4, 5, 6], 16, false);
-        sprite.x = -(20 - 8) / 2;
-        sprite.y = -(20 - 8) / 2;
+        sprite.x = -(20 - 8) / 2 - 2;
+        sprite.y = -(20 - 8) / 2 - 2;
         if(velocity.y < 0) {
             sprite.play("idle_vertical");
         }
