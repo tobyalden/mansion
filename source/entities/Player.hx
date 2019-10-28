@@ -38,17 +38,20 @@ class Player extends Entity
     public static inline var INVINCIBLE_TIME = 1.5;
     public static inline var KNOCKBACK_SPEED = 200;
 
-    public static inline var MAX_HEALTH = 3;
+    public static inline var MAX_HEALTH_NORMAL = 5;
+    public static inline var MAX_HEALTH_HARD = 3;
     public static inline var DEATH_DECCEL = 0.95;
 
     public static inline var PITFALL_RESET_TIME = 1;
-    public static inline var STARTING_NUMBER_OF_FLASKS = 3;
+    public static inline var STARTING_NUMBER_OF_FLASKS = 5;
+    public static inline var STARTING_NUMBER_OF_FLASKS_HARD = 3;
 
     public var stamina(default, null):Float;
     public var health(default, null):Int;
     public var facing(default, null):String;
     public var flaskCount(default, null):Int;
     public var sword(default, null):Sword;
+    private var maxHealth:Int;
     private var velocity:Vector2;
     private var rollCooldown:Alarm;
     private var stunCooldown:Alarm;
@@ -152,10 +155,14 @@ class Player extends Entity
             "piano9" => new Sfx("audio/piano9.wav")
         ];
         facing = GameScene.hasGlobalFlag("respawnInRoom") ? "down" : "up";
-        flaskCount = STARTING_NUMBER_OF_FLASKS;
+        flaskCount = (
+            GameScene.isHardMode ?
+            STARTING_NUMBER_OF_FLASKS_HARD : STARTING_NUMBER_OF_FLASKS
+        );
         isRunning = false;
         stamina = MAX_STAMINA;
-        health = MAX_HEALTH;
+        maxHealth = GameScene.isHardMode ? MAX_HEALTH_HARD : MAX_HEALTH_NORMAL;
+        health = maxHealth;
         staminaRecoveryDelay = new Alarm(
             STAMINA_RECOVERY_DELAY, TweenType.Persist
         );
@@ -283,7 +290,7 @@ class Player extends Entity
         }
 
         if(canControl() && velocity.length == 0) {
-            if(!healTimer.active && health < MAX_HEALTH && flaskCount > 0) {
+            if(!healTimer.active && health < maxHealth && flaskCount > 0) {
                 healTimer.start();
                 healSigil.play("idle", true);
             }

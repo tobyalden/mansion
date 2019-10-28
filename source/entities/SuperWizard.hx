@@ -49,7 +49,7 @@ class SuperWizard extends Enemy
     public static inline var PHASE_DURATION = 12.5;
     public static inline var ENRAGE_PHASE_DURATION = 10;
 
-    public static inline var STARTING_HEALTH = 100;
+    public static inline var STARTING_HEALTH = 200;
     public static inline var ENRAGE_THRESHOLD = 40;
 
     public var laser(default, null):SuperWizardLaser;
@@ -104,7 +104,11 @@ class SuperWizard extends Enemy
         sprite.add("shoot", [2]);
         sprite.play("idle");
         graphic = sprite;
-        health = 1;
+        health = (
+            GameScene.isNightmare
+            ? Std.int(STARTING_HEALTH * GameScene.NIGHTMARE_HEALTH_MULTIPLIER)
+            : STARTING_HEALTH
+        );
 
         laser = new SuperWizardLaser(this);
 
@@ -132,7 +136,7 @@ class SuperWizard extends Enemy
         });
         addTween(spoutShotInterval);
 
-        isEnraged = false;
+        isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
 
@@ -273,7 +277,9 @@ class SuperWizard extends Enemy
                 allPhases.push(phaseName);
             }
             allPhases.remove(currentPhase);
-            allPhases.remove("enrage");
+            if(!GameScene.isNightmare) {
+                allPhases.remove("enrage");
+            }
             currentPhase = allPhases[
                 Std.int(Math.floor(Math.random() * allPhases.length))
             ];

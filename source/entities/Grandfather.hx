@@ -27,8 +27,7 @@ class Grandfather extends Enemy
     public static inline var CURTAIN_PHASE_DURATION_MULTIPLIER = 1.5;
     public static inline var WAVE_PHASE_DURATION_MULTIPLIER = 1.5;
 
-    //public static inline var STARTING_HEALTH = 200;
-    public static inline var STARTING_HEALTH = 2;
+    public static inline var STARTING_HEALTH = 200;
     public static inline var ENRAGE_THRESHOLD = 80;
 
     public static inline var CURTAIN_SHOT_SPEED = 80;
@@ -99,9 +98,13 @@ class Grandfather extends Enemy
         sprite.add("dying", [0]);
         sprite.play("idle");
         graphic = sprite;
-        health = STARTING_HEALTH;
+        health = (
+            GameScene.isNightmare
+            ? Std.int(STARTING_HEALTH * GameScene.NIGHTMARE_HEALTH_MULTIPLIER)
+            : STARTING_HEALTH
+        );
 
-        isEnraged = false;
+        isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
 
@@ -218,7 +221,9 @@ class Grandfather extends Enemy
                 allPhases.push(phaseName);
             }
             allPhases.remove(currentPhase);
-            allPhases.remove("enrage");
+            if(!GameScene.isNightmare) {
+                allPhases.remove("enrage");
+            }
             allPhases.remove(lastNonChargePhase);
             if(currentPhase == "charge") {
                 currentPhase = allPhases[

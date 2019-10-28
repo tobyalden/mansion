@@ -25,7 +25,7 @@ class GrandJoker extends Enemy
     public static inline var ENRAGE_PHASE_DURATION = 10;
     public static inline var CURTAIN_PHASE_DURATION_MULTIPLIER = 1.5;
 
-    public static inline var STARTING_HEALTH = 100;
+    public static inline var STARTING_HEALTH = 200;
     public static inline var ENRAGE_THRESHOLD = 40;
 
     public static inline var CLOCK_SHOT_SPEED = 108;
@@ -93,9 +93,13 @@ class GrandJoker extends Enemy
         sprite.add("shoot", [8, 9], 2);
         sprite.play("idle");
         graphic = sprite;
-        health = STARTING_HEALTH;
+        health = (
+            GameScene.isNightmare
+            ? Std.int(STARTING_HEALTH * GameScene.NIGHTMARE_HEALTH_MULTIPLIER)
+            : STARTING_HEALTH
+        );
 
-        isEnraged = false;
+        isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
 
@@ -228,7 +232,9 @@ class GrandJoker extends Enemy
                 allPhases.push(phaseName);
             }
             allPhases.remove(currentPhase);
-            allPhases.remove("enrage");
+            if(!GameScene.isNightmare) {
+                allPhases.remove("enrage");
+            }
             if(currentPhase == "enrage") {
                 allPhases.remove("clock");
             }

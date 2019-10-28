@@ -59,6 +59,7 @@ class Viewport extends Entity
             var boss = cast(_boss, Grandfather);
             bossHealthBar.width = (
                 boss.health / Grandfather.STARTING_HEALTH
+                // TODO: don't forget to account for health multipliers
                 * BOSS_HEALTH_BAR_LENGTH
             );
         }

@@ -28,6 +28,7 @@ class GameScene extends Scene
     public static inline var CAMERA_PAN_TIME = 1;
     public static inline var LOCK_CHANCE = 1;
     public static inline var MUSIC_FADE_SPEED = 1;
+    public static inline var NIGHTMARE_HEALTH_MULTIPLIER = 1.5;
 
     public static var isHardMode = false;
     public static var isNightmare = false;
@@ -60,7 +61,7 @@ class GameScene extends Scene
     public static function saveGame() {
         Data.write("globalFlags", currentGlobalFlags);
         Data.save(SAVE_FILENAME);
-        saveIndicator.graphic.alpha = 1;
+        //saveIndicator.graphic.alpha = 1;
         var alphaTween = new VarTween();
         alphaTween.tween(saveIndicator.graphic, "alpha", 0, 3, Ease.sineIn);
         // TODO: Move this once UI is established, maybe?
@@ -974,7 +975,15 @@ class GameScene extends Scene
             converse('test');
         }
         else if(Main.inputPressed("print")) {
-            trace('screenX: ${currentScreenX}. screenY" ${currentScreenY}');
+            //trace('screenX: ${currentScreenX}. screenY" ${currentScreenY}');
+            for(boss in [
+                "ringmaster", "grandfather", "superwizard", "grandjoker"
+            ]) {
+                trace(
+                    '${boss}
+                    has ${cast(getInstance(boss), Enemy).health} HP
+                ');
+            }
         }
     }
 

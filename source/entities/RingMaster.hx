@@ -91,9 +91,13 @@ class RingMaster extends Enemy
         sprite.add("tossboth", [5]);
         sprite.play("idle");
         graphic = sprite;
-        health = STARTING_HEALTH;
+        health = (
+            GameScene.isNightmare
+            ? Std.int(STARTING_HEALTH * GameScene.NIGHTMARE_HEALTH_MULTIPLIER)
+            : STARTING_HEALTH
+        );
 
-        isEnraged = false;
+        isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
 
@@ -375,7 +379,9 @@ class RingMaster extends Enemy
                 allPhases.push(phaseName);
             }
             allPhases.remove(currentPhase);
-            allPhases.remove("enrage");
+            if(!GameScene.isNightmare) {
+                allPhases.remove("enrage");
+            }
             currentPhase = allPhases[
                 Std.int(Math.floor(Math.random() * allPhases.length))
             ];

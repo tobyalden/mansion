@@ -159,9 +159,11 @@ class MainMenu extends Scene
                         Data.clear();
                         if(selected == 0) {
                             GameScene.isHardMode = false;
+                            GameScene.isNightmare = false;
                         }
                         else if(selected == 1) {
                             GameScene.isHardMode = true;
+                            GameScene.isNightmare = false;
                         }
                         else if(selected == 2) {
                             GameScene.isHardMode = true;
