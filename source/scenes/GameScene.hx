@@ -2,6 +2,7 @@ package scenes;
 
 import haxepunk.*;
 import haxepunk.graphics.*;
+import haxepunk.graphics.text.*;
 import haxepunk.input.*;
 import haxepunk.masks.*;
 import haxepunk.math.*;
@@ -21,6 +22,7 @@ import openfl.Assets;
 
 class GameScene extends Scene
 {
+    public static inline var SAVE_FILENAME = "familymansion";
     public static inline var PLAYFIELD_SIZE = 320;
     public static inline var NUMBER_OF_ENEMIES = 150;
     public static inline var CAMERA_PAN_TIME = 1;
@@ -36,7 +38,7 @@ class GameScene extends Scene
         //"superWizardFightStarted", "ringMasterFightStarted",
         //"grandJokerFightStarted"
     //];
-    private var music:Map<String, Sfx>;
+    public static var saveIndicator:Entity;
 
     public static function hasGlobalFlag(flag:String) {
         return currentGlobalFlags.indexOf(flag) != -1;
@@ -53,6 +55,16 @@ class GameScene extends Scene
         if(currentGlobalFlags.remove(flag)) {
             trace('removed currentGlobal flag: ${flag}');
         }
+    }
+
+    public static function saveGame() {
+        Data.write("globalFlags", currentGlobalFlags);
+        Data.save(SAVE_FILENAME);
+        saveIndicator.graphic.alpha = 1;
+        var alphaTween = new VarTween();
+        alphaTween.tween(saveIndicator.graphic, "alpha", 0, 3, Ease.sineIn);
+        // TODO: Move this once UI is established, maybe?
+        //HXP.scene.addTween(alphaTween, true);
     }
 
     public var isLevelLocked(default, null):Bool;
@@ -85,12 +97,14 @@ class GameScene extends Scene
     private var tutorial:Tutorial;
     private var currentSong:String;
     private var playerReviveSfx:Sfx;
+    private var music:Map<String, Sfx>;
 
     public function setIsLevelLocked(newIsLevelLocked:Bool)  {
         isLevelLocked = newIsLevelLocked;
     }
 
     override public function begin() {
+        Data.load(SAVE_FILENAME);
         currentGlobalFlags = Data.read(
             "globalFlags", globalFlagsAtStart
         );
@@ -227,6 +241,14 @@ class GameScene extends Scene
         isDying = false;
         playerReviveSfx = new Sfx("audio/playerrevive.wav");
         music[currentSong].loop();
+        var saveIndicatorText = new Text("GAME SAVED", {color: 0x000000});
+        saveIndicatorText.size = 12;
+        saveIndicatorText.font = "font/tmnt-the-hyperstone-heist-italic.ttf";
+        saveIndicatorText.x = 30;
+        saveIndicatorText.y = 30;
+        saveIndicator = addGraphic(saveIndicatorText);
+        saveIndicator.followCamera = camera;
+        saveIndicator.graphic.alpha = 0;
     }
 
     public function getCurrentSong() {

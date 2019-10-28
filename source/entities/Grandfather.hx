@@ -494,6 +494,7 @@ class Grandfather extends Enemy
 
     override function die() {
         GameScene.addGlobalFlag("grandfatherDefeated");
+        GameScene.saveGame();
         for(tween in tweens) {
             tween.active = false;
         }

@@ -1,11 +1,9 @@
 BIG:
-- ending
 - add inspections for random stuff around house
 - bugfix controller
-- difficulties
+- difficulties (don't forget to save this)
 - add UI
 - rewrite dialog
-- saving / loading
 
 MEDIUM:
 - music
@@ -16,10 +14,12 @@ MEDIUM:
 - add remaining sfx
     + doors opening
     + grass footsteps
+    + death explosions
 - add flask-giving sequence
 - eirena sfx doesn't end on death
 
 SMALL:
+- finish credits (add will & sam)
 - move exits further back in hallways
 - add new spell graphics
 - fix ring color
@@ -27,6 +27,8 @@ SMALL:
 ------------------------------------------------------------------------------
 
 FINISHED:
++ saving / loading
++ ending
 + add interactables
 + intro
 + add rest of collision

@@ -50,6 +50,10 @@ class MainMenu extends Scene
         glowFader.tween(glow, "alpha", 0, 1, Ease.sineInOut);
         addTween(glowFader, true);
 
+        Data.load(GameScene.SAVE_FILENAME);
+        var savedGlobalFlags = Data.read("globalFlags", []);
+        saveGameExists = savedGlobalFlags.length > 0;
+
         menu = [
             new Text("New Game"),
             new Text("Continue")
@@ -110,7 +114,6 @@ class MainMenu extends Scene
         canControl = true;
         atDifficultyMenu = false;
         fadeTweens = new Array<Tween>();
-        saveGameExists = false;
         sfx = [
             "start" => new Sfx("audio/start.wav"),
             "continue" => new Sfx("audio/continue.wav"),
