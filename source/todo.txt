@@ -11,10 +11,12 @@ MEDIUM:
 - add dad
 - add remaining sfx
     + doors opening
-    - grass footsteps
+    + grass footsteps
     - death explosions
+    - grandfather fight
 - add flask-giving sequence
 - eirena sfx doesn't end on death
+- add grandfather sprite
 
 SMALL:
 - move exits further back in hallways

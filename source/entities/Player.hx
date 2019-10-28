@@ -144,6 +144,7 @@ class Player extends Entity
             "playerdeath" => new Sfx("audio/playerdeath.wav"),
             "fall" => new Sfx("audio/fall.wav"),
             "run" => new Sfx("audio/run.wav"),
+            "grassrun" => new Sfx("audio/grassrun.wav"),
             "piano1" => new Sfx("audio/piano1.wav"),
             "piano2" => new Sfx("audio/piano2.wav"),
             "piano3" => new Sfx("audio/piano3.wav"),
@@ -200,6 +201,7 @@ class Player extends Entity
 
     public function stopSfx() {
         sfx["run"].stop();
+        sfx["grassrun"].stop();
     }
 
     public function cancelRoll() {
@@ -645,12 +647,22 @@ class Player extends Entity
         }
 
         if(isWalking) {
-            if(!sfx["run"].playing) {
-                sfx["run"].loop();
+            if(cast(scene, GameScene).isInGrass()) {
+                if(!sfx["grassrun"].playing) {
+                    sfx["grassrun"].loop();
+                }
+                sfx["run"].stop();
+            }
+            else {
+                if(!sfx["run"].playing) {
+                    sfx["run"].loop();
+                }
+                sfx["grassrun"].stop();
             }
         }
         else {
             sfx["run"].stop();
+            sfx["grassrun"].stop();
         }
     }
 }

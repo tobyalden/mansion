@@ -34,11 +34,11 @@ class GameScene extends Scene
     public static var isNightmare = false;
     public static var isProcedural = false;
     public static var currentGlobalFlags(default, null):Array<String>;
-    private static var globalFlagsAtStart:Array<String> = [];
-    //private static var globalFlagsAtStart:Array<String> = [
-        //"superwizardDefeated", "ringmasterDefeated",
-        //"grandjokerDefeated"
-    //];
+    //private static var globalFlagsAtStart:Array<String> = [];
+    private static var globalFlagsAtStart:Array<String> = [
+        "superwizardDefeated", "ringmasterDefeated",
+        "grandjokerDefeated"
+    ];
     public static var saveIndicator:Entity;
 
     public static function hasGlobalFlag(flag:String) {
@@ -99,6 +99,17 @@ class GameScene extends Scene
     private var currentSong:String;
     private var playerReviveSfx:Sfx;
     private var music:Map<String, Sfx>;
+
+    public function isInGrass() {
+        return (
+            currentScreenX == 5
+            && (
+                currentScreenY == 3
+                || currentScreenY == 4
+                || currentScreenY == 5
+            )
+        );
+    }
 
     public function setIsLevelLocked(newIsLevelLocked:Bool)  {
         isLevelLocked = newIsLevelLocked;
@@ -266,6 +277,9 @@ class GameScene extends Scene
                     return "silence";
                 }
             }
+        }
+        if(isInGrass()) {
+            return "silence";
         }
         return 'mansion${numberOfBossesBeaten()}';
     }
@@ -987,8 +1001,8 @@ class GameScene extends Scene
             converse('test');
         }
         else if(Main.inputPressed("print")) {
-            trace('isHardMode: ${isHardMode}. isNightmare: ${isNightmare}');
-            //trace('screenX: ${currentScreenX}. screenY" ${currentScreenY}');
+            //trace('isHardMode: ${isHardMode}. isNightmare: ${isNightmare}');
+            trace('screenX: ${currentScreenX}. screenY" ${currentScreenY}');
             //for(boss in [
                 //"ringmaster", "grandfather", "superwizard", "grandjoker"
             //]) {
