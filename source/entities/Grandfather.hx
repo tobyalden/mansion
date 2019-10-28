@@ -94,15 +94,17 @@ class Grandfather extends Enemy
         y -= 50;
         startPosition.y -= 50;
         sprite = new Spritemap("graphics/grandfather.png", WIDTH, HEIGHT);
-        sprite.add("idle", [0]);
+        sprite.add("idle", [0, 1], 4);
         sprite.add("dying", [0]);
-        sprite.play("idle");
+        sprite.add("charging", [0, 1], 8);
+        sprite.add("human", [2]);
         graphic = sprite;
         health = (
             GameScene.isNightmare
             ? Std.int(STARTING_HEALTH * GameScene.NIGHTMARE_HEALTH_MULTIPLIER)
             : STARTING_HEALTH
         );
+        health = 1;
 
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
@@ -175,6 +177,7 @@ class Grandfather extends Enemy
         preEnrage.onComplete.bind(function() {
             phaseTimer.reset(ENRAGE_PHASE_DURATION);
             enrageShotTimer.start();
+            sfx['flurry'].play();
         });
         addTween(preEnrage);
 
@@ -185,9 +188,18 @@ class Grandfather extends Enemy
         addTween(enrageShotTimer);
 
         sfx = [
-            "enrage" => new Sfx("audio/enrage.wav")
+            "enrage" => new Sfx("audio/enrage.wav"),
+            "charge" => new Sfx("audio/charge.wav"),
+            "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
+            "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
+            "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
+            "bigshot1" => new Sfx("audio/bigshot1.wav"),
+            "bigshot2" => new Sfx("audio/bigshot2.wav"),
+            "bigshot3" => new Sfx("audio/bigshot3.wav"),
+            "flurry" => new Sfx("audio/flurry.wav")
         ];
         fightStarted = GameScene.hasGlobalFlag("grandfatherFightStarted");
+        sprite.play(fightStarted ? "idle" : "human");
     }
 
     private function generatePhaseLocations() {
@@ -259,7 +271,12 @@ class Grandfather extends Enemy
         }
         else if(!fightStarted || gameScene.isDialogMode) {
             // Do nothing
-            sprite.play("dying");
+            if(!fightStarted) {
+                sprite.play("human");
+            }
+            else {
+                sprite.play("dying");
+            }
             var player = scene.getInstance("player");
             if(player.y - bottom < 50 && !gameScene.isDialogMode) {
                 gameScene.converse("grandfather");
@@ -267,6 +284,8 @@ class Grandfather extends Enemy
             }
         }
         else if(betweenPhases) {
+            sfx['flurry'].stop();
+            sprite.play('idle');
             if(preAdvancePhaseTimer.active) {
                 // Do nothing
             }
@@ -299,6 +318,8 @@ class Grandfather extends Enemy
                     Ease.sineInOut
                 );
                 chargeAttack.start();
+                sfx['charge'].play();
+                sprite.play('charging');
             }
             else {
                 if(chargeAttack.active) {
@@ -310,6 +331,7 @@ class Grandfather extends Enemy
             }
         }
         else if(currentPhase == "curtain") {
+            sprite.play('idle');
             if(!curtainShotTimer.active) {
                 phaseTimer.reset(
                     (isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION)
@@ -327,6 +349,7 @@ class Grandfather extends Enemy
             }
         }
         else if(currentPhase == "waves") {
+            sprite.play('idle');
             if(!waveShotTimer.active) {
                 phaseTimer.reset(
                     (isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION)
@@ -339,15 +362,18 @@ class Grandfather extends Enemy
             }
         }
         else if(currentPhase == "tentacles") {
+            sprite.play('idle');
             if(!tentacleShotTimer.active) {
                 age = 0;
                 phaseTimer.reset(
                     (isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION)
                 );
                 tentacleShotTimer.reset(TENTACLE_SHOT_INTERVAL);
+                sfx['flurry'].play();
             }
         }
         else if(currentPhase == "enrage") {
+            sprite.play('idle');
             if(
                 !preEnrage.active
                 && !enrageShotTimer.active
@@ -359,6 +385,7 @@ class Grandfather extends Enemy
     }
 
     private function curtainShot() {
+        sfx['rippleattack${HXP.choose(1, 2, 3)}'].play();
         var slant = HXP.choose(2, 1.5, 1, 0.5, 0) * HXP.choose(1, -1);
         var speed = HXP.choose(
             //CURTAIN_SHOT_SPEED,
@@ -400,6 +427,7 @@ class Grandfather extends Enemy
     }
 
     private function curtainAimedShot() {
+        sfx['bigshot${HXP.choose(1, 2, 3)}'].play();
         var shotAngle = getAngleTowardsPlayer();
         var shotVector = new Vector2(
             Math.cos(shotAngle), Math.sin(shotAngle)
@@ -408,6 +436,7 @@ class Grandfather extends Enemy
     }
 
     private function waveShot() {
+        sfx['rippleattack${HXP.choose(1, 2, 3)}'].play();
         var fromSide = HXP.choose(true, false);
         var fromLeft = HXP.choose(true, false);
         for(i in -50...50) {

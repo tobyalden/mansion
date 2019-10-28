@@ -13,6 +13,8 @@ class BigExplosion extends Entity {
 
     public static inline var SIZE = 32;
 
+    private var sfx:Sfx;
+
     public function new(source:Entity) {
         super(
             source.x +
@@ -28,6 +30,12 @@ class BigExplosion extends Entity {
             scene.remove(this);
         });
         graphic = sprite;
+        sfx = new Sfx(
+            'audio/bossexplode${HXP.choose(1, 2, 3, 4, 5, 6, 7)}.wav'
+        );
+        if(Math.random() > 0.6) {
+            sfx.play();
+        }
     }
 }
 

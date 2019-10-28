@@ -6,14 +6,18 @@ BIG:
 
 MEDIUM:
 - music
+- make butler dialogue conditional
 - add dog
 - add sister
 - add dad
 - add remaining sfx
     + doors opening
     + grass footsteps
-    - death explosions
-    - grandfather fight
+    + death explosions
+    + grandfather fight
+    - grandfather transformation
+    - healing spell
+    - enrage
 - add flask-giving sequence
 - eirena sfx doesn't end on death
 - add grandfather sprite

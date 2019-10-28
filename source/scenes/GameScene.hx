@@ -1044,6 +1044,7 @@ class GameScene extends Scene
         }
         else if(lastConversationName == "grandfather") {
             cast(getInstance("grandfather"), Enemy).setFightStarted(true);
+            curtain.blinkWhite();
         }
     }
 
