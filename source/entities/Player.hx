@@ -158,10 +158,10 @@ class Player extends Entity
             "healfinish" => new Sfx("audio/healfinish.wav")
         ];
         facing = GameScene.hasGlobalFlag("respawnInRoom") ? "down" : "up";
-        flaskCount = (
-            GameScene.isHardMode ?
-            STARTING_NUMBER_OF_FLASKS_HARD : STARTING_NUMBER_OF_FLASKS
-        );
+        refillFlasks();
+        if(!GameScene.hasGlobalFlag("flasksobtained")) {
+            flaskCount = 0;
+        }
         isRunning = false;
         stamina = MAX_STAMINA;
         maxHealth = GameScene.isHardMode ? MAX_HEALTH_HARD : MAX_HEALTH_NORMAL;
@@ -200,6 +200,13 @@ class Player extends Entity
             flaskCount -= 1;
         });
         addTween(healTimer);
+    }
+
+    public function refillFlasks() {
+        flaskCount = (
+            GameScene.isHardMode ?
+            STARTING_NUMBER_OF_FLASKS_HARD : STARTING_NUMBER_OF_FLASKS
+        );
     }
 
     public function stopSfx() {

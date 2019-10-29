@@ -9,7 +9,6 @@ MEDIUM:
 - add dog
 - add sister
 - add dad
-- allow you to exit mansion on game complete
 - add flask-giving sequence
 - eirena sfx doesn't end on death
 
@@ -20,6 +19,7 @@ SMALL:
 ------------------------------------------------------------------------------
 
 FINISHED:
++ allow you to exit mansion on game complete
 + move exits further back in hallways
 + add remaining sfx
     + doors opening

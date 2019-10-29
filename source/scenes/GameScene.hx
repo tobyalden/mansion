@@ -34,11 +34,11 @@ class GameScene extends Scene
     public static var isNightmare = false;
     public static var isProcedural = false;
     public static var currentGlobalFlags(default, null):Array<String>;
-    //private static var globalFlagsAtStart:Array<String> = [];
-    private static var globalFlagsAtStart:Array<String> = [
-        "superwizardDefeated", "ringmasterDefeated",
-        "grandjokerDefeated"
-    ];
+    private static var globalFlagsAtStart:Array<String> = [];
+    //private static var globalFlagsAtStart:Array<String> = [
+        //"superwizardDefeated", "ringmasterDefeated",
+        //"grandjokerDefeated"
+    //];
     public static var saveIndicator:Entity;
 
     public static function hasGlobalFlag(flag:String) {
@@ -1077,6 +1077,11 @@ class GameScene extends Scene
         else if(lastConversationName == "grandfather") {
             cast(getInstance("grandfather"), Enemy).setFightStarted(true);
             curtain.blinkWhite();
+        }
+        else if(lastConversationName == "butler1") {
+            player.refillFlasks();
+            addGlobalFlag("flasksobtained");
+            saveGame();
         }
     }
 
