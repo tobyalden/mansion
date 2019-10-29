@@ -153,7 +153,9 @@ class Player extends Entity
             "piano6" => new Sfx("audio/piano6.wav"),
             "piano7" => new Sfx("audio/piano7.wav"),
             "piano8" => new Sfx("audio/piano8.wav"),
-            "piano9" => new Sfx("audio/piano9.wav")
+            "piano9" => new Sfx("audio/piano9.wav"),
+            "healcast" => new Sfx("audio/healcast.wav"),
+            "healfinish" => new Sfx("audio/healfinish.wav")
         ];
         facing = GameScene.hasGlobalFlag("respawnInRoom") ? "down" : "up";
         flaskCount = (
@@ -193,6 +195,7 @@ class Player extends Entity
         lastSafeSpot = new Vector2(x, y);
         healTimer = new Alarm(HEAL_TIME);
         healTimer.onComplete.bind(function() {
+            sfx['healfinish'].play();
             health += 1;
             flaskCount -= 1;
         });
@@ -295,10 +298,12 @@ class Player extends Entity
             if(!healTimer.active && health < maxHealth && flaskCount > 0) {
                 healTimer.start();
                 healSigil.play("idle", true);
+                sfx['healcast'].play();
             }
         }
         else {
             healTimer.active = false;
+            sfx['healcast'].stop();
         }
 
         healSigil.visible = healTimer.active;

@@ -15,7 +15,7 @@ MEDIUM:
     + death explosions
     + grandfather fight
     + grandfather transformation
-    - healing spell
+    + healing spell
     - enrage
 - add flask-giving sequence
 - eirena sfx doesn't end on death
