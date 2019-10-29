@@ -21,7 +21,7 @@ class Player extends Entity
     public static inline var STUN_TIME = 0.3;
     public static inline var CAST_COOLDOWN = 0.2;
     //public static inline var CAST_COOLDOWN = 0.4;
-    public static inline var HEAL_TIME = 2.5;
+    public static inline var HEAL_TIME = 2.5 / 2;
 
     public static inline var MAX_STAMINA = 125;
     public static inline var STAMINA_RECOVERY_SPEED_MOVING = 25;

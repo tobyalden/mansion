@@ -1,24 +1,25 @@
 BIG:
 - add UI
-
 - add inspections for random stuff around house
 - rewrite dialog
 
 MEDIUM:
 - music
-- make butler dialogue conditional
 - add dog
 - add sister
 - add dad
-- eirena sfx doesn't end on death
+- eirena and duessa flurry sfx don't end on death (maybe grandpa too)
+- improve look of lock walls
 
 SMALL:
 - remove debug controls
 - new game starts intro
+- only play intro for new game
 
 ------------------------------------------------------------------------------
 
 FINISHED:
++ make butler dialogue conditional
 + add flask-giving sequence
 + allow you to exit mansion on game complete
 + move exits further back in hallways

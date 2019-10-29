@@ -272,6 +272,18 @@ class GameScene extends Scene
         saveIndicator.graphic.alpha = 0;
     }
 
+    public function getCurrentBossName() {
+        for(boss in ["superwizard", "ringmaster", "grandjoker", "grandfather"]) {
+            if(
+                isPlayerOnSameScreenAsBoss(boss)
+                && cast(getInstance(boss), Enemy).fightStarted
+            ) {
+                return boss;
+            }
+        }
+        return "none";
+    }
+
     public function getCurrentSong() {
         for(boss in ["superwizard", "ringmaster", "grandjoker", "grandfather"]) {
             if(isPlayerOnSameScreenAsBoss(boss)) {

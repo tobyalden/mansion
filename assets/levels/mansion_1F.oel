@@ -434,7 +434,7 @@
     <ringmaster x="800" y="1120"/>
     <grandjoker x="2400" y="160"/>
     <butler x="1440" y="2080"/>
-    <player x="1448" y="2128"/>
+    <player x="1432" y="2336"/>
     <respawn x="3016" y="472"/>
     <piano x="1344" y="2048"/>
     <interactable x="1392" y="2040" width="16" height="8" dialogpath="deadplant"/>
