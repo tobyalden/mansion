@@ -9,25 +9,26 @@ MEDIUM:
 - add dog
 - add sister
 - add dad
-- add remaining sfx
-    + doors opening
-    + grass footsteps
-    + death explosions
-    + grandfather fight
-    + grandfather transformation
-    + healing spell
-    - enrage
+- allow you to exit mansion on game complete
 - add flask-giving sequence
 - eirena sfx doesn't end on death
 
 SMALL:
-- move exits further back in hallways
 - remove debug controls
 - new game starts intro
 
 ------------------------------------------------------------------------------
 
 FINISHED:
++ move exits further back in hallways
++ add remaining sfx
+    + doors opening
+    + grass footsteps
+    + death explosions
+    + grandfather fight
+    + grandfather transformation
+    + healing spell
+    + enrage
 + add grandfather sprite
 + finish credits (add will & sam)
 + unlock door
