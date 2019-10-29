@@ -25,7 +25,7 @@ class Interactable extends Entity {
     }
 
     public function getConversation() {
-        if(dialogpath == "lockeddoor") {
+        if(dialogpath == "lockeddoor" || dialogpath == "frontdoor") {
             sfx["doorlocked"].play();
         }
         return dialogpath;
@@ -35,6 +35,12 @@ class Interactable extends Entity {
         if(
             dialogpath == "lockeddoor"
             && cast(scene, GameScene).numberOfBossesBeaten() >= 3
+        ) {
+            collidable = false;
+        }
+        else if(
+            dialogpath == "frontdoor"
+            && cast(scene, GameScene).numberOfBossesBeaten() >= 4
         ) {
             collidable = false;
         }

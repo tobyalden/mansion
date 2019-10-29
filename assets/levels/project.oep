@@ -45,6 +45,7 @@
                 <string name="sfx" default=""/>
             </values>
         </object>
+		<object name="frontdoor" image="frontdoor.png" width="16" height="16" resizableX="true" resizableY="true" tile="false"></object>
 		<object name="interactable" image="interactable.png" width="8" height="8" resizableX="true" resizableY="true" tile="false">
             <values>
                 <string name="dialogpath" default=""/>

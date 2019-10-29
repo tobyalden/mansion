@@ -98,7 +98,10 @@ class GameScene extends Scene
     private var tutorial:Tutorial;
     private var currentSong:String;
     private var playerReviveSfx:Sfx;
+    private var isLeavingHouse:Bool;
     private var music:Map<String, Sfx>;
+    private var sfx:Map<String, Sfx>;
+
 
     public function isInGrass() {
         return (
@@ -249,9 +252,13 @@ class GameScene extends Scene
             "grandfatherfight" => new Sfx("audio/grandfatherfight.ogg"),
             "silence" => new Sfx("audio/silence.ogg")
         ];
+        sfx = [
+            "bigdoor" => new Sfx("audio/bigdoor.wav")
+        ];
         currentSong = "mansion1";
         isDying = false;
         playerReviveSfx = new Sfx("audio/playerrevive.wav");
+        isLeavingHouse = false;
         music[currentSong].loop();
         var saveIndicatorText = new Text("GAME SAVED", {color: 0x000000});
         saveIndicatorText.size = 12;
@@ -451,6 +458,22 @@ class GameScene extends Scene
         isMovingDuringFade = false;
     }
 
+    public function leaveHouse() {
+        if(isLeavingHouse) {
+            return;
+        }
+        stopSfx();
+        sfx["bigdoor"].play();
+        pausePlayer = true;
+        isLeavingHouse = true;
+        curtain.fadeOut(6);
+        var leavePause = new Alarm(3);
+        leavePause.onComplete.bind(function() {
+            HXP.scene = new Outro();
+        });
+        addTween(leavePause, true);
+    }
+
     override public function update() {
         if(Input.check("restart")) {
             HXP.scene = new GameScene();
@@ -597,7 +620,7 @@ class GameScene extends Scene
                 }
             }
         }
-        if(!music[getCurrentSong()].playing && !isDying) {
+        if(!music[getCurrentSong()].playing && !isDying && !isLeavingHouse) {
             music[getCurrentSong()].volume = 1;
             music[getCurrentSong()].loop();
         }
@@ -780,6 +803,15 @@ class GameScene extends Scene
                 Std.parseInt(lock.att.height)
             );
             add(lock);
+        }
+        for(frontdoor in fastXml.node.objects.nodes.frontdoor) {
+            var frontdoor = new FrontDoor(
+                Std.parseInt(frontdoor.att.x),
+                Std.parseInt(frontdoor.att.y),
+                Std.parseInt(frontdoor.att.width),
+                Std.parseInt(frontdoor.att.height)
+            );
+            add(frontdoor);
         }
         for(piano in fastXml.node.objects.nodes.piano) {
             var piano = new Piano(

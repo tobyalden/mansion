@@ -453,5 +453,7 @@
     <exit x="2728" y="696" width="16" height="40" sfx="">
       <node x="1472" y="1976"/>
     </exit>
+    <interactable x="1424" y="2376" width="32" height="56" dialogpath="frontdoor"/>
+    <frontdoor x="1424" y="2360" width="32" height="24"/>
   </objects>
 </level>
