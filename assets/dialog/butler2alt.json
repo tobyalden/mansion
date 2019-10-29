@@ -2,15 +2,18 @@
     "conversation": [
         {
             "portrait": "mc",
-            "text": "How about Duessa?"
+            "text": "Where's Mom?"
         },
         {
             "portrait": "butler",
-            "text": "You can find her upstairs in the library."
+            "text": "Dead, miss."
         },
         {
             "portrait": "mc",
-            "text": "Thanks."
+            "text": "Oh yeah, lol."
         }
     ]
 }
+
+
+

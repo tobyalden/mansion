@@ -1,5 +1,6 @@
 BIG:
 - add UI
+
 - add inspections for random stuff around house
 - rewrite dialog
 
@@ -9,7 +10,6 @@ MEDIUM:
 - add dog
 - add sister
 - add dad
-- add flask-giving sequence
 - eirena sfx doesn't end on death
 
 SMALL:
@@ -19,6 +19,7 @@ SMALL:
 ------------------------------------------------------------------------------
 
 FINISHED:
++ add flask-giving sequence
 + allow you to exit mansion on game complete
 + move exits further back in hallways
 + add remaining sfx

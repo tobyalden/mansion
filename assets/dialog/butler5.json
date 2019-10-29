@@ -2,16 +2,19 @@
     "conversation": [
         {
             "portrait": "mc",
-            "text": "Well, see you around!"
+            "text": "So how you been, Arthur?"
         },
         {
             "portrait": "butler",
-            "text": "Goodbye, miss."
+            "text": "I have been well, miss."
+        },
+        {
+            "portrait": "mc",
+            "text": "You go to any wild parties?"
+        },
+        {
+            "portrait": "butler",
+            "text": "You continue to delight me, Miss."
         }
     ]
 }
-
-
-
-
-

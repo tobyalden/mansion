@@ -1,0 +1,12 @@
+{
+    "conversation": [
+        {
+            "portrait": "mc",
+            "text": "Well, see you around!"
+        },
+        {
+            "portrait": "butler",
+            "text": "Goodbye, miss."
+        }
+    ]
+}

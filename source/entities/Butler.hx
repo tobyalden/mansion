@@ -16,14 +16,27 @@ class Butler extends Entity {
         type = "npc";
         graphic = new Image("graphics/butler.png");
         mask = new Hitbox(16, 16);
-        dialogNumber = 1;
+        dialogNumber = GameScene.hasGlobalFlag("flasksobtained") ? 2 : 1;
     }
 
     public function getConversation() {
         var dialogNumberToReturn = dialogNumber;
         dialogNumber++;
-        if(dialogNumber > 5) {
+        if(dialogNumber > 6) {
             dialogNumber = 2;
+        }
+        trace('dialog number is ${dialogNumber}. globalFlags: ${GameScene.currentGlobalFlags}');
+        if(
+            dialogNumberToReturn == 2
+            && GameScene.hasGlobalFlag("superwizardDefeated")
+            || dialogNumberToReturn == 3
+            && GameScene.hasGlobalFlag("ringmasterDefeated")
+            || dialogNumberToReturn == 4
+            && GameScene.hasGlobalFlag("grandjokerDefeated")
+            || dialogNumberToReturn == 6
+            && GameScene.hasGlobalFlag("grandfatherDefeated")
+        ) {
+            return 'butler${dialogNumberToReturn}alt';
         }
         return 'butler${dialogNumberToReturn}';
     }
