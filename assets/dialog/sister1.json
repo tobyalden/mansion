@@ -6,19 +6,19 @@
         },
         {
             "portrait": "mc",
-            "text": "Hey hey."
+            "text": "Hey! It's good to see you."
         },
         {
             "portrait": "sister",
-            "text": "Whaddup?"
+            "text": "You too, sis! What's up?"
         },
         {
             "portrait": "mc",
-            "text": "Not much, just came home to deal with some family shit."
+            "text": "Not much, I just came home to deal with some blood prophecy stuff."
         },
         {
             "portrait": "sister",
-            "text": "Hell yes. Are you gonna take down grandfather?"
+            "text": "Oh yeah, I saw your post about that. You've gotta kill mom's side of the family?"
         },
         {
             "portrait": "mc",
@@ -26,11 +26,11 @@
         },
         {
             "portrait": "sister",
-            "text": "Dope. I respect that."
+            "text": "Ugh, that sounds like a total hassle."
         },
         {
             "portrait": "mc",
-            "text": "Thank you! That means a lot."
+            "text": "Oh, it is."
         }
     ]
 }

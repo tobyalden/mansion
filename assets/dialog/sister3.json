@@ -2,31 +2,31 @@
     "conversation": [
         {
             "portrait": "sister",
-            "text": "Hey, have you ever played this game Dragon Fire XII?"
+            "text": "Hey, have you ever played this game Fire Wheel 3?"
         },
         {
             "portrait": "mc",
-            "text": "I can guarantee you have not played pretty much any of the games you have."
+            "text": "I have not."
         },
         {
             "portrait": "sister",
-            "text": "Dude, you're missing out. It's got this bonkers combat system where you need to manually select what your characters shout when they attack, and it's fully voice acted. It's like the game is constantly screaming at you."
+            "text": "It's got this combat system where you need to manually select what your characters shout when they attack, and it's fully voice acted. It's like the game is constantly screaming at you."
         },
         {
             "portrait": "mc",
-            "text": "That sounds terrible."
+            "text": "That sounds so stressful!"
         },
         {
             "portrait": "sister",
-            "text": "No it rules. There's also real-time travel times so it takes like five or six hours to get from one town to another."
+            "text": "It is! It's also got this mode where there's real-time travel times so it takes like five or six hours to get from one town to another. I actually got up at six this morning to start sailing to the next continent so I could get there by dinner."
         },
         {
             "portrait": "mc",
-            "text": "Where do you find the time to play this shit even?"
+            "text": "You have some weird priorities."
         },
         {
             "portrait": "sister",
-            "text": "Funemployment, baby!"
+            "text": "This, sister, is the true joy of unemployment."
         }
     ]
 }
