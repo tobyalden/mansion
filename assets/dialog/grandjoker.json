@@ -10,31 +10,15 @@
         },
         {
             "portrait": "duessa",
-            "text": "Here to kill me?"
+            "text": "Here to kill me and my sisters?"
         },
         {
             "portrait": "mc",
-            "text": "Yeah, but I mean we don't have to do it right away if you're busy."
+            "text": "Yeah, but we don't have to do it now if you're busy."
         },
         {
             "portrait": "duessa",
-            "text": "No, now's good. I'm going to kill you instead, though. I'm actually very strong, even though I read so many books."
-        },
-        {
-            "portrait": "mc",
-            "text": "How do you know I'm not also very strong?"
-        },
-        {
-            "portrait": "duessa",
-            "text": "Are you?"
-        },
-        {
-            "portrait": "mc",
-            "text": "No, I'm normal strong. But I don't believe you're VERY strong. That feels like a stretch."
-        },
-        {
-            "portrait": "duessa",
-            "text": "Don't belittle me."
+            "text": "No, now's good."
         }
     ]
 }

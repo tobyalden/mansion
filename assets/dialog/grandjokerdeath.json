@@ -2,19 +2,20 @@
     "conversation": [
         {
             "portrait": "duessa",
-            "text": "Wow. You actually were strong."
+            "text": "Wow. You're really strong"
         },
         {
             "portrait": "mc",
-            "text": "Thanks. It was a good fight."
+            "text": "I know, thanks."
         },
         {
             "portrait": "mc",
-            "text": "When you shot those walls at me, that was good."
+            "text": "It was a good fight. I liked when you shot the walls at me. "
+        }
         },
         {
             "portrait": "mc",
-            "text": "Anyway, good fight. Glad I won."
+            "text": "Glad I won."
         },
         {
             "portrait": "duessa",
@@ -22,7 +23,7 @@
         },
         {
             "portrait": "mc",
-            "text": "Well, you wouldn't be."
+            "text": "Well, it'd be weird if you were."
         }
     ]
 }

@@ -2,19 +2,15 @@
     "conversation": [
         {
             "portrait": "mc",
-            "text": "Munera, I have to be honest."
-        },
-        {
-            "portrait": "mc",
-            "text": "I feel like you weren't really bringing your A game to that fight."
+            "text": "What gives, Munera? It felt like you were barely trying."
         },
         {
             "portrait": "munera",
-            "text": "Sorry. I ate like half of a person before we fought and got really bloated."
+            "text": "Sorry. I ate half of a person before we fought and was feeling bloated."
         },
         {
             "portrait": "mc",
-            "text": "Wow! That's nasty."
+            "text": "This is why you're my nastiest aunt. Bye, Munera."
         }
     ]
 }

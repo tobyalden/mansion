@@ -2,43 +2,51 @@
     "conversation": [
         {
             "portrait": "munera",
-            "text": "...Aria? Is that you?"
+            "text": "...Aria? That you?"
         },
         {
             "portrait": "mc",
-            "text": "Yup. What's up, Munera?"
+            "text": "Hey Munera."
         },
         {
             "portrait": "munera",
-            "text": "Uhh... not too much, I guess?"
+            "text": "Uhh... not too much. Just having a snack."
         },
         {
             "portrait": "mc",
-            "text": "Cool, cool."
+            "text": "Oh, cool."
         },
         {
             "portrait": "mc",
-            "text": "So I'm here about that whole blood lineage prophecy..."
+            "text": "So I'm here about that blood prophecy thing..."
+        },
+        {
+            "portrait": "mc",
+            "text": "Where I'm fated to kill you and your sisters?"
         },
         {
             "portrait": "munera",
-            "text": "Ooh. Yeah. Ok. I forgot you were coming today. Sorry."
+            "text": "Oh yeah. I forgot you were coming today."
         },
         {
             "portrait": "mc",
-            "text": "Are you for real?"
+            "text": "Really?"
         },
         {
             "portrait": "mc",
-            "text": "I texted you and mom about it like six times. You even replied."
+            "text": "I texted you about it a bunch."
+        },
+        {
+            "portrait": "mc",
+            "text": "I'm pretty sure you even replied."
         },
         {
             "portrait": "munera",
-            "text": "I did?"
+            "text": "Did I?"
         },
         {
             "portrait": "mc",
-            "text": "Look, maybe we should just fight now before this gets any more awkward."
+            "text": "Look, maybe we should just fight now."
         }
     ]
 }
