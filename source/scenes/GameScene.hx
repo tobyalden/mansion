@@ -251,7 +251,8 @@ class GameScene extends Scene
             "ringmasterfight" => new Sfx("audio/ringmasterfight.ogg"),
             "grandjokerfight" => new Sfx("audio/grandjokerfight.ogg"),
             "grandfatherfight" => new Sfx("audio/grandfatherfight.ogg"),
-            "silence" => new Sfx("audio/silence.ogg")
+            "silence" => new Sfx("audio/silence.ogg"),
+            "birdsong" => new Sfx("audio/birdsong.wav")
         ];
         sfx = [
             "bigdoor" => new Sfx("audio/bigdoor.wav")
@@ -287,7 +288,7 @@ class GameScene extends Scene
             }
         }
         if(isInGrass()) {
-            return "silence";
+            return "birdsong";
         }
         return 'mansion${numberOfBossesBeaten()}';
     }

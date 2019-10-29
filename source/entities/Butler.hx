@@ -33,6 +33,8 @@ class Butler extends Entity {
             && GameScene.hasGlobalFlag("ringmasterDefeated")
             || dialogNumberToReturn == 4
             && GameScene.hasGlobalFlag("grandjokerDefeated")
+            || dialogNumberToReturn == 5
+            && GameScene.hasGlobalFlag("grandfatherDefeated")
             || dialogNumberToReturn == 6
             && GameScene.hasGlobalFlag("grandfatherDefeated")
         ) {
