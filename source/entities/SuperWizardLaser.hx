@@ -76,7 +76,12 @@ class SuperWizardLaser extends Entity {
     }
 
     override public function update() {
-        if(isOn && !sfx["laser"].playing && !cast(scene, GameScene).isDying) {
+        if(
+            isOn
+            && !sfx["laser"].playing
+            && !cast(scene, GameScene).isDying
+            && !wizard.stopActing
+        ) {
             sfx["laser"].loop();
         }
         moveTo(wizard.centerX - width / 2, wizard.bottom - 40);

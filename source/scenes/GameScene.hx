@@ -34,12 +34,11 @@ class GameScene extends Scene
     public static var isNightmare = false;
     public static var isProcedural = false;
     public static var currentGlobalFlags(default, null):Array<String>;
-    //private static var globalFlagsAtStart:Array<String> = [];
-    private static var globalFlagsAtStart:Array<String> = [
-        "superwizardDefeated", "ringmasterDefeated",
-        "grandjokerDefeated", "flasksobtained",
-        "grandfatherDefeated"
-    ];
+    private static var globalFlagsAtStart:Array<String> = [];
+    //private static var globalFlagsAtStart:Array<String> = [
+        //"superwizardDefeated", "ringmasterDefeated",
+        //"grandjokerDefeated", "flasksobtained"
+    //];
     public static var saveIndicator:Entity;
 
     public static function hasGlobalFlag(flag:String) {
@@ -366,6 +365,10 @@ class GameScene extends Scene
         var duessa = getInstance("grandjoker");
         if(duessa != null) {
             cast(duessa, GrandJoker).stopSfx();
+        }
+        var grandfather = getInstance("grandfather");
+        if(grandfather != null) {
+            cast(grandfather, Grandfather).stopSfx();
         }
         player.stopSfx();
         for(musicName in music.keys()) {

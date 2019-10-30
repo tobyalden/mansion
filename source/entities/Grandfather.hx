@@ -27,8 +27,8 @@ class Grandfather extends Enemy
     public static inline var CURTAIN_PHASE_DURATION_MULTIPLIER = 1.5;
     public static inline var WAVE_PHASE_DURATION_MULTIPLIER = 1.5;
 
-    public static inline var STARTING_HEALTH = 200;
-    public static inline var ENRAGE_THRESHOLD = 80;
+    public static inline var STARTING_HEALTH = 300;
+    public static inline var ENRAGE_THRESHOLD = 120;
 
     public static inline var CURTAIN_SHOT_SPEED = 80;
     public static inline var CURTAIN_SHOT_INTERVAL = 0.6;
@@ -51,6 +51,18 @@ class Grandfather extends Enemy
     public static inline var CHARGE_TIME = 2;
     public static inline var ENRAGE_CHARGE_TIME = 1;
 
+    public var sfx:Map<String, Sfx> = [
+        "enrage" => new Sfx("audio/enrage.wav"),
+        "charge" => new Sfx("audio/charge.wav"),
+        "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
+        "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
+        "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
+        "bigshot1" => new Sfx("audio/bigshot1.wav"),
+        "bigshot2" => new Sfx("audio/bigshot2.wav"),
+        "bigshot3" => new Sfx("audio/bigshot3.wav"),
+        "flurry" => new Sfx("audio/flurry.wav")
+    ];
+
     private var sprite:Spritemap;
 
     private var preEnrage:Alarm;
@@ -66,6 +78,7 @@ class Grandfather extends Enemy
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
     private var isDying:Bool;
+    private var stopActing:Bool;
 
     private var curtainShotTimer:Alarm;
     private var curtainAimedShotTimer:Alarm;
@@ -80,8 +93,6 @@ class Grandfather extends Enemy
     private var chargeRetreat:LinearMotion;
 
     private var lastNonChargePhase:String;
-
-    private var sfx:Map<String, Sfx>;
 
     public function new(startX:Float, startY:Float) {
         super(startX - WIDTH / 2, startY - HEIGHT / 2);
@@ -104,11 +115,11 @@ class Grandfather extends Enemy
             ? Std.int(STARTING_HEALTH * GameScene.NIGHTMARE_HEALTH_MULTIPLIER)
             : STARTING_HEALTH
         );
-        health = 1;
 
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
+        stopActing = false;
 
         generatePhaseLocations();
 
@@ -177,7 +188,9 @@ class Grandfather extends Enemy
         preEnrage.onComplete.bind(function() {
             phaseTimer.reset(ENRAGE_PHASE_DURATION);
             enrageShotTimer.start();
-            sfx['flurry'].play();
+            if(!stopActing) {
+                sfx['flurry'].loop();
+            }
         });
         addTween(preEnrage);
 
@@ -187,19 +200,13 @@ class Grandfather extends Enemy
         });
         addTween(enrageShotTimer);
 
-        sfx = [
-            "enrage" => new Sfx("audio/enrage.wav"),
-            "charge" => new Sfx("audio/charge.wav"),
-            "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
-            "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
-            "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
-            "bigshot1" => new Sfx("audio/bigshot1.wav"),
-            "bigshot2" => new Sfx("audio/bigshot2.wav"),
-            "bigshot3" => new Sfx("audio/bigshot3.wav"),
-            "flurry" => new Sfx("audio/flurry.wav")
-        ];
         fightStarted = GameScene.hasGlobalFlag("grandfatherFightStarted");
         sprite.play(fightStarted ? "idle" : "human");
+    }
+
+    public function stopSfx() {
+        sfx["flurry"].stop();
+        stopActing = true;
     }
 
     private function generatePhaseLocations() {
@@ -250,6 +257,9 @@ class Grandfather extends Enemy
     }
 
     override private function act() {
+        if(stopActing) {
+            return;
+        }
         if(health <= ENRAGE_THRESHOLD) {
             if(!isEnraged) {
                 enrageNextPhase = true;
@@ -369,7 +379,9 @@ class Grandfather extends Enemy
                     (isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION)
                 );
                 tentacleShotTimer.reset(TENTACLE_SHOT_INTERVAL);
-                sfx['flurry'].play();
+                if(!stopActing) {
+                    sfx['flurry'].loop();
+                }
             }
         }
         else if(currentPhase == "enrage") {

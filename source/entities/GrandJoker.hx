@@ -43,6 +43,14 @@ class GrandJoker extends Enemy
     public static inline var ENRAGE_SHOT_SPEED = 100;
     public static inline var ENRAGE_SINGLE_ROTATION_DURATION = 10;
 
+    public var sfx:Map<String, Sfx> = [
+        "enrage" => new Sfx("audio/enrage.wav"),
+        "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
+        "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
+        "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
+        "flurry" => new Sfx("audio/flurry.wav")
+    ];
+
     private var sprite:Spritemap;
 
     private var preEnrage:Alarm;
@@ -58,6 +66,7 @@ class GrandJoker extends Enemy
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
     private var isDying:Bool;
+    private var stopActing:Bool;
 
     private var clockShotTimer:Alarm;
 
@@ -69,7 +78,6 @@ class GrandJoker extends Enemy
 
     private var enrageShotTimer:Alarm;
 
-    private var sfx:Map<String, Sfx>;
     private var hitbox:Hitbox;
 
     public function new(startX:Float, startY:Float) {
@@ -102,6 +110,7 @@ class GrandJoker extends Enemy
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
+        stopActing = false;
 
         generatePhaseLocations();
 
@@ -161,18 +170,12 @@ class GrandJoker extends Enemy
         });
         addTween(enrageShotTimer);
 
-        sfx = [
-            "enrage" => new Sfx("audio/enrage.wav"),
-            "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
-            "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
-            "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
-            "flurry" => new Sfx("audio/flurry.wav")
-        ];
         fightStarted = GameScene.hasGlobalFlag("grandJokerFightStarted");
     }
 
     public function stopSfx() {
         sfx["flurry"].stop();
+        stopActing = true;
     }
 
     private function generatePhaseLocations() {
@@ -245,6 +248,9 @@ class GrandJoker extends Enemy
     }
 
     override private function act() {
+        if(stopActing) {
+            return;
+        }
         if(health <= ENRAGE_THRESHOLD) {
             if(!isEnraged) {
                 enrageNextPhase = true;
@@ -305,7 +311,7 @@ class GrandJoker extends Enemy
         }
         else if(currentPhase == "clock") {
             if(!clockShotTimer.active) {
-                if(!sfx["flurry"].playing) {
+                if(!sfx["flurry"].playing && !stopActing) {
                     sfx["flurry"].loop();
                 }
                 sprite.play("shoot");
@@ -331,7 +337,7 @@ class GrandJoker extends Enemy
             }
         }
         else if(currentPhase == "circle") {
-            if(!sfx["flurry"].playing) {
+            if(!sfx["flurry"].playing && !stopActing) {
                 sfx["flurry"].loop();
             }
             var player = scene.getInstance("player");
@@ -419,7 +425,7 @@ class GrandJoker extends Enemy
     }
 
     private function curtainBarrierShot() {
-        if(!sfx["flurry"].playing) {
+        if(!sfx["flurry"].playing && !stopActing) {
             sfx["flurry"].loop();
         }
         var shotVector = new Vector2(1, (Math.random() - 0.5) / 1.5);
@@ -470,7 +476,7 @@ class GrandJoker extends Enemy
     }
 
     private function enrageShot() {
-        if(!sfx["flurry"].playing) {
+        if(!sfx["flurry"].playing && !stopActing) {
             sfx["flurry"].loop();
         }
         var shotAngle = -Math.PI / 2;

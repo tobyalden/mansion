@@ -53,6 +53,7 @@ class SuperWizard extends Enemy
     public static inline var ENRAGE_THRESHOLD = 40;
 
     public var laser(default, null):SuperWizardLaser;
+    public var stopActing(default, null):Bool;
 
     private var sprite:Spritemap;
 
@@ -84,7 +85,16 @@ class SuperWizard extends Enemy
 
     private var isDying:Bool;
 
-    private var sfx:Map<String, Sfx>;
+    public var sfx:Map<String, Sfx> = [
+        "enrage" => new Sfx("audio/enrage.wav"),
+        "bigshot1" => new Sfx("audio/bigshot1.wav"),
+        "bigshot2" => new Sfx("audio/bigshot2.wav"),
+        "bigshot3" => new Sfx("audio/bigshot3.wav"),
+        "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
+        "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
+        "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
+        "flurry" => new Sfx("audio/flurry.wav")
+    ];
 
     public function new(startX:Float, startY:Float) {
         super(startX - SIZE / 2, startY - SIZE / 2);
@@ -139,6 +149,7 @@ class SuperWizard extends Enemy
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
+        stopActing = false;
 
         generatePhaseLocations();
 
@@ -161,6 +172,9 @@ class SuperWizard extends Enemy
         preEnrage.onComplete.bind(function() {
             enrageRippleInterval.start();
             enrageSpoutInterval.start();
+            if(!sfx["flurry"].playing && !stopActing) {
+                sfx["flurry"].loop();
+            }
             // TODO: This makes all the phases after this shorter.
             // Is that desired? Probably, but good to note.
             phaseTimer.reset(ENRAGE_PHASE_DURATION);
@@ -195,16 +209,6 @@ class SuperWizard extends Enemy
         });
         addTween(preAdvancePhaseTimer);
 
-        sfx = [
-            "enrage" => new Sfx("audio/enrage.wav"),
-            "bigshot1" => new Sfx("audio/bigshot1.wav"),
-            "bigshot2" => new Sfx("audio/bigshot2.wav"),
-            "bigshot3" => new Sfx("audio/bigshot3.wav"),
-            "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
-            "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
-            "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
-            "flurry" => new Sfx("audio/flurry.wav")
-        ];
         collidable = false;
         fightStarted = GameScene.hasGlobalFlag("superWizardFightStarted");
     }
@@ -212,6 +216,7 @@ class SuperWizard extends Enemy
     public function stopSfx() {
         sfx["flurry"].stop();
         laser.stopSfx();
+        stopActing = true;
     }
 
     private function generatePhaseLocations() {
@@ -287,6 +292,9 @@ class SuperWizard extends Enemy
     }
 
     override private function act() {
+        if(stopActing) {
+            return;
+        }
         if(health <= ENRAGE_THRESHOLD) {
             if(!isEnraged) {
                 enrageNextPhase = true;
@@ -404,7 +412,7 @@ class SuperWizard extends Enemy
     }
 
     private function spiralShot() {
-        if(!sfx["flurry"].playing) {
+        if(!sfx["flurry"].playing && !stopActing) {
             sfx["flurry"].loop();
         }
         var numBullets = (

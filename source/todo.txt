@@ -1,7 +1,5 @@
 BIG:
-- add UI
 - add inspections for random stuff around house
-- rewrite dialog
 
 MEDIUM:
 - music
@@ -9,16 +7,20 @@ MEDIUM:
 - add sister
 - add dad
 - eirena and duessa flurry sfx don't end on death (maybe grandpa too)
-- improve look of lock walls
 
 SMALL:
 - remove debug controls
-- new game starts intro
 - only play intro for new game
+- can get behind duessa and gf during wall stages
+- add buffer to boss sprites
 
 ------------------------------------------------------------------------------
 
 FINISHED:
++ new game starts intro
++ improve look of lock walls
++ rewrite dialog
++ add UI
 + make butler dialogue conditional
 + add flask-giving sequence
 + allow you to exit mansion on game complete
