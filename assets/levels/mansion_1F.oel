@@ -437,7 +437,7 @@
     <player x="1432" y="2336"/>
     <respawn x="3016" y="472"/>
     <piano x="1344" y="2048"/>
-    <interactable x="1392" y="2040" width="16" height="8" dialogpath="deadplant"/>
+    <interactable x="1696" y="2160" width="24" height="8" dialogpath="fireplace"/>
     <interactable x="1432" y="1952" width="32" height="8" dialogpath="familyportrait"/>
     <lock x="1728" y="1968" width="64" height="8"/>
     <interactable x="1728" y="1928" width="64" height="48" dialogpath="lockeddoor"/>
@@ -455,5 +455,22 @@
     </exit>
     <interactable x="1424" y="2376" width="32" height="56" dialogpath="frontdoor"/>
     <frontdoor x="1424" y="2360" width="32" height="24"/>
+    <interactable x="1392" y="2040" width="16" height="8" dialogpath="deadplant"/>
+    <interactable x="1792" y="2152" width="32" height="8" dialogpath="tv"/>
+    <interactable x="1816" y="2016" width="8" height="8" dialogpath="flowerpicture"/>
+    <interactable x="1072" y="2288" width="32" height="8" dialogpath="diningroomcabinet2"/>
+    <interactable x="1104" y="2328" width="24" height="8" dialogpath="meal"/>
+    <interactable x="1136" y="2288" width="32" height="8" dialogpath="diningroomcabinet1"/>
+    <interactable x="1136" y="2088" width="16" height="16" dialogpath="horsehead"/>
+    <interactable x="1176" y="2024" width="24" height="8" dialogpath="fridge"/>
+    <interactable x="1104" y="2032" width="24" height="8" dialogpath="stove"/>
+    <interactable x="1072" y="2024" width="24" height="8" dialogpath="kitchencabinet"/>
+    <interactable x="744" y="1312" width="32" height="8" dialogpath="cellar1"/>
+    <interactable x="920" y="976" width="24" height="8" dialogpath="deadbody"/>
+    <interactable x="1808" y="2336" width="32" height="8" dialogpath="painting1"/>
+    <interactable x="1992" y="2336" width="24" height="8" dialogpath="painting3"/>
+    <interactable x="1904" y="2336" width="24" height="8" dialogpath="painting2"/>
+    <interactable x="1952" y="1936" width="24" height="8" dialogpath="coffin"/>
+    <interactable x="2192" y="1936" width="8" height="8" dialogpath="momspainting"/>
   </objects>
 </level>
