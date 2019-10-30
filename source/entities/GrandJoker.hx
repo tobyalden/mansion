@@ -118,6 +118,7 @@ class GrandJoker extends Enemy
         addTween(phaseRelocater);
 
         currentPhase = HXP.choose("clock", "curtain", "circle");
+        currentPhase = "curtain";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -448,6 +449,9 @@ class GrandJoker extends Enemy
         shotVector = new Vector2(-1, 0.3);
         spit = new Spit(this, shotVector, CURTAIN_BARRIER_SHOT_SPEED, false);
         scene.add(spit);
+
+        var shotVector = new Vector2((Math.random() - 0.5) * 1.2, -1);
+        scene.add(new Spit(this, shotVector, shotSpeed, false));
     }
 
     private function circleShot() {

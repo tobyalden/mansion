@@ -6,17 +6,17 @@ MEDIUM:
 - add dog
 - add sister
 - add dad
-- eirena and duessa flurry sfx don't end on death (maybe grandpa too)
 
 SMALL:
 - remove debug controls
 - only play intro for new game
-- can get behind duessa and gf during wall stages
 - add buffer to boss sprites
 
 ------------------------------------------------------------------------------
 
 FINISHED:
++ eirena and duessa flurry sfx don't end on death (maybe grandpa too)
++ can get behind duessa and gf during wall stages
 + new game starts intro
 + improve look of lock walls
 + rewrite dialog
