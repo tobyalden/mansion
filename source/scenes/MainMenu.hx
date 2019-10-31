@@ -174,7 +174,7 @@ class MainMenu extends Scene
                         Data.write("isNightmare", GameScene.isNightmare);
                         Data.save(GameScene.SAVE_FILENAME);
                         sfx["start"].play();
-                        fadeToGame();
+                        fadeToGame(true);
                     }
                     else {
                         atDifficultyMenu = false;
@@ -195,7 +195,7 @@ class MainMenu extends Scene
                             // Continue
                             if(saveGameExists) {
                                 sfx["continue"].play();
-                                fadeToGame();
+                                fadeToGame(false);
                             }
                             else {
                                 sfx["cantselect"].play();
@@ -227,12 +227,18 @@ class MainMenu extends Scene
         super.update();
     }
 
-    private function fadeToGame() {
+    private function fadeToGame(playIntro:Bool) {
         canControl = false;
         curtain.fadeOut();
         var sceneChanger = new Alarm(2);
         sceneChanger.onComplete.bind(function() {
-            HXP.scene = new GameScene();
+            if(playIntro) {
+                //HXP.scene = new Intro();
+                HXP.scene = new GameScene();
+            }
+            else {
+                HXP.scene = new GameScene();
+            }
         });
         addTween(sceneChanger, true);
     }

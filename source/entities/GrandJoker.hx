@@ -51,6 +51,8 @@ class GrandJoker extends Enemy
         "flurry" => new Sfx("audio/flurry.wav")
     ];
 
+    public var isDying(default, null):Bool;
+
     private var sprite:Spritemap;
 
     private var preEnrage:Alarm;
@@ -65,7 +67,6 @@ class GrandJoker extends Enemy
     private var screenCenter:Vector2;
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
-    private var isDying:Bool;
     private var stopActing:Bool;
 
     private var clockShotTimer:Alarm;
@@ -249,9 +250,6 @@ class GrandJoker extends Enemy
     }
 
     override private function act() {
-        if(stopActing) {
-            return;
-        }
         if(health <= ENRAGE_THRESHOLD) {
             if(!isEnraged) {
                 enrageNextPhase = true;
@@ -515,6 +513,7 @@ class GrandJoker extends Enemy
         for(tween in tweens) {
             tween.active = false;
         }
+        stopSfx();
         bigExplosionSpawner.start();
         clearHazards();
         isDying = true;

@@ -6,7 +6,11 @@
         },
         {
             "portrait": "none",
-            "text": "Looks like a delivery guy. Poor chump."
+            "text": "Looks like a delivery guy."
+        },
+        {
+            "portrait": "none",
+            "text": "Poor chump."
         }
     ]
 }

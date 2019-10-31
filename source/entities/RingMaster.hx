@@ -39,6 +39,7 @@ class RingMaster extends Enemy
     public var rings(default, null):Array<Ring>;
     public var screenCenter(default, null):Vector2;
     public var isEnraged(default, null):Bool;
+    public var isDying(default, null):Bool;
 
     private var sprite:Spritemap;
     private var preEnrage:Alarm;
@@ -53,7 +54,6 @@ class RingMaster extends Enemy
     private var tossCount:Int;
 
     private var enrageNextPhase:Bool;
-    private var isDying:Bool;
 
     private var sfx:Map<String, Sfx>;
 
@@ -96,6 +96,7 @@ class RingMaster extends Enemy
             ? Std.int(STARTING_HEALTH * GameScene.NIGHTMARE_HEALTH_MULTIPLIER)
             : STARTING_HEALTH
         );
+        health = 1;
 
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
@@ -552,6 +553,9 @@ class RingMaster extends Enemy
         }
         bigExplosionSpawner.start();
         clearHazards();
+        for(ring in rings) {
+            scene.remove(ring);
+        }
         isDying = true;
         collidable = false;
         var gameScene = cast(scene, GameScene);

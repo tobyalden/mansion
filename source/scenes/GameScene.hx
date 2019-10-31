@@ -276,6 +276,7 @@ class GameScene extends Scene
             if(
                 isPlayerOnSameScreenAsBoss(boss)
                 && cast(getInstance(boss), Enemy).fightStarted
+                && getInstance(boss).collidable
             ) {
                 return boss;
             }
@@ -1050,7 +1051,7 @@ class GameScene extends Scene
 
     private function debug() {
         if(Main.inputPressed("testdialog")) {
-            converse('test');
+            //endConversation();
         }
         else if(Main.inputPressed("print")) {
             //trace('isHardMode: ${isHardMode}. isNightmare: ${isNightmare}');

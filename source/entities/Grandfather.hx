@@ -63,6 +63,8 @@ class Grandfather extends Enemy
         "flurry" => new Sfx("audio/flurry.wav")
     ];
 
+    public var isDying(default, null):Bool;
+
     private var sprite:Spritemap;
 
     private var preEnrage:Alarm;
@@ -77,7 +79,6 @@ class Grandfather extends Enemy
     private var screenCenter:Vector2;
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
-    private var isDying:Bool;
     private var stopActing:Bool;
 
     private var curtainShotTimer:Alarm;
@@ -257,9 +258,6 @@ class Grandfather extends Enemy
     }
 
     override private function act() {
-        if(stopActing) {
-            return;
-        }
         if(health <= ENRAGE_THRESHOLD) {
             if(!isEnraged) {
                 enrageNextPhase = true;
@@ -544,6 +542,7 @@ class Grandfather extends Enemy
         for(tween in tweens) {
             tween.active = false;
         }
+        stopSfx();
         bigExplosionSpawner.start();
         clearHazards();
         isDying = true;

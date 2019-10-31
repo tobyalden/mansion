@@ -1,21 +1,21 @@
-BIG:
-- add inspections for random stuff around house
-
 MEDIUM:
-- music
+- rest of music (other boss themes)
 - add dog
 - add sister
 - add dad
 
 SMALL:
-- don't let you inspect stuff during boss battles
 - remove debug controls
-- only play intro for new game
 - add buffer to boss sprites
+- munera's rings don't appear sometimes
+- can't inspect dead body after munera battle
 
 ------------------------------------------------------------------------------
 
 FINISHED:
++ only play intro for new game
++ add inspections for random stuff around house
++ don't let you inspect stuff during boss battles
 + eirena and duessa flurry sfx don't end on death (maybe grandpa too)
 + can get behind duessa and gf during wall stages
 + new game starts intro

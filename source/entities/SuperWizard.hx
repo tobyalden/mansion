@@ -54,6 +54,7 @@ class SuperWizard extends Enemy
 
     public var laser(default, null):SuperWizardLaser;
     public var stopActing(default, null):Bool;
+    public var isDying(default, null):Bool;
 
     private var sprite:Spritemap;
 
@@ -82,8 +83,6 @@ class SuperWizard extends Enemy
     private var screenCenter:Vector2;
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
-
-    private var isDying:Bool;
 
     public var sfx:Map<String, Sfx> = [
         "enrage" => new Sfx("audio/enrage.wav"),
@@ -119,6 +118,7 @@ class SuperWizard extends Enemy
             ? Std.int(STARTING_HEALTH * GameScene.NIGHTMARE_HEALTH_MULTIPLIER)
             : STARTING_HEALTH
         );
+        health = 1;
 
         laser = new SuperWizardLaser(this);
 
@@ -292,9 +292,6 @@ class SuperWizard extends Enemy
     }
 
     override private function act() {
-        if(stopActing) {
-            return;
-        }
         if(health <= ENRAGE_THRESHOLD) {
             if(!isEnraged) {
                 enrageNextPhase = true;
@@ -464,6 +461,7 @@ class SuperWizard extends Enemy
         for(tween in tweens) {
             tween.active = false;
         }
+        stopSfx();
         bigExplosionSpawner.start();
         clearHazards();
         isDying = true;
