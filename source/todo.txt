@@ -8,6 +8,7 @@ MEDIUM:
 - add dad
 
 SMALL:
+- don't let you inspect stuff during boss battles
 - remove debug controls
 - only play intro for new game
 - add buffer to boss sprites

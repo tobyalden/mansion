@@ -257,7 +257,10 @@ class Player extends Entity
                     lastPiano = 1;
                 }
             }
-            else if(interactable != null) {
+            else if(
+                interactable != null
+                && cast(scene, GameScene).getCurrentBossName() == "none"
+            ) {
                 var gameScene = cast(scene, GameScene);
                 gameScene.converse(interactable.getConversation());
             }

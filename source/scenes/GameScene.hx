@@ -604,7 +604,10 @@ class GameScene extends Scene
             tutorial.teach("talk");
         }
         else if(player.sword.getInteractable() != null) {
-            tutorial.visible = !isDialogMode;
+            tutorial.visible = (
+                !isDialogMode
+                && getCurrentBossName() == "none"
+            );
             tutorial.teach("interact");
         }
         else {

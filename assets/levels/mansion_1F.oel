@@ -241,7 +241,7 @@
     <rect x="2288" y="696" w="32" h="32"/>
     <rect x="2288" y="728" w="16" h="136"/>
     <rect x="2300" y="552" w="4" h="4"/>
-    <rect x="2304" y="388" w="92" h="12"/>
+    <rect x="2304" y="384" w="92" h="16"/>
     <rect x="2304" y="436" w="92" h="16"/>
     <rect x="2304" y="484" w="64" h="12"/>
     <rect x="2304" y="800" w="8" h="36"/>
@@ -267,7 +267,7 @@
     <rect x="2388" y="408" w="8" h="4"/>
     <rect x="2416" y="304" w="140" h="12"/>
     <rect x="2416" y="316" w="12" h="44"/>
-    <rect x="2416" y="388" w="112" h="12"/>
+    <rect x="2416" y="384" w="112" h="16"/>
     <rect x="2416" y="436" w="112" h="16"/>
     <rect x="2428" y="336" w="84" h="24"/>
     <rect x="2448" y="460" w="12" h="12"/>
@@ -276,8 +276,9 @@
     <rect x="2488" y="360" w="40" h="4"/>
     <rect x="2492" y="416" w="4" h="8"/>
     <rect x="2500" y="412" w="28" h="20"/>
+    <rect x="2504" y="32" w="16" h="4"/>
     <rect x="2512" y="344" w="16" h="16"/>
-    <rect x="2512" y="364" w="16" h="24"/>
+    <rect x="2512" y="364" w="16" h="20"/>
     <rect x="2512" y="400" w="16" h="12"/>
     <rect x="2512" y="432" w="16" h="4"/>
     <rect x="2512" y="452" w="16" h="32"/>
@@ -472,5 +473,31 @@
     <interactable x="1904" y="2336" width="24" height="8" dialogpath="painting2"/>
     <interactable x="1952" y="1936" width="24" height="8" dialogpath="coffin"/>
     <interactable x="2192" y="1936" width="8" height="8" dialogpath="momspainting"/>
+    <interactable x="3008" y="776" width="16" height="8" dialogpath="bear"/>
+    <interactable x="2480" y="440" width="32" height="8" dialogpath="bookshelf10"/>
+    <interactable x="2304" y="488" width="32" height="8" dialogpath="bookshelf1"/>
+    <interactable x="2336" y="488" width="32" height="8" dialogpath="bookshelf2"/>
+    <interactable x="2448" y="488" width="32" height="8" dialogpath="bookshelf3"/>
+    <interactable x="2480" y="488" width="32" height="8" dialogpath="bookshelf4"/>
+    <interactable x="2336" y="440" width="32" height="8" dialogpath="bookshelf6"/>
+    <interactable x="2368" y="440" width="32" height="8" dialogpath="bookshelf7"/>
+    <interactable x="2416" y="440" width="32" height="8" dialogpath="bookshelf8"/>
+    <interactable x="2448" y="440" width="32" height="8" dialogpath="bookshelf9"/>
+    <interactable x="2304" y="440" width="32" height="8" dialogpath="bookshelf5"/>
+    <interactable x="2304" y="392" width="32" height="8" dialogpath="bookshelf11"/>
+    <interactable x="2336" y="392" width="32" height="8" dialogpath="bookshelf12"/>
+    <interactable x="2368" y="392" width="32" height="8" dialogpath="bookshelf13"/>
+    <interactable x="2416" y="392" width="32" height="8" dialogpath="bookshelf14"/>
+    <interactable x="2448" y="392" width="32" height="8" dialogpath="bookshelf15"/>
+    <interactable x="2480" y="392" width="32" height="8" dialogpath="bookshelf16"/>
+    <interactable x="2304" y="352" width="24" height="8" dialogpath="bookshelf17"/>
+    <interactable x="2488" y="352" width="24" height="8" dialogpath="bookshelf20"/>
+    <interactable x="2336" y="352" width="24" height="8" dialogpath="bookshelf18"/>
+    <interactable x="2456" y="352" width="24" height="8" dialogpath="bookshelf19"/>
+    <interactable x="2504" y="32" width="16" height="8" dialogpath="bigbook"/>
+    <interactable x="2992" y="464" width="8" height="16" dialogpath="bed"/>
+    <interactable x="3024" y="448" width="16" height="8" dialogpath="closet"/>
+    <interactable x="3064" y="456" width="8" height="8" dialogpath="mydiary"/>
+    <interactable x="3048" y="456" width="8" height="8" dialogpath="chest"/>
   </objects>
 </level>

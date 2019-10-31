@@ -44,6 +44,10 @@ class Interactable extends Entity {
         ) {
             collidable = false;
         }
+        else if(dialogpath.indexOf("bookshelf") != -1) {
+            var player = cast(scene.getInstance("player"), Player);
+            collidable = player.facing == "up";
+        }
         super.update();
     }
 }
