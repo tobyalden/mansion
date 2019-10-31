@@ -1,40 +1,44 @@
 {
     "conversation": [
         {
-            "portrait": "mc",
-            "text": "Man, don't you get tired of living at our parents?"
-        },
-        {
             "portrait": "sister",
-            "text": "It's working for me. I mostly play a lot of games and stay out of the way."
-        },
-        {
-            "portrait": "sister",
-            "text": "I've been working on an album, too."
-        },
-        {
-            "portrait": "sister",
-            "text": "It's called 666HXLLGXDDESS. It's like trappy beats but I kinda mumble over the top.."
+            "text": "So what's next?"
         },
         {
             "portrait": "mc",
-            "text": "Oh, like you're rapping?"
+            "text": "Go home and chill, I guess. I'm pretty wiped."
         },
         {
             "portrait": "sister",
-            "text": "No, it's more like..."
-        },
-        {
-            "portrait": "sister",
-            "text": "'mumbleemumbleyourdadsheadsmellslikeawarmsummerbreezemumblewhenhisheadygetssweatyicallitsprayinfebrezemumble"
-        },
-        {
-            "portrait": "sister",
-            "text": "That's all I got so far."
+            "text": "Word, that sounds good."
         },
         {
             "portrait": "mc",
-            "text": "Love it."
+            "text": "Hey, no judgement or anything, but don't you get tired of living at home?"
+        },
+        {
+            "portrait": "sister",
+            "text": "Nah, it's working for me. I mostly just lay low and play a lot of games."
+        },
+        {
+            "portrait": "sister",
+            "text": "Plus, now that mom's dead I was thinking of turning her room into a home gym. Get on those gains, you know."
+        },
+        {
+            "portrait": "mc",
+            "text": "I guess that does sound pretty chill."
+        },
+        {
+            "portrait": "mc",
+            "text": "Well, if you ever want to visit, you know where to find me."
+        },
+        {
+            "portrait": "sister",
+            "text": "Will do! Good seeing you, sis."
+        },
+        {
+            "portrait": "mc",
+            "text": "You too! Talk soon."
         }
     ]
 }

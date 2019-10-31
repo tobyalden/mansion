@@ -6,11 +6,11 @@
         },
         {
             "portrait": "mc",
-            "text": "Hey! It's good to see you."
+            "text": "Hey! Good to see you, sis."
         },
         {
             "portrait": "sister",
-            "text": "You too, sis! What's up?"
+            "text": "You too! What's up?"
         },
         {
             "portrait": "mc",
@@ -30,7 +30,7 @@
         },
         {
             "portrait": "mc",
-            "text": "Oh, it is."
+            "text": "Tell me about it."
         }
     ]
 }

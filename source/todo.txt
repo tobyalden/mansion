@@ -6,11 +6,11 @@ MEDIUM:
 
 SMALL:
 - remove debug controls
-- add dialog for grandfather
 
 ------------------------------------------------------------------------------
 
 FINISHED:
++ add dialog for grandfather
 + add buffer to boss sprites
 + munera's rings don't appear sometimes
 + can't inspect dead body after munera battle

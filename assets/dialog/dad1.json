@@ -1,0 +1,34 @@
+{
+    "conversation": [
+        {
+            "portrait": "dad",
+            "text": "Hey Aria! Great to see you!"
+        },
+        {
+            "portrait": "mc",
+            "text": "Hey dad, how's it going?"
+        },
+        {
+            "portrait": "dad",
+            "text": "Oh, it's going well! Just bought this new TV."
+        },
+        {
+            "portrait": "dad",
+            "text": "What brings you home?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Well actually, I have to kill mom's side of the family to fulfill a blood prophecy."
+        },
+        {
+            "portrait": "mc",
+            "text": "But I can't really talk to you about it because of that curse mom placed on you where anytime someone mentions blood prophecies you think they're talking about the Mariners."
+        },
+        {
+            "portrait": "dad",
+            "text": "They're gonna win them all this year, just watch!"
+        }
+    ]
+}
+
+

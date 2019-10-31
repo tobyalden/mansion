@@ -2,23 +2,35 @@
     "conversation": [
         {
             "portrait": "sister",
-            "text": "You ever watch youhole.tv?"
+            "text": "Yo, you donezo?"
         },
         {
             "portrait": "mc",
-            "text": "No, what's that?"
+            "text": "I'm donezo. Just killed grandfather"
         },
         {
             "portrait": "sister",
-            "text": "It's this website where you can watch random videos."
+            "text": "Nice, congrats. Did he do the flesh heap thing?"
         },
         {
             "portrait": "mc",
-            "text": "Honestly, that sounds kind of boring."
+            "text": "Is the pope Catholic?"
         },
         {
             "portrait": "sister",
-            "text": "The boring contains the sublime, lil bro..."
+            "text": "I guess I didn't need to ask."
+        },
+        {
+            "portrait": "sister",
+            "text": "Man, though... that thing is so nasty."
+        },
+        {
+            "portrait": "sister",
+            "text": "You ever think about how he cleans all those skin folds?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Damn dude, don't put those thoughts in my brain. I just got done staring at that thing."
         }
     ]
 }
