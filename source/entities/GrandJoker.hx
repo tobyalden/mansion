@@ -96,7 +96,8 @@ class GrandJoker extends Enemy
         screenCenter = new Vector2(x, y);
         y -= 50;
         startPosition.y -= 50;
-        sprite = new Spritemap("graphics/bosses.png", SIZE, SIZE);
+        sprite = new Spritemap("graphics/bosses.png", SIZE, SIZE + 10);
+        sprite.y = -5;
         sprite.add("dying", [6]);
         sprite.add("idle", [6, 7], 4);
         sprite.add("shoot", [8, 9], 2);

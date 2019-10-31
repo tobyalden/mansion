@@ -107,7 +107,8 @@ class SuperWizard extends Enemy
         screenCenter = new Vector2(x, y);
         y -= 50;
         startPosition.y -= 50;
-        sprite = new Spritemap("graphics/bosses.png", SIZE, SIZE);
+        sprite = new Spritemap("graphics/bosses.png", SIZE, SIZE + 10);
+        sprite.y = -5;
         sprite.add("idle", [0]);
         sprite.add("laser", [1]);
         sprite.add("shoot", [2]);

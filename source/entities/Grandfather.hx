@@ -105,7 +105,8 @@ class Grandfather extends Enemy
         screenCenter = new Vector2(x, y);
         y -= 50;
         startPosition.y -= 50;
-        sprite = new Spritemap("graphics/grandfather.png", WIDTH, HEIGHT);
+        sprite = new Spritemap("graphics/grandfather.png", WIDTH, HEIGHT + 10);
+        sprite.y = -5;
         sprite.add("idle", [0, 1], 4);
         sprite.add("dying", [0]);
         sprite.add("charging", [0, 1], 8);
