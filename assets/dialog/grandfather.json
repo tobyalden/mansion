@@ -2,11 +2,39 @@
     "conversation": [
         {
             "portrait": "grandfather",
-            "text": "Well howdy partner."
+            "text": "Well howdy, partner."
         },
         {
             "portrait": "mc",
-            "text": "let's combat"
+            "text": "Hey Grandpa. It's been a while."
+        },
+        {
+            "portrait": "grandfather",
+            "text": "Sure has. I take it you've killed my children?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Yup. It's been a productive morning."
+        },
+        {
+            "portrait": "grandfather",
+            "text": "I'll say. I guess all that's left now is to kill me, huh?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Sounds about right."
+        },
+        {
+            "portrait": "grandfather",
+            "text": "Good thing I'm just a fragile old man, huh? Should be easy."
+        },
+        {
+            "portrait": "grandfather",
+            "text": "It's not like I'm going to transform in a monstrous pile of living flesh or anything."
+        },
+        {
+            "portrait": "mc",
+            "text": "I'll miss that trademark humor of yours, grandpa."
         }
     ]
 }

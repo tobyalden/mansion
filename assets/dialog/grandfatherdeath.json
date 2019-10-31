@@ -2,12 +2,23 @@
     "conversation": [
         {
             "portrait": "grandfathermonster",
-            "text": "oh dang"
+            "text": "Uurgh... I didn't expect this..."
         },
         {
             "portrait": "mc",
-            "text": "lol"
+            "text": "Yes, well, these things have a way of sneaking up on you."
+        },
+        {
+            "portrait": "grandfathermonster",
+            "text": "...uuughh..."
+        },
+        {
+            "portrait": "mc",
+            "text": "Heh. Goodbye forever, you gross old man."
+        },
+        {
+            "portrait": "mc",
+            "text": "I hope it's hot where you're headed."
         }
     ]
 }
-
