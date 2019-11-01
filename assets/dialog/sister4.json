@@ -14,7 +14,7 @@
         },
         {
             "portrait": "mc",
-            "text": "Thanks. Hey, is there a blood prophecy you need to fill as well?"
+            "text": "Thanks. Hey, is there a blood prophecy you need to fulfill as well?"
         },
         {
             "portrait": "sister",
@@ -26,23 +26,7 @@
         },
         {
             "portrait": "sister",
-            "text": "No, that's purely voluntary. Check out my abs though."
-        },
-        {
-            "portrait": "none",
-            "text": "I poke her abs."
-        },
-        {
-            "portrait": "none",
-            "text": "They're pretty hard."
-        },
-        {
-            "portrait": "mc",
-            "text": "Wow, impressive."
-        },
-        {
-            "portrait": "sister",
-            "text": "I kinda thought I was gonna fart when I was flexing."
+            "text": "No, that's purely voluntary."
         }
     ]
 }

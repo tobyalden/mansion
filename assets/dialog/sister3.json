@@ -2,7 +2,7 @@
     "conversation": [
         {
             "portrait": "sister",
-            "text": "Hey, have you ever played this game Fire Wheel 3?"
+            "text": "Hey, have you ever played this game Fire Wheel III?"
         },
         {
             "portrait": "mc",
@@ -10,23 +10,15 @@
         },
         {
             "portrait": "sister",
-            "text": "It's got this combat system where you need to manually select what your characters shout when they attack, and it's fully voice acted. It's like the game is constantly screaming at you."
+            "text": "It's got this combat system where you need to manually select what your characters shout when they attack, and it's fully voice acted."
+        },
+        {
+            "portrait": "sister",
+            "text": "It's like the game is constantly screaming at you."
         },
         {
             "portrait": "mc",
             "text": "Sounds stressful."
-        },
-        {
-            "portrait": "sister",
-            "text": "It's also got real-time travel times, so it takes like six or seven hours to get from one town to another. I actually got up at five this morning to start sailing to the next continent so I could get there by dinner."
-        },
-        {
-            "portrait": "mc",
-            "text": "Dude, you have weird priorities."
-        },
-        {
-            "portrait": "sister",
-            "text": "Heheh... this, sister, is the true joy of unemployment."
         }
     ]
 }

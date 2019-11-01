@@ -112,7 +112,7 @@ class DialogBox extends Entity
         addTween(typeTimer);
         typeTimer.start();
 
-        fastTypeTimer = new Alarm(0.025, TweenType.Looping);
+        fastTypeTimer = new Alarm(0.015, TweenType.Looping);
         fastTypeTimer.onComplete.bind(function() {
             addCharacter(true);
         });

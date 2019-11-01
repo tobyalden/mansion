@@ -9,50 +9,51 @@ import haxepunk.tweens.misc.*;
 import haxepunk.utils.*;
 import scenes.*;
 
-class Dad extends NPC {
+class Sister extends NPC {
     private var dialogNumber:Int;
 
     public function new(x:Float, y:Float) {
         super(x, y);
         type = "npc";
-        name = "dad";
-        graphic = new Image("graphics/dad.png");
-        mask = new Hitbox(10, 18);
+        name = "sister";
+        graphic = new Image("graphics/sister.png");
+        mask = new Hitbox(14, 16);
 
-        dialogNumber = Data.read("highestDadDialogHeard", 1);
+        dialogNumber = Data.read("highestSisterDialogHeard", 1);
     }
 
     private function getHighestAvailableConversation() {
         var gameScene = cast(scene, GameScene);
 		var numBossesBeaten = gameScene.numberOfBossesBeaten();
-		if(numBossesBeaten == 1) {
+		if(numBossesBeaten == 2) {
             return 2;
 		}
-		else if(numBossesBeaten == 2) {
+		else if(numBossesBeaten == 3) {
             return 4;
 		}
-		else if(numBossesBeaten == 3) {
+        else {
             return 6;
-		}
-		else {
-            return 8;
 		}
     }
 
     public function onBossDeath() {
+        trace('Sister.onBossDeath() called.');
+        trace('Data.read("highestSisterDialogHeard", 1) = ${Data.read("highestSisterDialogHeard", 1)}');
+        trace('getHighestAvailableConversation() - 2 = ${getHighestAvailableConversation() - 2}');
         if(
-            Data.read("highestDadDialogHeard", 1)
+            Data.read("highestSisterDialogHeard", 1)
             == getHighestAvailableConversation() - 2
         ) {
             dialogNumber = getHighestAvailableConversation() - 1;
+            trace('set new conversation on boss death');
         }
     }
 
     override public function update() {
         var gameScene = cast(HXP.scene, GameScene);
         var numBossesBeaten = gameScene.numberOfBossesBeaten();
-        visible = numBossesBeaten > 0;
-        collidable = numBossesBeaten > 0;
+        visible = numBossesBeaten > 1;
+        collidable = numBossesBeaten > 1;
         super.update();
     }
 
@@ -62,10 +63,12 @@ class Dad extends NPC {
         if(dialogNumber > getHighestAvailableConversation()) {
             dialogNumber = getHighestAvailableConversation() - 1;
         }
-        if(dialogNumberToReturn > Data.read("highestDadDialogHeard", 1)) {
-            Data.write("highestDadDialogHeard", dialogNumberToReturn);
+        if(dialogNumberToReturn > Data.read("highestSisterDialogHeard", 1)) {
+            Data.write("highestSisterDialogHeard", dialogNumberToReturn);
+            trace('wrote ${dialogNumberToReturn} as highest dialog heard');
         }
         Data.save(GameScene.SAVE_FILENAME);
-        return 'dad${dialogNumberToReturn}';
+        return 'sister${dialogNumberToReturn}';
     }
 }
+

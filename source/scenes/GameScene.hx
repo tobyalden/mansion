@@ -34,12 +34,12 @@ class GameScene extends Scene
     public static var isNightmare = false;
     public static var isProcedural = false;
     public static var currentGlobalFlags(default, null):Array<String>;
-    //private static var globalFlagsAtStart:Array<String> = [];
-    private static var globalFlagsAtStart:Array<String> = [
-        "superwizardDefeated"
+    private static var globalFlagsAtStart:Array<String> = [];
+    //private static var globalFlagsAtStart:Array<String> = [
+        //"superwizardDefeated"
         //"superwizardDefeated", "ringmasterDefeated",
         //"grandjokerDefeated", "flasksobtained"
-    ];
+    //];
     public static var saveIndicator:Entity;
 
     public static function hasGlobalFlag(flag:String) {
@@ -814,6 +814,13 @@ class GameScene extends Scene
             );
             add(dad);
         }
+        for(sister in fastXml.node.objects.nodes.sister) {
+            var sister = new Sister(
+                Std.parseInt(sister.att.x),
+                Std.parseInt(sister.att.y)
+            );
+            add(sister);
+        }
         for(interactable in fastXml.node.objects.nodes.interactable) {
             var interactable = new Interactable(
                 Std.parseInt(interactable.att.x),
@@ -1114,6 +1121,7 @@ class GameScene extends Scene
         }
         else if(lastConversationName.indexOf("death") != -1) {
             cast(getInstance("dad"), Dad).onBossDeath();
+            cast(getInstance("sister"), Sister).onBossDeath();
         }
     }
 

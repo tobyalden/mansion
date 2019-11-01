@@ -27,6 +27,7 @@
 		<object name="respawn" image="respawn.png" width="16" height="16"></object>
 		<object name="butler" image="butler.png" width="16" height="16"></object>
 		<object name="dad" image="dad.png" width="10" height="18"></object>
+		<object name="sister" image="sister.png" width="14" height="16"></object>
 		<object name="stalker" image="stalker.png" width="24" height="24"></object>
 		<object name="archer" image="archer.png" width="24" height="24"></object>
 		<object name="bouncer" image="bouncer.png" width="24" height="24"></object>
