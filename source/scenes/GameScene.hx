@@ -144,8 +144,6 @@ class GameScene extends Scene
         tutorial = new Tutorial(camera);
         add(tutorial);
 
-        Key.define("restart", [Key.R]);
-        Key.define("zoomout", [Key.Q]);
         isLevelLocked = false;
         allEnemies = new Array<Entity>();
         addGraphic(new Image("graphics/fullmap.png"), 20);
@@ -493,9 +491,6 @@ class GameScene extends Scene
     }
 
     override public function update() {
-        if(Input.check("restart")) {
-            HXP.scene = new GameScene();
-        }
         var _exit = player.collide("exit", player.x, player.y);
         if(_exit != null && !pausePlayer) {
             var exit = cast(_exit, Exit);
@@ -585,18 +580,9 @@ class GameScene extends Scene
         else {
             bindCameraToLevel(currentScreenX, currentScreenY);
         }
-        if(Input.check("zoomout")) {
-            camera.x = -1700;
-            camera.y = -200;
-            camera.scale = 0.1;
-            player.visible = false;
-            viewport.visible = false;
-        }
-        else {
-            camera.scale = 1;
-            player.visible = true;
-            viewport.visible = true;
-        }
+        camera.scale = 1;
+        player.visible = true;
+        viewport.visible = true;
         onScreenBox.x = camera.x + 20;
         onScreenBox.y = camera.y + 20;
 
@@ -645,8 +631,6 @@ class GameScene extends Scene
             music[getCurrentSong()].volume = 1;
             music[getCurrentSong()].loop();
         }
-
-        debug();
     }
 
     private function loadStaticLevel(levelName:String) {
@@ -1067,24 +1051,6 @@ class GameScene extends Scene
                 }
             }
             count++;
-        }
-    }
-
-    private function debug() {
-        if(Main.inputPressed("testdialog")) {
-            //endConversation();
-        }
-        else if(Main.inputPressed("print")) {
-            //trace('isHardMode: ${isHardMode}. isNightmare: ${isNightmare}');
-            trace('screenX: ${currentScreenX}. screenY" ${currentScreenY}');
-            //for(boss in [
-                //"ringmaster", "grandfather", "superwizard", "grandjoker"
-            //]) {
-                //trace(
-                    //'${boss}
-                    //has ${cast(getInstance(boss), Enemy).health} HP
-                //');
-            //}
         }
     }
 

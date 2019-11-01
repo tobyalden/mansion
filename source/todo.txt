@@ -1,7 +1,5 @@
 MEDIUM:
-- rest of music (other boss themes, main menu?)
-- add dog
-- add sister
+- rest of music (just need two more boss themes from wyatt)
 
 SMALL:
 - remove debug controls
@@ -10,6 +8,8 @@ SMALL:
 ------------------------------------------------------------------------------
 
 FINISHED:
++ add dog
++ add sister
 + add dad
 + add dialog for grandfather
 + add buffer to boss sprites
