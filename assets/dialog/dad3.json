@@ -1,0 +1,25 @@
+{
+    "conversation": [
+        {
+            "portrait": "dad",
+            "text": "Hi Aria! How's it going?"
+        },
+        {
+            "portrait": "mc",
+            "text": "It's going okay. How's the new TV?"
+        },
+        {
+            "portrait": "dad",
+            "text": "It's great! I could watch it all day."
+        },
+        {
+            "portrait": "mc",
+            "text": "Isn't that what you're doing?"
+        },
+        {
+            "portrait": "dad",
+            "text": "Haha! Guilty as charged!"
+        }
+    ]
+}
+

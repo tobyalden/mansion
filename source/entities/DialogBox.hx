@@ -74,6 +74,8 @@ class DialogBox extends Entity
         portrait.add("grandfathermonster", [6]);
         portrait.add("dog", [7]);
         portrait.add("none", [8]);
+        portrait.add("sister", [9]);
+        portrait.add("dad", [10]);
         portrait.x = BOX_WIDTH - 150;
         portrait.y = -160;
         text = new Text(

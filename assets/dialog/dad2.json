@@ -1,0 +1,32 @@
+{
+    "conversation": [
+        {
+            "portrait": "mc",
+            "text": "So, what's the problem with the TV?"
+        },
+        {
+            "portrait": "dad",
+            "text": "I can't find the power button! I've looked everywhere!"
+        },
+        {
+            "portrait": "mc",
+            "text": "Why don't you just use the remote?"
+        },
+        {
+            "portrait": "dad",
+            "text": "Huh?"
+        },
+        {
+            "portrait": "dad",
+            "text": "Oh wow, that's a great point!"
+        },
+        {
+            "portrait": "dad",
+            "text": "Thanks Aria!"
+        },
+        {
+            "portrait": "mc",
+            "text": "I live to serve."
+        }
+    ]
+}

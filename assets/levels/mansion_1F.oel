@@ -499,5 +499,6 @@
     <interactable x="3024" y="448" width="16" height="8" dialogpath="closet"/>
     <interactable x="3064" y="456" width="8" height="8" dialogpath="mydiary"/>
     <interactable x="3048" y="456" width="8" height="8" dialogpath="chest"/>
+    <dad x="1800" y="2112"/>
   </objects>
 </level>

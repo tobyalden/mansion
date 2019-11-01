@@ -36,8 +36,9 @@ class GameScene extends Scene
     public static var currentGlobalFlags(default, null):Array<String>;
     //private static var globalFlagsAtStart:Array<String> = [];
     private static var globalFlagsAtStart:Array<String> = [
-        "superwizardDefeated", "ringmasterDefeated",
-        "grandjokerDefeated", "flasksobtained"
+        "superwizardDefeated"
+        //"superwizardDefeated", "ringmasterDefeated",
+        //"grandjokerDefeated", "flasksobtained"
     ];
     public static var saveIndicator:Entity;
 
@@ -806,6 +807,13 @@ class GameScene extends Scene
             );
             add(butler);
         }
+        for(dad in fastXml.node.objects.nodes.dad) {
+            var dad = new Dad(
+                Std.parseInt(dad.att.x),
+                Std.parseInt(dad.att.y)
+            );
+            add(dad);
+        }
         for(interactable in fastXml.node.objects.nodes.interactable) {
             var interactable = new Interactable(
                 Std.parseInt(interactable.att.x),
@@ -1103,6 +1111,9 @@ class GameScene extends Scene
             player.refillFlasks();
             addGlobalFlag("flasksobtained");
             saveGame();
+        }
+        else if(lastConversationName.indexOf("death") != -1) {
+            cast(getInstance("dad"), Dad).onBossDeath();
         }
     }
 

@@ -1,0 +1,21 @@
+{
+    "conversation": [
+        {
+            "portrait": "dad",
+            "text": "Hey Aria! You taking off?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Yeah, I think I'd better get going."
+        },
+        {
+            "portrait": "dad",
+            "text": "Well, it was great seeing you!"
+        },
+        {
+            "portrait": "mc",
+            "text": "You too, dad."
+        }
+    ]
+}
+

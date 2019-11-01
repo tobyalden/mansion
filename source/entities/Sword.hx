@@ -41,12 +41,12 @@ class Sword extends Entity {
         super.update();
     }
 
-    public function getConversationPartner():Butler {
+    public function getConversationPartner():NPC {
         var npc = collide("npc", x, y);
         if(npc == null) {
             return null;
         }
-        return cast(npc, Butler);
+        return cast(npc, NPC);
     }
 
     public function getInteractable():Interactable {

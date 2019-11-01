@@ -8,7 +8,7 @@ import haxepunk.Tween;
 import haxepunk.tweens.misc.*;
 import scenes.*;
 
-class Butler extends Entity {
+class Butler extends NPC {
     private var dialogNumber:Int;
 
     public function new(x:Float, y:Float) {
@@ -19,13 +19,12 @@ class Butler extends Entity {
         dialogNumber = GameScene.hasGlobalFlag("flasksobtained") ? 2 : 1;
     }
 
-    public function getConversation() {
+    override public function getConversation() {
         var dialogNumberToReturn = dialogNumber;
         dialogNumber++;
         if(dialogNumber > 6) {
             dialogNumber = 2;
         }
-        trace('dialog number is ${dialogNumber}. globalFlags: ${GameScene.currentGlobalFlags}');
         if(
             dialogNumberToReturn == 2
             && GameScene.hasGlobalFlag("superwizardDefeated")

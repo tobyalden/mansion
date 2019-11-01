@@ -1,0 +1,33 @@
+{
+    "conversation": [
+        {
+            "portrait": "mc",
+            "text": "Hey dad, how did you meet mom anyway?"
+        },
+        {
+            "portrait": "dad",
+            "text": "Oh, I'll never forget it!"
+        },
+        {
+            "portrait": "dad",
+            "text": "I was walking home after work one day and suddenly she appeared out of nowhere!"
+        },
+        {
+            "portrait": "dad",
+            "text": "She looked me dead in the eye and I dropped to one knee and proposed to her!"
+        },
+        {
+            "portrait": "dad",
+            "text": "I don't know what came over me!"
+        },
+        {
+            "portrait": "dad",
+            "text": "It was like magic!"
+        },
+        {
+            "portrait": "mc",
+            "text": "Haha, yeah... magic..."
+        }
+    ]
+}
+

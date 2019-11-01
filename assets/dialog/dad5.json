@@ -1,0 +1,20 @@
+{
+    "conversation": [
+        {
+            "portrait": "dad",
+            "text": "Say, have you seen your mother around?"
+        },
+        {
+            "portrait": "mc",
+            "text": "Umm... no."
+        },
+        {
+            "portrait": "dad",
+            "text": "That's funny! I wonder where she went!"
+        },
+        {
+            "portrait": "mc",
+            "text": "It's really anybody's guess."
+        }
+    ]
+}
