@@ -36,7 +36,6 @@ class GameScene extends Scene
     public static var currentGlobalFlags(default, null):Array<String>;
     private static var globalFlagsAtStart:Array<String> = [];
     //private static var globalFlagsAtStart:Array<String> = [
-        //"superwizardDefeated"
         //"superwizardDefeated", "ringmasterDefeated",
         //"grandjokerDefeated", "flasksobtained"
     //];
@@ -820,6 +819,13 @@ class GameScene extends Scene
                 Std.parseInt(sister.att.y)
             );
             add(sister);
+        }
+        for(dog in fastXml.node.objects.nodes.dog) {
+            var dog = new Dog(
+                Std.parseInt(dog.att.x),
+                Std.parseInt(dog.att.y)
+            );
+            add(dog);
         }
         for(interactable in fastXml.node.objects.nodes.interactable) {
             var interactable = new Interactable(

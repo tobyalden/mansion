@@ -501,5 +501,6 @@
     <interactable x="3048" y="456" width="8" height="8" dialogpath="chest"/>
     <dad x="1800" y="2112"/>
     <sister x="1168" y="2048"/>
+    <dog x="1880" y="1448"/>
   </objects>
 </level>
