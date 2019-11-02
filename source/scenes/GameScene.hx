@@ -251,14 +251,14 @@ class GameScene extends Scene
             "finalboss" => new Sfx("audio/finalboss.ogg"),
             "saveroom" => new Sfx("audio/saveroom.ogg"),
             "silence" => new Sfx("audio/silence.ogg"),
-            "birdsong" => new Sfx("audio/birdsong.wav")
+            "birdsong" => new Sfx("audio/birdsong.ogg")
         ];
         sfx = [
-            "bigdoor" => new Sfx("audio/bigdoor.wav")
+            "bigdoor" => new Sfx("audio/bigdoor.ogg")
         ];
         currentSong = getCurrentSong();
         isDying = false;
-        playerReviveSfx = new Sfx("audio/playerrevive.wav");
+        playerReviveSfx = new Sfx("audio/playerrevive.ogg");
         isLeavingHouse = false;
         music[currentSong].loop();
         var saveIndicatorText = new Text("GAME SAVED", {color: 0x000000});

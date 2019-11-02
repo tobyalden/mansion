@@ -44,14 +44,14 @@ class Spell extends Entity
         graphic = sprite;
         mask = new Hitbox(8, 8);
         sfx = [
-            "hit1" => new Sfx("audio/hit1.wav"),
-            "hit2" => new Sfx("audio/hit2.wav"),
-            "hit3" => new Sfx("audio/hit3.wav"),
-            "hit4" => new Sfx("audio/hit4.wav"),
-            "hitwall1" => new Sfx("audio/hitwall1.wav"),
-            "hitwall2" => new Sfx("audio/hitwall2.wav"),
-            "hitwall3" => new Sfx("audio/hitwall3.wav"),
-            "hitwall4" => new Sfx("audio/hitwall4.wav")
+            "hit1" => new Sfx("audio/hit1.ogg"),
+            "hit2" => new Sfx("audio/hit2.ogg"),
+            "hit3" => new Sfx("audio/hit3.ogg"),
+            "hit4" => new Sfx("audio/hit4.ogg"),
+            "hitwall1" => new Sfx("audio/hitwall1.ogg"),
+            "hitwall2" => new Sfx("audio/hitwall2.ogg"),
+            "hitwall3" => new Sfx("audio/hitwall3.ogg"),
+            "hitwall4" => new Sfx("audio/hitwall4.ogg")
         ];
     }
 

@@ -68,9 +68,9 @@ class Ring extends Entity {
         enrageTossRight = true;
         returnTime = RETURN_TIME;
         sfx = [
-            "ringbounce1" => new Sfx("audio/ringbounce1.wav"),
-            "ringbounce2" => new Sfx("audio/ringbounce2.wav"),
-            "ringbounce3" => new Sfx("audio/ringbounce3.wav")
+            "ringbounce1" => new Sfx("audio/ringbounce1.ogg"),
+            "ringbounce2" => new Sfx("audio/ringbounce2.ogg"),
+            "ringbounce3" => new Sfx("audio/ringbounce3.ogg")
         ];
     }
 

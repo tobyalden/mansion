@@ -50,10 +50,10 @@ class Archer extends Enemy
         spitCooldown = new Alarm(SPIT_COOLDOWN);
         addTween(spitCooldown);
         sfx = [
-            "arrowdraw" => new Sfx("audio/arrowdraw.wav"),
-            "arrowshoot1" => new Sfx("audio/arrowshoot1.wav"),
-            "arrowshoot2" => new Sfx("audio/arrowshoot2.wav"),
-            "arrowshoot3" => new Sfx("audio/arrowshoot3.wav")
+            "arrowdraw" => new Sfx("audio/arrowdraw.ogg"),
+            "arrowshoot1" => new Sfx("audio/arrowshoot1.ogg"),
+            "arrowshoot2" => new Sfx("audio/arrowshoot2.ogg"),
+            "arrowshoot3" => new Sfx("audio/arrowshoot3.ogg")
         ];
     }
 

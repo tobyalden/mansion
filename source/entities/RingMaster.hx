@@ -248,14 +248,14 @@ class RingMaster extends Enemy
         isEndingEnragePhase = false;
 
         sfx = [
-            "ringtoss1" => new Sfx("audio/ringtoss1.wav"),
-            "ringtoss2" => new Sfx("audio/ringtoss2.wav"),
-            "ringtoss3" => new Sfx("audio/ringtoss3.wav"),
-            "ringreturn" => new Sfx("audio/ringreturn.wav"),
-            "scattershot1" => new Sfx("audio/scattershot1.wav"),
-            "scattershot2" => new Sfx("audio/scattershot2.wav"),
-            "scattershot3" => new Sfx("audio/scattershot3.wav"),
-            "enrage" => new Sfx("audio/enrage.wav")
+            "ringtoss1" => new Sfx("audio/ringtoss1.ogg"),
+            "ringtoss2" => new Sfx("audio/ringtoss2.ogg"),
+            "ringtoss3" => new Sfx("audio/ringtoss3.ogg"),
+            "ringreturn" => new Sfx("audio/ringreturn.ogg"),
+            "scattershot1" => new Sfx("audio/scattershot1.ogg"),
+            "scattershot2" => new Sfx("audio/scattershot2.ogg"),
+            "scattershot3" => new Sfx("audio/scattershot3.ogg"),
+            "enrage" => new Sfx("audio/enrage.ogg")
         ];
         fightStarted = GameScene.hasGlobalFlag("ringMasterFightStarted");
     }

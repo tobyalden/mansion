@@ -45,9 +45,9 @@ class SuperWizardLaser extends Entity {
         });
         addTween(turnOffTimer);
         sfx = [
-            "laser" => new Sfx("audio/laser.wav"),
-            "laserwarmup" => new Sfx("audio/laserwarmup.wav"),
-            "lasercooldown" => new Sfx("audio/lasercooldown.wav")
+            "laser" => new Sfx("audio/laser.ogg"),
+            "laserwarmup" => new Sfx("audio/laserwarmup.ogg"),
+            "lasercooldown" => new Sfx("audio/lasercooldown.ogg")
         ];
         isOn = false;
     }

@@ -47,9 +47,9 @@ class Follower extends Enemy {
         });
         addTween(locationRecorder);
         //sfx = [
-            //"bounce1" => new Sfx("audio/bounce1.wav"),
-            //"bounce2" => new Sfx("audio/bounce2.wav"),
-            //"bounce3" => new Sfx("audio/bounce3.wav"),
+            //"bounce1" => new Sfx("audio/bounce1.ogg"),
+            //"bounce2" => new Sfx("audio/bounce2.ogg"),
+            //"bounce3" => new Sfx("audio/bounce3.ogg"),
         //];
     }
 

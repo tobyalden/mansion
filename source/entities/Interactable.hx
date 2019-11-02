@@ -20,7 +20,7 @@ class Interactable extends Entity {
         type = "interactable";
         mask = new Hitbox(width, height);
         sfx = [
-            "doorlocked" => new Sfx("audio/doorlocked.wav")
+            "doorlocked" => new Sfx("audio/doorlocked.ogg")
         ];
     }
 

@@ -74,8 +74,8 @@ class Outro extends Scene
         outroText.y = cutscene.y + 220;
         //addGraphic(outroText);
         sfx = [
-            "outro" => new Sfx("audio/intro.wav"),
-            "flowers" => new Sfx("audio/flowers.wav"),
+            "outro" => new Sfx("audio/intro.ogg"),
+            "flowers" => new Sfx("audio/flowers.ogg"),
         ];
         sfx["outro"].play();
         sfx["flowers"].play();

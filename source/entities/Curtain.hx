@@ -29,7 +29,7 @@ class Curtain extends Entity
         fadeSpeed = FADE_SPEED;
         followCamera = sceneCamera;
         sfx = [
-            "flash" => new Sfx("audio/flash.wav")
+            "flash" => new Sfx("audio/flash.ogg")
         ];
     }
 

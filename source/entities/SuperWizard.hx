@@ -85,14 +85,14 @@ class SuperWizard extends Enemy
     private var enrageNextPhase:Bool;
 
     public var sfx:Map<String, Sfx> = [
-        "enrage" => new Sfx("audio/enrage.wav"),
-        "bigshot1" => new Sfx("audio/bigshot1.wav"),
-        "bigshot2" => new Sfx("audio/bigshot2.wav"),
-        "bigshot3" => new Sfx("audio/bigshot3.wav"),
-        "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
-        "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
-        "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
-        "flurry" => new Sfx("audio/flurry.wav")
+        "enrage" => new Sfx("audio/enrage.ogg"),
+        "bigshot1" => new Sfx("audio/bigshot1.ogg"),
+        "bigshot2" => new Sfx("audio/bigshot2.ogg"),
+        "bigshot3" => new Sfx("audio/bigshot3.ogg"),
+        "rippleattack1" => new Sfx("audio/rippleattack1.ogg"),
+        "rippleattack2" => new Sfx("audio/rippleattack2.ogg"),
+        "rippleattack3" => new Sfx("audio/rippleattack3.ogg"),
+        "flurry" => new Sfx("audio/flurry.ogg")
     ];
 
     public function new(startX:Float, startY:Float) {

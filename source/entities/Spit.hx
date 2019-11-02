@@ -43,10 +43,10 @@ class Spit extends Entity
         sprite.y = -(sprite.height - size) / 2;
         graphic = sprite;
         sfx = [
-            "hitwall1" => new Sfx("audio/hitwall1.wav"),
-            "hitwall2" => new Sfx("audio/hitwall2.wav"),
-            "hitwall3" => new Sfx("audio/hitwall3.wav"),
-            "hitwall4" => new Sfx("audio/hitwall4.wav")
+            "hitwall1" => new Sfx("audio/hitwall1.ogg"),
+            "hitwall2" => new Sfx("audio/hitwall2.ogg"),
+            "hitwall3" => new Sfx("audio/hitwall3.ogg"),
+            "hitwall4" => new Sfx("audio/hitwall4.ogg")
         ];
     }
 

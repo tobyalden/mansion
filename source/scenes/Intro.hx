@@ -68,7 +68,7 @@ class Intro extends Scene
         introText.y = cutscene.y + 220;
         addGraphic(introText);
         sfx = [
-            "intro" => new Sfx("audio/intro.wav"),
+            "intro" => new Sfx("audio/intro.ogg"),
         ];
         sfx["intro"].play();
         add(curtain);

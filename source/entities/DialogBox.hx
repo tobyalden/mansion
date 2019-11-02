@@ -54,10 +54,10 @@ class DialogBox extends Entity
     public function new(sceneCamera:Camera) {
         super();
         sfx = [
-            "type1" => new Sfx("audio/type1.wav"),
-            "type2" => new Sfx("audio/type2.wav"),
-            "type3" => new Sfx("audio/type3.wav"),
-            "typenext" => new Sfx("audio/typenext.wav")
+            "type1" => new Sfx("audio/type1.ogg"),
+            "type2" => new Sfx("audio/type2.ogg"),
+            "type3" => new Sfx("audio/type3.ogg"),
+            "typenext" => new Sfx("audio/typenext.ogg")
         ];
         layer = -99;
         followCamera = sceneCamera;

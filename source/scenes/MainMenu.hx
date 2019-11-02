@@ -114,15 +114,15 @@ class MainMenu extends Scene
         atDifficultyMenu = false;
         fadeTweens = new Array<Tween>();
         sfx = [
-            "start" => new Sfx("audio/start.wav"),
-            "continue" => new Sfx("audio/continue.wav"),
-            "select1" => new Sfx("audio/select1.wav"),
-            "select2" => new Sfx("audio/select2.wav"),
-            "select3" => new Sfx("audio/select3.wav"),
-            "cantselect" => new Sfx("audio/cantselect.wav"),
-            "back" => new Sfx("audio/back.wav"),
+            "start" => new Sfx("audio/start.ogg"),
+            "continue" => new Sfx("audio/continue.ogg"),
+            "select1" => new Sfx("audio/select1.ogg"),
+            "select2" => new Sfx("audio/select2.ogg"),
+            "select3" => new Sfx("audio/select3.ogg"),
+            "cantselect" => new Sfx("audio/cantselect.ogg"),
+            "back" => new Sfx("audio/back.ogg"),
             //"mainmenu" => new Sfx("audio/mainmenu.ogg"),
-            "laugh" => new Sfx("audio/laugh.wav")
+            "laugh" => new Sfx("audio/laugh.ogg")
         ];
         //sfx["mainmenu"].loop();
     }    

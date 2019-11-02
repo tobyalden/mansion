@@ -24,7 +24,7 @@ class Exit extends Entity {
         //graphic = new ColoredRect(width, height, 0x0000FF);
         mask = new Hitbox(width, height);
         if(sfxName != "") {
-            sfx = new Sfx('audio/${sfxName}.wav');
+            sfx = new Sfx('audio/${sfxName}.ogg');
         }
     }
 

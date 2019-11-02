@@ -49,9 +49,9 @@ class Booster extends Enemy {
 
         health = 4;
         sfx = [
-            "boost1" => new Sfx("audio/boost1.wav"),
-            "boost2" => new Sfx("audio/boost2.wav"),
-            "boost3" => new Sfx("audio/boost3.wav"),
+            "boost1" => new Sfx("audio/boost1.ogg"),
+            "boost2" => new Sfx("audio/boost2.ogg"),
+            "boost3" => new Sfx("audio/boost3.ogg"),
         ];
     }
 

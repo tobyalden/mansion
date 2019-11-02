@@ -34,7 +34,7 @@ class Credits extends Scene
         postCreditsRevealed = false;
         sfx = [
             "ending" => new Sfx("audio/ending.ogg"),
-            "postcredits" => new Sfx("audio/postcredits.wav")
+            "postcredits" => new Sfx("audio/postcredits.ogg")
         ];
         sfx["ending"].play();
     }

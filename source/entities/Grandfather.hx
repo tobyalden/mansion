@@ -52,15 +52,15 @@ class Grandfather extends Enemy
     public static inline var ENRAGE_CHARGE_TIME = 1;
 
     public var sfx:Map<String, Sfx> = [
-        "enrage" => new Sfx("audio/enrage.wav"),
-        "charge" => new Sfx("audio/charge.wav"),
-        "rippleattack1" => new Sfx("audio/rippleattack1.wav"),
-        "rippleattack2" => new Sfx("audio/rippleattack2.wav"),
-        "rippleattack3" => new Sfx("audio/rippleattack3.wav"),
-        "bigshot1" => new Sfx("audio/bigshot1.wav"),
-        "bigshot2" => new Sfx("audio/bigshot2.wav"),
-        "bigshot3" => new Sfx("audio/bigshot3.wav"),
-        "flurry" => new Sfx("audio/flurry.wav")
+        "enrage" => new Sfx("audio/enrage.ogg"),
+        "charge" => new Sfx("audio/charge.ogg"),
+        "rippleattack1" => new Sfx("audio/rippleattack1.ogg"),
+        "rippleattack2" => new Sfx("audio/rippleattack2.ogg"),
+        "rippleattack3" => new Sfx("audio/rippleattack3.ogg"),
+        "bigshot1" => new Sfx("audio/bigshot1.ogg"),
+        "bigshot2" => new Sfx("audio/bigshot2.ogg"),
+        "bigshot3" => new Sfx("audio/bigshot3.ogg"),
+        "flurry" => new Sfx("audio/flurry.ogg")
     ];
 
     public var isDying(default, null):Bool;

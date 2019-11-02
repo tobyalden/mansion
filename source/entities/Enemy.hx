@@ -46,9 +46,9 @@ class Enemy extends Entity
         tweens = new Array<Tween>();
         velocity = new Vector2();
         universalSfx = [
-            "death1" => new Sfx("audio/robotdeath1.wav"),
-            "death2" => new Sfx("audio/robotdeath2.wav"),
-            "death3" => new Sfx("audio/robotdeath3.wav")
+            "death1" => new Sfx("audio/robotdeath1.ogg"),
+            "death2" => new Sfx("audio/robotdeath2.ogg"),
+            "death3" => new Sfx("audio/robotdeath3.ogg")
         ];
         age = 0;
         isDead = false;
