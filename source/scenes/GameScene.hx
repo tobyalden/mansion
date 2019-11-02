@@ -102,6 +102,9 @@ class GameScene extends Scene
     private var music:Map<String, Sfx>;
     private var sfx:Map<String, Sfx>;
 
+    public function isInRoom() {
+        return currentScreenX == 9 && currentScreenY == 1;
+    }
 
     public function isInGrass() {
         return (
@@ -244,17 +247,16 @@ class GameScene extends Scene
             "mansion2" => new Sfx("audio/mansion2.ogg"),
             "mansion3" => new Sfx("audio/mansion3.ogg"),
             "mansion4" => new Sfx("audio/mansion4.ogg"),
-            "superwizardfight" => new Sfx("audio/superwizardfight.ogg"),
-            "ringmasterfight" => new Sfx("audio/ringmasterfight.ogg"),
-            "grandjokerfight" => new Sfx("audio/grandjokerfight.ogg"),
-            "grandfatherfight" => new Sfx("audio/grandfatherfight.ogg"),
+            "boss" => new Sfx("audio/boss.ogg"),
+            "finalboss" => new Sfx("audio/finalboss.ogg"),
+            "saveroom" => new Sfx("audio/saveroom.ogg"),
             "silence" => new Sfx("audio/silence.ogg"),
             "birdsong" => new Sfx("audio/birdsong.wav")
         ];
         sfx = [
             "bigdoor" => new Sfx("audio/bigdoor.wav")
         ];
-        currentSong = "mansion1";
+        currentSong = getCurrentSong();
         isDying = false;
         playerReviveSfx = new Sfx("audio/playerrevive.wav");
         isLeavingHouse = false;
@@ -290,12 +292,20 @@ class GameScene extends Scene
                     && !hasGlobalFlag('${boss}Defeated')
                     && !isDying
                 ) {
-                    return '${boss}fight';
+                    if(boss == "grandfather") {
+                        return 'finalboss';
+                    }
+                    else {
+                        return 'boss';
+                    }
                 }
                 else {
                     return "silence";
                 }
             }
+        }
+        if(isInRoom()) {
+            return "saveroom";
         }
         if(isInGrass()) {
             return "birdsong";

@@ -2,12 +2,12 @@ MEDIUM:
 - rest of music (just need two more boss themes from wyatt)
 
 SMALL:
-- remove debug controls
 - make web build
 
 ------------------------------------------------------------------------------
 
 FINISHED:
++ remove debug controls
 + add dog
 + add sister
 + add dad

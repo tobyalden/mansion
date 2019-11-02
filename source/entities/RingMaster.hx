@@ -97,7 +97,6 @@ class RingMaster extends Enemy
             ? Std.int(STARTING_HEALTH * GameScene.NIGHTMARE_HEALTH_MULTIPLIER)
             : STARTING_HEALTH
         );
-        health = 1;
 
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
