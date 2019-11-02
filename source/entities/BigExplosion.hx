@@ -31,7 +31,7 @@ class BigExplosion extends Entity {
         });
         graphic = sprite;
         sfx = new Sfx(
-            'audio/bossexplode${HXP.choose(1, 2, 3, 4, 5, 6, 7)}.wav'
+            'audio/bossexplode${HXP.choose(1, 2, 3, 4, 5, 6, 7)}.ogg'
         );
         if(Math.random() > 0.6) {
             sfx.play();

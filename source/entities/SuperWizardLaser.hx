@@ -58,14 +58,14 @@ class SuperWizardLaser extends Entity {
 
     public function turnOn() {
         sprite.play("warmingup");
-        if(!cast(scene, GameScene).isDying) {
+        if(!cast(HXP.scene, GameScene).isDying) {
             sfx["laserwarmup"].play();
         }
         warmUpTimer.start(); 
     }
 
     public function turnOff() {
-        if(!cast(scene, GameScene).isDying) {
+        if(!cast(HXP.scene, GameScene).isDying) {
             sfx["lasercooldown"].play();
         }
         sfx["laser"].stop();
@@ -79,7 +79,7 @@ class SuperWizardLaser extends Entity {
         if(
             isOn
             && !sfx["laser"].playing
-            && !cast(scene, GameScene).isDying
+            && !cast(HXP.scene, GameScene).isDying
             && !wizard.stopActing
         ) {
             sfx["laser"].loop();
