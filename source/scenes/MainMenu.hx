@@ -156,6 +156,7 @@ class MainMenu extends Scene
                 else if(atDifficultyMenu) {
                     if(Main.inputPressed("roll")) {
                         Data.clear();
+                        GameScene.resetGlobalFlags();
                         if(selected == 0) {
                             GameScene.isHardMode = false;
                             GameScene.isNightmare = false;
@@ -169,6 +170,7 @@ class MainMenu extends Scene
                             GameScene.isNightmare = true;
                             sfx["laugh"].play();
                         }
+                        Data.write("globalFlags", []);
                         Data.write("saveGameExists", true);
                         Data.write("isHardMode", GameScene.isHardMode);
                         Data.write("isNightmare", GameScene.isNightmare);

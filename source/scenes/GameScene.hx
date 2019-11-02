@@ -34,12 +34,16 @@ class GameScene extends Scene
     public static var isNightmare = false;
     public static var isProcedural = false;
     public static var currentGlobalFlags(default, null):Array<String>;
-    private static var globalFlagsAtStart:Array<String> = [];
+    public static var globalFlagsAtStart:Array<String> = [];
     //private static var globalFlagsAtStart:Array<String> = [
         //"superwizardDefeated", "ringmasterDefeated",
         //"grandjokerDefeated", "flasksobtained"
     //];
     public static var saveIndicator:Entity;
+
+    public static function resetGlobalFlags() {
+        currentGlobalFlags = new Array<String>();
+    }
 
     public static function hasGlobalFlag(flag:String) {
         return currentGlobalFlags.indexOf(flag) != -1;
