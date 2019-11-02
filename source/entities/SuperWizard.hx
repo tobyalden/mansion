@@ -464,6 +464,7 @@ class SuperWizard extends Enemy
         stopSfx();
         bigExplosionSpawner.start();
         clearHazards();
+        scene.remove(laser);
         isDying = true;
         collidable = false;
         var gameScene = cast(scene, GameScene);

@@ -260,6 +260,9 @@ class Enemy extends Entity
             if(Type.getClass(hazard) == Ring) {
                 continue;
             }
+            if(Type.getClass(hazard) == SuperWizardLaser) {
+                continue;
+            }
             if(Type.getClass(hazard) == Spit) {
                 cast(hazard, Spit).destroy();
             }
