@@ -233,8 +233,7 @@ class MainMenu extends Scene
         var sceneChanger = new Alarm(2);
         sceneChanger.onComplete.bind(function() {
             if(playIntro) {
-                //HXP.scene = new Intro();
-                HXP.scene = new GameScene();
+                HXP.scene = new Intro();
             }
             else {
                 HXP.scene = new GameScene();
