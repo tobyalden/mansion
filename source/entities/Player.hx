@@ -202,6 +202,13 @@ class Player extends Entity
         addTween(healTimer);
     }
 
+    public function refillFlasksAndHealth() {
+        if(GameScene.hasGlobalFlag("flasksobtained")) {
+            refillFlasks();
+        }
+        health = maxHealth;
+    }
+
     public function refillFlasks() {
         flaskCount = (
             GameScene.isHardMode ?

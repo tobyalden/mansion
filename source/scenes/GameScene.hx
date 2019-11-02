@@ -1108,6 +1108,7 @@ class GameScene extends Scene
         else if(lastConversationName.indexOf("death") != -1) {
             cast(getInstance("dad"), Dad).onBossDeath();
             cast(getInstance("sister"), Sister).onBossDeath();
+            player.refillFlasksAndHealth();
         }
     }
 
