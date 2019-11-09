@@ -433,6 +433,7 @@ class RingMaster extends Enemy
             }
             else if(atPhaseLocation()) {
                 betweenPhases = false;
+                isEndingEnragePhase = false;
             }
             else {
                 if(!phaseRelocater.active) {
