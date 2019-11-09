@@ -73,6 +73,9 @@ class Viewport extends Entity
             else if(bossName == "grandjoker") {
                 startingHealth = GrandJoker.STARTING_HEALTH;
             }
+            else if(bossName == "nymph") {
+                startingHealth = Nymph.STARTING_HEALTH;
+            }
             else {
                 startingHealth = Grandfather.STARTING_HEALTH;
             }

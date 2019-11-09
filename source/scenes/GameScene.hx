@@ -276,7 +276,9 @@ class GameScene extends Scene
     }
 
     public function getCurrentBossName() {
-        for(boss in ["superwizard", "ringmaster", "grandjoker", "grandfather"]) {
+        for(boss in [
+            "superwizard", "ringmaster", "grandjoker", "grandfather", "nymph"
+        ]) {
             if(
                 isPlayerOnSameScreenAsBoss(boss)
                 && cast(getInstance(boss), Enemy).fightStarted
@@ -289,7 +291,9 @@ class GameScene extends Scene
     }
 
     public function getCurrentSong() {
-        for(boss in ["superwizard", "ringmaster", "grandjoker", "grandfather"]) {
+        for(boss in [
+            "superwizard", "ringmaster", "grandjoker", "grandfather", "nymph"
+        ]) {
             if(isPlayerOnSameScreenAsBoss(boss)) {
                 if(
                     cast(getInstance(boss), Enemy).fightStarted
@@ -797,6 +801,16 @@ class GameScene extends Scene
             );
             allEnemies.push(grandfather);
         }
+        for(nymph in fastXml.node.objects.nodes.nymph) {
+            if(hasGlobalFlag("nymphDefeated")) {
+                break;
+            }
+            var nymph = new Nymph(
+                Std.parseInt(nymph.att.x),
+                Std.parseInt(nymph.att.y)
+            );
+            allEnemies.push(nymph);
+        }
         for(butler in fastXml.node.objects.nodes.butler) {
             var butler = new Butler(
                 Std.parseInt(butler.att.x),
@@ -1095,6 +1109,9 @@ class GameScene extends Scene
         }
         else if(lastConversationName == "grandjoker") {
             cast(getInstance("grandjoker"), Enemy).setFightStarted(true);
+        }
+        else if(lastConversationName == "nymph") {
+            cast(getInstance("nymph"), Enemy).setFightStarted(true);
         }
         else if(lastConversationName == "grandfather") {
             cast(getInstance("grandfather"), Enemy).setFightStarted(true);

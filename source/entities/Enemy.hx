@@ -63,7 +63,6 @@ class Enemy extends Entity
             scene.add(new BigExplosion(this));
         });
         addTween(bigExplosionSpawner);
-        bigExplosionSpawner.start();
         fightStarted = false;
     }
 

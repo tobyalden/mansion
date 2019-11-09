@@ -6,6 +6,9 @@
   </walls>
   <smallwalls>
     <rect x="48" y="1344" w="12" h="8"/>
+    <rect x="320" y="2560" w="320" h="4"/>
+    <rect x="320" y="2564" w="8" h="320"/>
+    <rect x="328" y="2872" w="312" h="12"/>
     <rect x="416" y="1308" w="32" h="60"/>
     <rect x="432" y="1368" w="16" h="136"/>
     <rect x="448" y="1488" w="80" h="16"/>
@@ -17,6 +20,7 @@
     <rect x="512" y="1484" w="16" h="4"/>
     <rect x="524" y="1412" w="4" h="20"/>
     <rect x="528" y="1424" w="56" h="8"/>
+    <rect x="632" y="2564" w="8" h="308"/>
     <rect x="640" y="964" w="316" h="8"/>
     <rect x="640" y="972" w="16" h="304"/>
     <rect x="656" y="1264" w="128" h="12"/>
@@ -350,6 +354,7 @@
     <room x="640" y="1280" width="320" height="320" alwaysLock="false" neverLock="false"/>
     <room x="640" y="960" width="320" height="320" alwaysLock="false" neverLock="false"/>
     <fullmap x="0" y="0"/>
+    <room x="320" y="2560" width="320" height="320" alwaysLock="false" neverLock="false"/>
   </rooms>
   <objects>
     <exit x="3024" y="512" width="32" height="16" sfx="smalldoor">
@@ -435,8 +440,8 @@
     <ringmaster x="800" y="1120"/>
     <grandjoker x="2400" y="160"/>
     <butler x="1440" y="2080"/>
-    <player x="1432" y="2336"/>
-    <respawn x="3016" y="472"/>
+    <player x="424" y="2816"/>
+    <respawn x="512" y="2824"/>
     <piano x="1344" y="2048"/>
     <interactable x="1696" y="2160" width="24" height="8" dialogpath="fireplace"/>
     <interactable x="1432" y="1952" width="32" height="8" dialogpath="familyportrait"/>
@@ -502,5 +507,6 @@
     <dad x="1800" y="2112"/>
     <sister x="1168" y="2048"/>
     <dog x="1880" y="1448"/>
+    <nymph x="480" y="2720"/>
   </objects>
 </level>
