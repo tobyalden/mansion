@@ -32,14 +32,14 @@ class GrandJoker extends Enemy
 
     public static inline var CURTAIN_SHOT_SPEED = 80;
     public static inline var CURTAIN_SHOT_INTERVAL = 2;
-    public static inline var ENRAGE_CURTAIN_SHOT_INTERVAL = 1;
+    public static inline var ENRAGE_CURTAIN_SHOT_INTERVAL = 1.25;
     public static inline var CURTAIN_BARRIER_SHOT_SPEED = 160;
 
     public static inline var CIRCLE_PERIMETER_TIME = 10;
     public static inline var ENRAGED_CIRCLE_PERIMETER_TIME = 7.5;
     public static inline var CIRCLE_SHOT_SPEED = 80;
 
-    public static inline var ENRAGE_SHOT_INTERVAL = 0.02;
+    public static inline var ENRAGE_SHOT_INTERVAL = 0.025;
     public static inline var ENRAGE_SHOT_SPEED = 100;
     public static inline var ENRAGE_SINGLE_ROTATION_DURATION = 10;
 
@@ -120,7 +120,6 @@ class GrandJoker extends Enemy
         addTween(phaseRelocater);
 
         currentPhase = HXP.choose("clock", "curtain", "circle");
-        currentPhase = "curtain";
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
