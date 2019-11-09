@@ -510,6 +510,35 @@ class Grandfather extends Enemy
         scene.add(new Spit(
             this, shotVector, TENTACLE_SHOT_SPEED, false, accel
         ));
+
+        // Barrier
+        shotVector = new Vector2(1, (Math.random() - 0.5) / 1.5);
+        var shotSpeed = Math.max(
+            GrandJoker.CURTAIN_BARRIER_SHOT_SPEED * Math.random(),
+            GrandJoker.CURTAIN_BARRIER_SHOT_SPEED / 4
+        );
+        scene.add(new Spit(this, shotVector, shotSpeed, false));
+        shotVector = new Vector2(-1, (Math.random() - 0.5) / 1.5);
+        scene.add(new Spit(this, shotVector, shotSpeed, false));
+        shotVector = new Vector2(1, (Math.random() - 0.8));
+        scene.add(new Spit(this, shotVector, shotSpeed, false));
+        shotVector = new Vector2(-1, (Math.random() - 0.8));
+        scene.add(new Spit(this, shotVector, shotSpeed, false));
+
+        shotVector = new Vector2(1, 0.3);
+        var spit = new Spit(
+            this, shotVector, GrandJoker.CURTAIN_BARRIER_SHOT_SPEED, false
+        );
+        scene.add(spit);
+
+        shotVector = new Vector2(-1, 0.3);
+        spit = new Spit(
+            this, shotVector, GrandJoker.CURTAIN_BARRIER_SHOT_SPEED, false
+        );
+        scene.add(spit);
+
+        shotVector = new Vector2((Math.random() - 0.5) * 1.2, -1);
+        scene.add(new Spit(this, shotVector, shotSpeed, false));
     }
 
     private function enrageShot() {
