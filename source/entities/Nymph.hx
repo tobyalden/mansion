@@ -17,31 +17,32 @@ class Nymph extends Enemy
 {
     public static inline var SIZE = 80;
 
+    public static inline var SPIRAL_SHOT_SPEED = 92.5;
+    public static inline var SPIRAL_TURN_RATE = 1;
+    public static inline var SPIRAL_BULLETS_PER_SHOT = 4;
+    public static inline var SPIRAL_SHOT_INTERVAL = 0.05;
+
+    public static inline var RIPPLE_SHOT_SPEED = 100;
+    public static inline var RIPPLE_SHOT_SPREAD = 15;
+    public static inline var RIPPLE_SHOT_INTERVAL = 2.7;
+    public static inline var ENRAGED_RIPPLE_SHOT_INTERVAL = 1.8;
+    public static inline var RIPPLE_BULLETS_PER_SHOT = 200;
+
     public static inline var PRE_ENRAGE_TIME = 2;
     public static inline var PRE_PHASE_ADVANCE_TIME = 2;
     public static inline var PHASE_TRANSITION_TIME = 2;
     public static inline var ENRAGED_PHASE_TRANSITION_TIME = 1.33;
-    public static inline var PHASE_DURATION = 12.5;
-    public static inline var ENRAGE_PHASE_DURATION = 10;
+    public static inline var PHASE_DURATION = 60;
+    public static inline var ENRAGE_PHASE_DURATION = 8;
     public static inline var CURTAIN_PHASE_DURATION_MULTIPLIER = 1.5;
 
     public static inline var STARTING_HEALTH = 200;
     public static inline var ENRAGE_THRESHOLD = 40;
 
-    public static inline var CLOCK_SHOT_SPEED = 108;
+    private var spiralShotInterval:Alarm;
+    private var spiralShotStartAngle:Float;
 
-    public static inline var CURTAIN_SHOT_SPEED = 80;
-    public static inline var CURTAIN_SHOT_INTERVAL = 2;
-    public static inline var ENRAGE_CURTAIN_SHOT_INTERVAL = 1.25;
-    public static inline var CURTAIN_BARRIER_SHOT_SPEED = 160;
-
-    public static inline var CIRCLE_PERIMETER_TIME = 10;
-    public static inline var ENRAGED_CIRCLE_PERIMETER_TIME = 7.5;
-    public static inline var CIRCLE_SHOT_SPEED = 80;
-
-    public static inline var ENRAGE_SHOT_INTERVAL = 0.025;
-    public static inline var ENRAGE_SHOT_SPEED = 100;
-    public static inline var ENRAGE_SINGLE_ROTATION_DURATION = 10;
+    private var rippleShotInterval:Alarm;
 
     public var sfx:Map<String, Sfx> = [
         "enrage" => new Sfx("audio/enrage.ogg"),
@@ -68,16 +69,6 @@ class Nymph extends Enemy
     private var isEnraged:Bool;
     private var enrageNextPhase:Bool;
     private var stopActing:Bool;
-
-    private var clockShotTimer:Alarm;
-
-    private var curtainShotTimer:Alarm;
-    private var curtainBarrierShotTimer:Alarm;
-
-    private var circlePerimeter:LinearPath;
-    private var circleShotTimer:Alarm;
-
-    private var enrageShotTimer:Alarm;
 
     private var hitbox:Hitbox;
 
@@ -109,6 +100,23 @@ class Nymph extends Enemy
             : STARTING_HEALTH
         );
 
+        spiralShotInterval = new Alarm(
+            SPIRAL_SHOT_INTERVAL, TweenType.Looping
+        );
+        spiralShotInterval.onComplete.bind(function() {
+            spiralShot();
+        });
+        addTween(spiralShotInterval);
+        spiralShotStartAngle = 0;
+
+        rippleShotInterval = new Alarm(
+            RIPPLE_SHOT_INTERVAL, TweenType.Looping
+        );
+        rippleShotInterval.onComplete.bind(function() {
+            rippleShot();
+        });
+        addTween(rippleShotInterval);
+
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
@@ -119,7 +127,7 @@ class Nymph extends Enemy
         phaseRelocater = new LinearMotion();
         addTween(phaseRelocater);
 
-        currentPhase = HXP.choose("clock", "curtain", "circle");
+        currentPhase = HXP.choose("wheel");
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -133,44 +141,12 @@ class Nymph extends Enemy
         });
         addTween(preAdvancePhaseTimer);
 
-        clockShotTimer = new Alarm(0.025, TweenType.Looping);
-        clockShotTimer.onComplete.bind(function() {
-            clockShot();
-        });
-        addTween(clockShotTimer);
-
-        curtainShotTimer = new Alarm(CURTAIN_SHOT_INTERVAL, TweenType.Looping);
-        curtainShotTimer.onComplete.bind(function() {
-            curtainShot();
-        });
-        addTween(curtainShotTimer);
-
-        curtainBarrierShotTimer = new Alarm(0.05, TweenType.Looping);
-        curtainBarrierShotTimer.onComplete.bind(function() {
-            curtainBarrierShot();
-            sprite.play("shoot");
-        });
-        addTween(curtainBarrierShotTimer);
-
-        circleShotTimer = new Alarm(0.015, TweenType.Looping);
-        circleShotTimer.onComplete.bind(function() {
-            circleShot();
-        });
-        addTween(circleShotTimer);
-
         preEnrage = new Alarm(PRE_ENRAGE_TIME);
         preEnrage.onComplete.bind(function() {
             age = 0;
-            enrageShotTimer.start();
             sprite.play("shoot");
         });
         addTween(preEnrage);
-
-        enrageShotTimer = new Alarm(ENRAGE_SHOT_INTERVAL, TweenType.Looping);
-        enrageShotTimer.onComplete.bind(function() {
-            enrageShot();
-        });
-        addTween(enrageShotTimer);
 
         fightStarted = GameScene.hasGlobalFlag("nymphFightStarted");
     }
@@ -182,38 +158,10 @@ class Nymph extends Enemy
 
     private function generatePhaseLocations() {
         phaseLocations = [
-            "clock" => new Vector2(screenCenter.x, screenCenter.y),
-            "curtain" => new Vector2(screenCenter.x, screenCenter.y - 95),
-            // circle is set below
-            "enrage" => new Vector2(screenCenter.x, screenCenter.y)
+            "wheel" => new Vector2(screenCenter.x, screenCenter.y),
+            //"curtain" => new Vector2(screenCenter.x, screenCenter.y - 95),
+            "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95)
         ];
-        circlePerimeter = new LinearPath();
-        var perimeterPoints = [
-            new Vector2(screenCenter.x - 95, screenCenter.y - 95),
-            new Vector2(screenCenter.x + 95, screenCenter.y - 95),
-            new Vector2(screenCenter.x + 95, screenCenter.y + 95),
-            new Vector2(screenCenter.x - 95, screenCenter.y + 95)
-        ];
-        if(Math.random() > 0.5) {
-            perimeterPoints.reverse();
-        }
-        var pointCount = 0;
-        var startCount = HXP.choose(0, 1, 2, 3);
-        var startPoint = perimeterPoints[
-            (startCount + pointCount) % perimeterPoints.length
-        ];
-        phaseLocations["circle"] = new Vector2(startPoint.x, startPoint.y);
-        while(pointCount < 5) {
-            var point = perimeterPoints[
-                (startCount + pointCount) % perimeterPoints.length
-            ];
-            circlePerimeter.addPoint(point.x, point.y);
-            pointCount++;
-        }
-        circlePerimeter.onComplete.bind(function() {
-            preAdvancePhase();
-        });
-        addTween(circlePerimeter);
     }
 
     private function preAdvancePhase() {
@@ -240,9 +188,6 @@ class Nymph extends Enemy
             if(!GameScene.isNightmare) {
                 allPhases.remove("enrage");
             }
-            if(currentPhase == "enrage") {
-                allPhases.remove("clock");
-            }
             currentPhase = allPhases[
                 Std.int(Math.floor(Math.random() * allPhases.length))
             ];
@@ -262,7 +207,6 @@ class Nymph extends Enemy
             sprite.play("dying");
             if(!gameScene.pausePlayer) {
                 isDead = true;
-                //scene.remove(this);
                 bigExplosionSpawner.cancel();
                 visible = false;
                 collidable = false;
@@ -308,196 +252,73 @@ class Nymph extends Enemy
                 moveTo(phaseRelocater.x, phaseRelocater.y);
             }
         }
-        else if(currentPhase == "clock") {
-            if(!clockShotTimer.active) {
-                if(!sfx["flurry"].playing && !stopActing) {
-                    sfx["flurry"].loop();
-                }
-                sprite.play("shoot");
-                phaseTimer.reset(
-                    isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION
-                );
-                clockShotTimer.start();
-                age = Math.random() * Math.PI * 2;
-            }
-        }
-        else if(currentPhase == "curtain") {
-            if(!curtainShotTimer.active) {
-                phaseTimer.reset(
-                    (isEnraged ? ENRAGE_PHASE_DURATION : PHASE_DURATION)
-                    * CURTAIN_PHASE_DURATION_MULTIPLIER
-                );
-                curtainShotTimer.reset(
+        else if(currentPhase == "wheel") {
+            if(!spiralShotInterval.active) {
+                spiralShotInterval.start();
+                spiralShotStartAngle = getAngleTowardsPlayer();
+                age = Math.PI * 1.5;
+
+                rippleShotInterval.reset(
                     isEnraged ?
-                    ENRAGE_CURTAIN_SHOT_INTERVAL : CURTAIN_SHOT_INTERVAL
+                    ENRAGED_RIPPLE_SHOT_INTERVAL
+                    : RIPPLE_SHOT_INTERVAL
                 );
-                curtainBarrierShotTimer.start();
-                age = Math.random() * Math.PI * 2;
-            }
-        }
-        else if(currentPhase == "circle") {
-            if(!sfx["flurry"].playing && !stopActing) {
-                sfx["flurry"].loop();
-            }
-            var player = scene.getInstance("player");
-            sprite.play("idle");
-            sprite.flipX = centerX > player.centerX;
-            hitbox.x = sprite.flipX ? 25 : 3;
-            if(!circlePerimeter.active && !preAdvancePhaseTimer.active) {
-                circlePerimeter.setMotion(
-                    isEnraged ?
-                    ENRAGED_CIRCLE_PERIMETER_TIME : CIRCLE_PERIMETER_TIME,
-                    Ease.linear
-                );
-                circlePerimeter.start();
-                circleShotTimer.start();
-            }
-            else {
-                moveTo(circlePerimeter.x, circlePerimeter.y);
+                rippleShot();
+                phaseTimer.start();
             }
         }
         else if(currentPhase == "enrage") {
-            if(
-                enrageShotTimer.active
-                && age >= ENRAGE_SINGLE_ROTATION_DURATION * 2
-            ) {
-                preAdvancePhase();
-            }
-            else if(
-                !preEnrage.active
-                && !enrageShotTimer.active
-                && !preAdvancePhaseTimer.active
-            ) {
-                preEnrage.start();
-                sfx["enrage"].play();
-            }
+            //if(
+                //enrageShotTimer.active
+                //&& age >= ENRAGE_SINGLE_ROTATION_DURATION * 2
+            //) {
+                //preAdvancePhase();
+            //}
+            //else if(
+                //!preEnrage.active
+                //&& !enrageShotTimer.active
+                //&& !preAdvancePhaseTimer.active
+            //) {
+                //preEnrage.start();
+                //sfx["enrage"].play();
+            //}
         }
     }
 
-    private function clockShot() {
-        var rotationSpeedMultiplier = isEnraged ? 1.25 : 1;
-        var shotVector = new Vector2(0, -1);
-        shotVector.rotate(-age * Math.PI / 2 * rotationSpeedMultiplier);
-        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
-
-        shotVector = new Vector2(0, -1);
-        shotVector.rotate(age * Math.PI / 3 * rotationSpeedMultiplier);
-        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED / 2, false));
-
-        var shotVector = new Vector2(0, -1);
-        shotVector.rotate(-age * Math.PI / 4 * rotationSpeedMultiplier);
-        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED / 2, false));
-
-        shotVector = new Vector2(0, -1);
-        shotVector.rotate(age * Math.PI / 5 * rotationSpeedMultiplier);
-        scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
-
-        if(isEnraged) {
-            shotVector = new Vector2(0, -1);
-            shotVector.rotate(age * Math.PI / 1.5);
-            scene.add(new Spit(this, shotVector, CLOCK_SHOT_SPEED, false));
-        }
-    }
-
-    private function curtainShot() {
-        var slant = HXP.choose(1.5, 1, 0.5, 0) * HXP.choose(1, -1);
-        var speed = HXP.choose(
-            CURTAIN_SHOT_SPEED,
-            CURTAIN_SHOT_SPEED / 1.5,
-            CURTAIN_SHOT_SPEED / 2,
-            CURTAIN_SHOT_SPEED * 1.5,
-            CURTAIN_SHOT_SPEED * 2
-        );
-        var boundPair = HXP.choose(
-            new Vector2(0, 50),
-            new Vector2(-50, 0),
-            new Vector2(-25, 25)
-        );
-        for(i in -50...50) {
-            var shotVector = new Vector2(0, 1);
-            var spit = new Spit(this, shotVector, speed, false);
-            spit.x += i * 3;
-            spit.y -= i * slant;
-            scene.add(spit);
-        }
-        sfx['rippleattack${HXP.choose(1, 2, 3)}'].play();
-    }
-
-    private function curtainBarrierShot() {
+    private function spiralShot() {
         if(!sfx["flurry"].playing && !stopActing) {
             sfx["flurry"].loop();
         }
-        var shotVector = new Vector2(1, (Math.random() - 0.5) / 1.5);
-        var shotSpeed = Math.max(
-            CURTAIN_BARRIER_SHOT_SPEED * Math.random(),
-            CURTAIN_BARRIER_SHOT_SPEED / 4
+        var numBullets = (
+            isEnraged ? SPIRAL_BULLETS_PER_SHOT + 1 : SPIRAL_BULLETS_PER_SHOT
         );
-        scene.add(new Spit(this, shotVector, shotSpeed, false));
-        var shotVector = new Vector2(-1, (Math.random() - 0.5) / 1.5);
-        scene.add(new Spit(this, shotVector, shotSpeed, false));
-        var shotVector = new Vector2(1, (Math.random() - 0.8));
-        scene.add(new Spit(this, shotVector, shotSpeed, false));
-        var shotVector = new Vector2(-1, (Math.random() - 0.8));
-        scene.add(new Spit(this, shotVector, shotSpeed, false));
-
-        var shotVector = new Vector2(1, 0.3);
-        var spit = new Spit(this, shotVector, CURTAIN_BARRIER_SHOT_SPEED, false);
-        scene.add(spit);
-
-        shotVector = new Vector2(-1, 0.3);
-        spit = new Spit(this, shotVector, CURTAIN_BARRIER_SHOT_SPEED, false);
-        scene.add(spit);
-
-        var shotVector = new Vector2((Math.random() - 0.5) * 1.2, -1);
-        scene.add(new Spit(this, shotVector, shotSpeed, false));
-    }
-
-    private function circleShot() {
-        var shotAngle = age * 4;
-        var shotVector = new Vector2(
-            Math.cos(shotAngle), Math.sin(shotAngle)
-        );
-        var spit = new Spit(this, shotVector, CIRCLE_SHOT_SPEED, false);
-        scene.add(spit);
-
-        shotAngle = getAngleTowardsPlayer();
-        shotVector = new Vector2(
-            Math.cos(shotAngle), Math.sin(shotAngle)
-        );
-        spit = new Spit(this, shotVector, CIRCLE_SHOT_SPEED * 2, false);
-        scene.add(spit);
-
-        if(isEnraged) {
-            shotAngle = -age * 4;
-            shotVector = new Vector2(
+        for(i in 0...numBullets) {
+            var spreadAngles = getSpreadAngles(
+                numBullets + 1, Math.PI * 2
+            );
+            var shotAngle = (
+                spiralShotStartAngle
+                + Math.cos(age / 3) * SPIRAL_TURN_RATE + spreadAngles[i]
+            );
+            var shotVector = new Vector2(
                 Math.cos(shotAngle), Math.sin(shotAngle)
             );
-            spit = new Spit(this, shotVector, CIRCLE_SHOT_SPEED, false);
-            scene.add(spit);
+            scene.add(new Spit(this, shotVector, SPIRAL_SHOT_SPEED));
         }
     }
 
-    private function enrageShot() {
-        if(!sfx["flurry"].playing && !stopActing) {
-            sfx["flurry"].loop();
-        }
-        var shotAngle = -Math.PI / 2;
-        if(age < ENRAGE_SINGLE_ROTATION_DURATION) {
-            shotAngle += age * age;
-        }
-        else {
-            shotAngle += (
-                (ENRAGE_SINGLE_ROTATION_DURATION * 2 - age)
-                * (ENRAGE_SINGLE_ROTATION_DURATION * 2 - age)
+    private function rippleShot() {
+        sfx['rippleattack${HXP.choose(1, 2, 3)}'].play();
+        var spreadAngles = getSpreadAngles(
+            RIPPLE_BULLETS_PER_SHOT, Math.PI * 2
+        );
+        for(i in 0...RIPPLE_BULLETS_PER_SHOT) {
+            var shotAngle = spreadAngles[i] + Math.PI / 2;
+            var shotVector = new Vector2(
+                Math.cos(shotAngle), Math.sin(shotAngle)
             );
+            scene.add(new Spit(this, shotVector, RIPPLE_SHOT_SPEED));
         }
-        var shotVector = new Vector2(
-            Math.cos(shotAngle), Math.sin(shotAngle)
-        );
-        var spit = new Spit(
-            this, shotVector, ENRAGE_SHOT_SPEED, false
-        );
-        scene.add(spit);
     }
 
     private function atPhaseLocation() {
