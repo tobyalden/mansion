@@ -387,6 +387,10 @@ class GameScene extends Scene
         if(grandfather != null) {
             cast(grandfather, Grandfather).stopSfx();
         }
+        var nymph = getInstance("nymph");
+        if(nymph != null) {
+            cast(nymph, Nymph).stopSfx();
+        }
         player.stopSfx();
         for(musicName in music.keys()) {
             music[musicName].stop();

@@ -28,6 +28,15 @@ class Nymph extends Enemy
     public static inline var ENRAGED_RIPPLE_SHOT_INTERVAL = 1.8;
     public static inline var RIPPLE_BULLETS_PER_SHOT = 200;
 
+    public static inline var LUNGE_INTERVAL = 2;
+    public static inline var LUNGE_SPEED = 250;
+    public static inline var LUNGE_DECEL = 350;
+    public static inline var LUNGE_SHOT_SPEED = 50;
+
+    public static inline var WALL_SHOT_SPEED = -20;
+    public static inline var WALL_SHOT_ACCEL = 200;
+    public static inline var WALL_SHOT_INTERVAL = 0.5;
+
     public static inline var PRE_ENRAGE_TIME = 2;
     public static inline var PRE_PHASE_ADVANCE_TIME = 2;
     public static inline var PHASE_TRANSITION_TIME = 2;
@@ -43,6 +52,12 @@ class Nymph extends Enemy
     private var spiralShotStartAngle:Float;
 
     private var rippleShotInterval:Alarm;
+
+    private var lungeInterval:Alarm;
+    private var lungeShotInterval:Alarm;
+
+    private var wallsInterval:Alarm;
+    private var slantFlip:Bool;
 
     public var sfx:Map<String, Sfx> = [
         "enrage" => new Sfx("audio/enrage.ogg"),
@@ -117,6 +132,31 @@ class Nymph extends Enemy
         });
         addTween(rippleShotInterval);
 
+        lungeInterval = new Alarm(
+            LUNGE_INTERVAL, TweenType.Looping
+        );
+        lungeInterval.onComplete.bind(function() {
+            lunge(false);
+        });
+        addTween(lungeInterval);
+
+        lungeShotInterval = new Alarm(
+            LUNGE_INTERVAL, TweenType.Looping
+        );
+        lungeShotInterval.onComplete.bind(function() {
+            lungeShot();
+        });
+        addTween(lungeShotInterval);
+
+        wallsInterval = new Alarm(
+            WALL_SHOT_INTERVAL, TweenType.Looping
+        );
+        wallsInterval.onComplete.bind(function() {
+            wallShot();
+        });
+        addTween(wallsInterval);
+        slantFlip = false;
+
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
@@ -127,7 +167,9 @@ class Nymph extends Enemy
         phaseRelocater = new LinearMotion();
         addTween(phaseRelocater);
 
-        currentPhase = HXP.choose("wheel");
+        //currentPhase = HXP.choose("wheel");
+        currentPhase = HXP.choose("lunge");
+        //currentPhase = HXP.choose("walls");
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -159,7 +201,8 @@ class Nymph extends Enemy
     private function generatePhaseLocations() {
         phaseLocations = [
             "wheel" => new Vector2(screenCenter.x, screenCenter.y),
-            //"curtain" => new Vector2(screenCenter.x, screenCenter.y - 95),
+            "lunge" => new Vector2(screenCenter.x, screenCenter.y),
+            "walls" => new Vector2(screenCenter.x, screenCenter.y - 95),
             "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95)
         ];
     }
@@ -267,6 +310,35 @@ class Nymph extends Enemy
                 phaseTimer.start();
             }
         }
+        else if(currentPhase == "lunge") {
+            if(!lungeShotInterval.active) {
+                lungeShotInterval.start();
+                var shotDelay = new Alarm(LUNGE_INTERVAL / 2);
+                shotDelay.onComplete.bind(function() {
+                    lungeInterval.start();
+                    lunge();
+                });
+                addTween(shotDelay, true);
+                phaseTimer.start();
+                lungeShot();
+            }
+            velocity.x = MathUtil.approach(
+                velocity.x, 0, LUNGE_DECEL * HXP.elapsed
+            );
+            velocity.y = MathUtil.approach(
+                velocity.y, 0, LUNGE_DECEL * HXP.elapsed
+            );
+            moveBy(
+                velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls"
+            );
+        }
+        else if(currentPhase == "walls") {
+            if(!wallsInterval.active) {
+                wallsInterval.start();
+                wallShot();
+                phaseTimer.start();
+            }
+        }
         else if(currentPhase == "enrage") {
             //if(
                 //enrageShotTimer.active
@@ -321,6 +393,51 @@ class Nymph extends Enemy
         }
     }
 
+    private function lunge(backwards:Bool = false) {
+        //sfx['rippleattack${HXP.choose(1, 2, 3)}'].play();
+        var lungeAngle = getAngleTowardsPlayer();
+        velocity = new Vector2(
+            Math.cos(lungeAngle), Math.sin(lungeAngle)
+        );
+        velocity.normalize(LUNGE_SPEED);
+        if(backwards) {
+            velocity.inverse();
+        }
+    }
+
+    private function lungeShot() {
+        //var lungeAngle = Math.PI / 4;
+        //var lungeAngle = Math.random() * Math.PI * 2;
+        //rippleShot();
+        //var lungeAngle = Math.random() * Math.PI * 2;
+        var lungeAngle = getAngleTowardsPlayer() + Math.PI / 4;
+        for (i in 0...50) {
+            var shotAngle = lungeAngle + Math.PI / 2;
+            var shotVector = new Vector2(
+                Math.cos(shotAngle), Math.sin(shotAngle)
+            );
+            scene.add(new Spit(this, shotVector, LUNGE_SHOT_SPEED + i * 3));
+
+            shotAngle = lungeAngle - Math.PI / 2;
+            shotVector = new Vector2(
+                Math.cos(shotAngle), Math.sin(shotAngle)
+            );
+            scene.add(new Spit(this, shotVector, LUNGE_SHOT_SPEED + i * 3));
+
+            shotAngle = lungeAngle;
+            shotVector = new Vector2(
+                Math.cos(shotAngle), Math.sin(shotAngle)
+            );
+            scene.add(new Spit(this, shotVector, LUNGE_SHOT_SPEED + i * 3));
+
+            shotAngle = lungeAngle - Math.PI;
+            shotVector = new Vector2(
+                Math.cos(shotAngle), Math.sin(shotAngle)
+            );
+            scene.add(new Spit(this, shotVector, LUNGE_SHOT_SPEED + i * 3));
+        }
+    }
+
     private function atPhaseLocation() {
         return (
             x == phaseLocations[currentPhase].x
@@ -347,6 +464,36 @@ class Nymph extends Enemy
             gameScene.converse("nymphdeath");
         });
         addTween(deathConversationDelay, true);
+    }
+
+    private function wallShot() {
+        var slant = HXP.choose(2, 1, 1.5) * (slantFlip ? -1 : 1);
+        slantFlip = Math.random() > 0.5;
+        //var slant = 0;
+        var speed = WALL_SHOT_SPEED;
+        var accel = WALL_SHOT_ACCEL * HXP.choose(2, 1.5, 1);
+        var accelSlant = HXP.choose(1, -1);
+        for(i in -50...50) {
+            var shotVector = new Vector2(0, 1);
+            var spit = new Spit(
+                this, shotVector, speed, false,
+                new Vector2(0, accel + (i * 2 * accelSlant))
+            );
+            spit.x += i * 3;
+            spit.y -= i * slant;
+            scene.add(spit);
+        }
+        sfx['rippleattack${HXP.choose(1, 2, 3)}'].play();
+    }
+
+    override public function moveCollideX(e:Entity) {
+        //velocity.x = -velocity.x / 4;
+        return true;
+    }
+
+    override public function moveCollideY(e:Entity) {
+        //velocity.y = -velocity.y / 4;
+        return true;
     }
 }
 
