@@ -33,7 +33,12 @@ class Nymph extends Enemy
     public static inline var LUNGE_DECEL = 350;
     public static inline var LUNGE_SHOT_SPEED = 50;
 
-    public static inline var WALL_SHOT_SPEED = -20;
+    public static inline var SEEDER_INTERVAL = 0.3;
+    public static inline var SEEDER_SHOT_SPEED = 50;
+    public static inline var SEEDER_SHOT_ACCEL = 10;
+    public static inline var SEEDER_CHASE_SPEED = 50;
+
+    public static inline var WALL_SHOT_SPEED = 50;
     public static inline var WALL_SHOT_ACCEL = 200;
     public static inline var WALL_SHOT_INTERVAL = 0.5;
 
@@ -48,15 +53,17 @@ class Nymph extends Enemy
     public static inline var STARTING_HEALTH = 200;
     public static inline var ENRAGE_THRESHOLD = 40;
 
-    private var spiralShotInterval:Alarm;
+    private var spiralShotTimer:Alarm;
     private var spiralShotStartAngle:Float;
 
-    private var rippleShotInterval:Alarm;
+    private var rippleShotTimer:Alarm;
 
-    private var lungeInterval:Alarm;
-    private var lungeShotInterval:Alarm;
+    private var lungeTimer:Alarm;
+    private var lungeShotTimer:Alarm;
 
-    private var wallsInterval:Alarm;
+    private var seederTimer:Alarm;
+
+    private var wallsTimer:Alarm;
     private var slantFlip:Bool;
 
     public var sfx:Map<String, Sfx> = [
@@ -115,47 +122,55 @@ class Nymph extends Enemy
             : STARTING_HEALTH
         );
 
-        spiralShotInterval = new Alarm(
+        spiralShotTimer = new Alarm(
             SPIRAL_SHOT_INTERVAL, TweenType.Looping
         );
-        spiralShotInterval.onComplete.bind(function() {
+        spiralShotTimer.onComplete.bind(function() {
             spiralShot();
         });
-        addTween(spiralShotInterval);
+        addTween(spiralShotTimer);
         spiralShotStartAngle = 0;
 
-        rippleShotInterval = new Alarm(
+        rippleShotTimer = new Alarm(
             RIPPLE_SHOT_INTERVAL, TweenType.Looping
         );
-        rippleShotInterval.onComplete.bind(function() {
+        rippleShotTimer.onComplete.bind(function() {
             rippleShot();
         });
-        addTween(rippleShotInterval);
+        addTween(rippleShotTimer);
 
-        lungeInterval = new Alarm(
+        lungeTimer = new Alarm(
             LUNGE_INTERVAL, TweenType.Looping
         );
-        lungeInterval.onComplete.bind(function() {
+        lungeTimer.onComplete.bind(function() {
             lunge(false);
         });
-        addTween(lungeInterval);
+        addTween(lungeTimer);
 
-        lungeShotInterval = new Alarm(
+        lungeShotTimer = new Alarm(
             LUNGE_INTERVAL, TweenType.Looping
         );
-        lungeShotInterval.onComplete.bind(function() {
+        lungeShotTimer.onComplete.bind(function() {
             lungeShot();
         });
-        addTween(lungeShotInterval);
+        addTween(lungeShotTimer);
 
-        wallsInterval = new Alarm(
+        wallsTimer = new Alarm(
             WALL_SHOT_INTERVAL, TweenType.Looping
         );
-        wallsInterval.onComplete.bind(function() {
+        wallsTimer.onComplete.bind(function() {
             wallShot();
         });
-        addTween(wallsInterval);
+        addTween(wallsTimer);
         slantFlip = false;
+
+        seederTimer = new Alarm(
+            SEEDER_INTERVAL, TweenType.Looping
+        );
+        seederTimer.onComplete.bind(function() {
+            seederShot();
+        });
+        addTween(seederTimer);
 
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
@@ -168,8 +183,9 @@ class Nymph extends Enemy
         addTween(phaseRelocater);
 
         //currentPhase = HXP.choose("wheel");
-        currentPhase = HXP.choose("lunge");
+        //currentPhase = HXP.choose("lunge");
         //currentPhase = HXP.choose("walls");
+        currentPhase = HXP.choose("seeder");
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -203,7 +219,8 @@ class Nymph extends Enemy
             "wheel" => new Vector2(screenCenter.x, screenCenter.y),
             "lunge" => new Vector2(screenCenter.x, screenCenter.y),
             "walls" => new Vector2(screenCenter.x, screenCenter.y - 95),
-            "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95)
+            "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95),
+            "seeder" => new Vector2(screenCenter.x, screenCenter.y)
         ];
     }
 
@@ -296,12 +313,27 @@ class Nymph extends Enemy
             }
         }
         else if(currentPhase == "wheel") {
-            if(!spiralShotInterval.active) {
-                spiralShotInterval.start();
+            if(!spiralShotTimer.active) {
+                spiralShotTimer.start();
                 spiralShotStartAngle = getAngleTowardsPlayer();
                 age = Math.PI * 1.5;
 
-                rippleShotInterval.reset(
+                rippleShotTimer.reset(
+                    isEnraged ?
+                    ENRAGED_RIPPLE_SHOT_INTERVAL
+                    : RIPPLE_SHOT_INTERVAL
+                );
+                rippleShot();
+                phaseTimer.start();
+            }
+        }
+        else if(currentPhase == "wheel") {
+            if(!spiralShotTimer.active) {
+                spiralShotTimer.start();
+                spiralShotStartAngle = getAngleTowardsPlayer();
+                age = Math.PI * 1.5;
+
+                rippleShotTimer.reset(
                     isEnraged ?
                     ENRAGED_RIPPLE_SHOT_INTERVAL
                     : RIPPLE_SHOT_INTERVAL
@@ -311,11 +343,11 @@ class Nymph extends Enemy
             }
         }
         else if(currentPhase == "lunge") {
-            if(!lungeShotInterval.active) {
-                lungeShotInterval.start();
+            if(!lungeShotTimer.active) {
+                lungeShotTimer.start();
                 var shotDelay = new Alarm(LUNGE_INTERVAL / 2);
                 shotDelay.onComplete.bind(function() {
-                    lungeInterval.start();
+                    lungeTimer.start();
                     lunge();
                 });
                 addTween(shotDelay, true);
@@ -333,11 +365,24 @@ class Nymph extends Enemy
             );
         }
         else if(currentPhase == "walls") {
-            if(!wallsInterval.active) {
-                wallsInterval.start();
+            if(!wallsTimer.active) {
+                wallsTimer.start();
                 wallShot();
                 phaseTimer.start();
             }
+        }
+        else if(currentPhase == "seeder") {
+            if(!seederTimer.active) {
+                seederTimer.start();
+            }
+            var angle = getAngleTowardsPlayer();
+            velocity = new Vector2(
+                Math.cos(angle), Math.sin(angle)
+            );
+            velocity.normalize(SEEDER_CHASE_SPEED);
+            moveBy(
+                velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls"
+            );
         }
         else if(currentPhase == "enrage") {
             //if(
@@ -467,23 +512,45 @@ class Nymph extends Enemy
     }
 
     private function wallShot() {
-        var slant = HXP.choose(2, 1, 1.5) * (slantFlip ? -1 : 1);
-        slantFlip = Math.random() > 0.5;
-        //var slant = 0;
-        var speed = WALL_SHOT_SPEED;
-        var accel = WALL_SHOT_ACCEL * HXP.choose(2, 1.5, 1);
-        var accelSlant = HXP.choose(1, -1);
-        for(i in -50...50) {
-            var shotVector = new Vector2(0, 1);
-            var spit = new Spit(
-                this, shotVector, speed, false,
-                new Vector2(0, accel + (i * 2 * accelSlant))
-            );
-            spit.x += i * 3;
-            spit.y -= i * slant;
-            scene.add(spit);
-        }
+        //var shotVector = Math.random() * Math.PI * 2;
+        //for(i in -50...50) {
+            //var spit = new Spit(
+                //this, shotVector, WALL_SHOT_SPEED, false,
+                //new Vector2(0, accel + (i * 2 * accelSlant))
+            //);
+        //}
+        //var slant = HXP.choose(2, 1, 1.5) * (slantFlip ? -1 : 1);
+        //slantFlip = Math.random() > 0.5;
+        ////var slant = 0;
+        //var speed = WALL_SHOT_SPEED;
+        //var accel = WALL_SHOT_ACCEL * HXP.choose(2, 1.5, 1);
+        //var accelSlant = HXP.choose(1, -1);
+        //for(i in -50...50) {
+            //var shotVector = new Vector2(0, 1);
+            //var spit = new Spit(
+                //this, shotVector, speed, false,
+                //new Vector2(0, accel + (i * 2 * accelSlant))
+            //);
+            //spit.x += i * 3;
+            //spit.y -= i * slant;
+            //scene.add(spit);
+        //}
         sfx['rippleattack${HXP.choose(1, 2, 3)}'].play();
+    }
+
+    private function seederShot() {
+        var shotAngle = Math.random() * Math.PI * 2;
+        var shotVector = new Vector2(
+            Math.cos(shotAngle), Math.sin(shotAngle)
+        );
+        var shotVectorInverse = shotVector.clone();
+        shotVectorInverse.inverse();
+        shotVectorInverse.normalize(SEEDER_SHOT_ACCEL);
+        var spit = new Spit(
+            this, shotVector, SEEDER_SHOT_SPEED, false,
+            shotVectorInverse
+        );
+        scene.add(spit);
     }
 
     override public function moveCollideX(e:Entity) {
