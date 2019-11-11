@@ -17,6 +17,9 @@ class Nymph extends Enemy
 {
     public static inline var SIZE = 80;
 
+    public static inline var PAUSE_BETWEEN_CHASES = 1;
+    public static inline var ENRAGED_PAUSE_BETWEEN_CHASES = 0.25;
+
     public static inline var SPIRAL_SHOT_SPEED = 92.5;
     public static inline var SPIRAL_TURN_RATE = 1;
     public static inline var SPIRAL_BULLETS_PER_SHOT = 4;
@@ -41,6 +44,16 @@ class Nymph extends Enemy
     public static inline var WALL_SHOT_SPEED = 50;
     public static inline var WALL_SHOT_ACCEL = 200;
     public static inline var WALL_SHOT_INTERVAL = 0.5;
+
+    public static inline var SCATTER_SHOT_INTERVAL = 2;
+    public static inline var ENRAGED_SCATTER_SHOT_INTERVAL = 1.5;
+    public static inline var SCATTER_SHOT_SPEED = 50;
+    public static inline var SCATTER_SHOT_NUM_BULLETS = 100;
+    public static inline var ENRAGED_SCATTER_SHOT_NUM_BULLETS = 16;
+    public static inline var CIRCLE_PERIMETER_TIME = 10;
+    public static inline var ENRAGED_CIRCLE_PERIMETER_TIME = 7;
+
+    public static inline var END_CHASE_TIME = 5;
 
     public static inline var PRE_ENRAGE_TIME = 2;
     public static inline var PRE_PHASE_ADVANCE_TIME = 2;
@@ -71,10 +84,20 @@ class Nymph extends Enemy
         "rippleattack1" => new Sfx("audio/rippleattack1.ogg"),
         "rippleattack2" => new Sfx("audio/rippleattack2.ogg"),
         "rippleattack3" => new Sfx("audio/rippleattack3.ogg"),
+        "ringtoss1" => new Sfx("audio/ringtoss1.ogg"),
+        "ringtoss2" => new Sfx("audio/ringtoss2.ogg"),
+        "ringtoss3" => new Sfx("audio/ringtoss3.ogg"),
+        "ringreturn" => new Sfx("audio/ringreturn.ogg"),
+        "scattershot1" => new Sfx("audio/scattershot1.ogg"),
+        "scattershot2" => new Sfx("audio/scattershot2.ogg"),
+        "scattershot3" => new Sfx("audio/scattershot3.ogg"),
         "flurry" => new Sfx("audio/flurry.ogg")
     ];
 
     public var isDying(default, null):Bool;
+    public var rings(default, null):Array<NymphRing>;
+    public var isEnraged(default, null):Bool;
+    public var screenCenter(default, null):Vector2;
 
     private var sprite:Spritemap;
 
@@ -87,8 +110,12 @@ class Nymph extends Enemy
     private var phaseTimer:Alarm;
     private var preAdvancePhaseTimer:Alarm;
 
-    private var screenCenter:Vector2;
-    private var isEnraged:Bool;
+    private var chaseTimer:Alarm;
+    private var scatterShotTimer:Alarm;
+    private var circlePerimeter:LinearPath;
+    private var chaseCount:Int;
+    private var endChaseTimer:Alarm;
+
     private var enrageNextPhase:Bool;
     private var stopActing:Bool;
 
@@ -96,6 +123,13 @@ class Nymph extends Enemy
 
     public function new(startX:Float, startY:Float) {
         super(startX - SIZE / 2, startY - SIZE / 2);
+        rings = [
+            new NymphRing(this), new NymphRing(this),
+            new NymphRing(this), new NymphRing(this),
+            new NymphRing(this), new NymphRing(this),
+            new NymphRing(this), new NymphRing(this),
+            new NymphRing(this), new NymphRing(this)
+        ];
         name = "nymph";
         layer = -10;
         isBoss = true;
@@ -172,6 +206,57 @@ class Nymph extends Enemy
         });
         addTween(seederTimer);
 
+        chaseTimer = new Alarm(
+            NymphRing.MAX_TOSS_TIME + PAUSE_BETWEEN_CHASES, TweenType.Looping
+        );
+        chaseTimer.onComplete.bind(function() {
+            var lastChasingRing:NymphRing = null;
+            var numChases = isEnraged ? 8 : 10;
+            for(ring in rings) {
+                if(ring.isChasing) {
+                    lastChasingRing = ring;
+                }
+                else if(chaseCount < numChases) {
+                    ring.chase(lastChasingRing);
+                    sfx['ringtoss${HXP.choose(1, 2, 3)}'].play();
+                    returnToIdleAfterPause();
+                    chaseCount++;
+                    return;
+                }
+                else if(!endChaseTimer.active) {
+                    endChaseTimer.start();
+                }
+            }
+        });
+        addTween(chaseTimer);
+        chaseCount = 0;
+        endChaseTimer = new Alarm(END_CHASE_TIME);
+        endChaseTimer.onComplete.bind(function() {
+            for(ring in rings) {
+                ring.returnToNymph(
+                    isEnraged ?
+                    NymphRing.ENRAGE_RETURN_TIME : NymphRing.RETURN_TIME
+                );
+            }
+            sfx['ringreturn'].play();
+            var ringReturnTimer = new Alarm(NymphRing.RETURN_TIME);
+            ringReturnTimer.onComplete.bind(function() {
+                preAdvancePhase();
+            });
+            addTween(ringReturnTimer, true);
+        });
+        addTween(endChaseTimer);
+
+        scatterShotTimer = new Alarm(
+            SCATTER_SHOT_INTERVAL, TweenType.Looping
+        );
+        scatterShotTimer.onComplete.bind(function() {
+            scatterShot();
+            sprite.play("tossboth");
+            returnToIdleAfterPause();
+        });
+        addTween(scatterShotTimer);
+
         isEnraged = GameScene.isNightmare ? true : false;
         enrageNextPhase = false;
         isDying = false;
@@ -185,7 +270,8 @@ class Nymph extends Enemy
         //currentPhase = HXP.choose("wheel");
         //currentPhase = HXP.choose("lunge");
         //currentPhase = HXP.choose("walls");
-        currentPhase = HXP.choose("seeder");
+        //currentPhase = HXP.choose("seeder");
+        currentPhase = HXP.choose("chaserings");
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -222,6 +308,34 @@ class Nymph extends Enemy
             "enrage" => new Vector2(screenCenter.x, screenCenter.y - 95),
             "seeder" => new Vector2(screenCenter.x, screenCenter.y)
         ];
+        circlePerimeter = new LinearPath();
+        var perimeterPoints = [
+            new Vector2(screenCenter.x - 95, screenCenter.y - 95),
+            new Vector2(screenCenter.x + 95, screenCenter.y - 95),
+            new Vector2(screenCenter.x + 95, screenCenter.y + 95),
+            new Vector2(screenCenter.x - 95, screenCenter.y + 95)
+        ];
+        if(Math.random() > 0.5) {
+            perimeterPoints.reverse();
+        }
+        var pointCount = 0;
+        var startCount = HXP.choose(0, 1, 2, 3);
+        var startPoint = perimeterPoints[
+            (startCount + pointCount) % perimeterPoints.length
+        ];
+        phaseLocations["chaserings"] = new Vector2(startPoint.x, startPoint.y);
+        while(pointCount < 5) {
+            var point = perimeterPoints[
+                (startCount + pointCount) % perimeterPoints.length
+            ];
+            circlePerimeter.addPoint(point.x, point.y);
+            pointCount++;
+        }
+        circlePerimeter.onComplete.bind(function() {
+            scatterShotTimer.active = false;
+
+        });
+        addTween(circlePerimeter);
     }
 
     private function preAdvancePhase() {
@@ -272,6 +386,9 @@ class Nymph extends Enemy
                 collidable = false;
             }
             clearHazards();
+            for(ring in rings) {
+                scene.remove(ring);
+            }
         }
         else if(!fightStarted || gameScene.isDialogMode) {
             // Do nothing
@@ -310,21 +427,6 @@ class Nymph extends Enemy
                     phaseRelocater.start();
                 }
                 moveTo(phaseRelocater.x, phaseRelocater.y);
-            }
-        }
-        else if(currentPhase == "wheel") {
-            if(!spiralShotTimer.active) {
-                spiralShotTimer.start();
-                spiralShotStartAngle = getAngleTowardsPlayer();
-                age = Math.PI * 1.5;
-
-                rippleShotTimer.reset(
-                    isEnraged ?
-                    ENRAGED_RIPPLE_SHOT_INTERVAL
-                    : RIPPLE_SHOT_INTERVAL
-                );
-                rippleShot();
-                phaseTimer.start();
             }
         }
         else if(currentPhase == "wheel") {
@@ -383,6 +485,29 @@ class Nymph extends Enemy
             moveBy(
                 velocity.x * HXP.elapsed, velocity.y * HXP.elapsed, "walls"
             );
+        }
+        else if(currentPhase == "chaserings") {
+            var player = scene.getInstance("player");
+            sprite.flipX = centerX < player.centerX;
+            if(!chaseTimer.active) {
+                if(isEnraged) {
+                    chaseTimer.reset(
+                        NymphRing.MAX_TOSS_TIME + ENRAGED_PAUSE_BETWEEN_CHASES
+                    );
+                }
+                else {
+                    chaseTimer.start();
+                }
+                var player = scene.getInstance("player");
+                rings[0].chase(player);
+                sprite.play("tossone");
+                sfx['ringtoss${HXP.choose(1, 2, 3)}'].play();
+                returnToIdleAfterPause();
+                chaseCount = 1;
+            }
+            //if(circlePerimeter.active && circlePerimeter.x != 0) {
+                //moveTo(circlePerimeter.x, circlePerimeter.y);
+            //}
         }
         else if(currentPhase == "enrage") {
             //if(
@@ -551,6 +676,31 @@ class Nymph extends Enemy
             shotVectorInverse
         );
         scene.add(spit);
+    }
+
+    private function scatterShot(isBig:Bool = false) {
+        var shotAngle = getAngleTowardsPlayer();
+        var shotVector = new Vector2(
+            Math.cos(shotAngle), Math.sin(shotAngle)
+        );
+        var numBullets = (
+            isEnraged ?
+            ENRAGED_SCATTER_SHOT_NUM_BULLETS : SCATTER_SHOT_NUM_BULLETS
+        );
+        for(i in 0...numBullets) {
+            scene.add(new Spit(
+                this, shotVector, SCATTER_SHOT_SPEED + i * 4
+            ));
+        }
+        sfx['scattershot${HXP.choose(1, 2, 3)}'].play();
+    }
+
+    private function returnToIdleAfterPause() {
+        var returnToIdlePause = new Alarm(0.75);
+        returnToIdlePause.onComplete.bind(function() {
+            sprite.play("idle");
+        });
+        addTween(returnToIdlePause, true);
     }
 
     override public function moveCollideX(e:Entity) {

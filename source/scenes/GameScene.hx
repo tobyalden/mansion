@@ -813,6 +813,9 @@ class GameScene extends Scene
                 Std.parseInt(nymph.att.x),
                 Std.parseInt(nymph.att.y)
             );
+            for(ring in nymph.rings) {
+                add(ring);
+            }
             allEnemies.push(nymph);
         }
         for(butler in fastXml.node.objects.nodes.butler) {
