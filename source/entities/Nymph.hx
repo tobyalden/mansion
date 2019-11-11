@@ -45,13 +45,13 @@ class Nymph extends Enemy
     public static inline var WALL_SHOT_ACCEL = 200;
     public static inline var WALL_SHOT_INTERVAL = 0.5;
 
-    public static inline var SCATTER_SHOT_INTERVAL = 2;
-    public static inline var ENRAGED_SCATTER_SHOT_INTERVAL = 1.5;
-    public static inline var SCATTER_SHOT_SPEED = 50;
+    public static inline var SCATTER_SHOT_INTERVAL = 0.8;
+    public static inline var ENRAGED_SCATTER_SHOT_INTERVAL = 0.6;
+    public static inline var SCATTER_SHOT_SPEED = 40;
     public static inline var SCATTER_SHOT_NUM_BULLETS = 100;
-    public static inline var ENRAGED_SCATTER_SHOT_NUM_BULLETS = 16;
-    public static inline var CIRCLE_PERIMETER_TIME = 10;
-    public static inline var ENRAGED_CIRCLE_PERIMETER_TIME = 7;
+    public static inline var ENRAGED_SCATTER_SHOT_NUM_BULLETS = 100;
+    public static inline var CIRCLE_PERIMETER_TIME = 5;
+    public static inline var ENRAGED_CIRCLE_PERIMETER_TIME = 4;
 
     public static inline var END_CHASE_TIME = 5;
 
@@ -257,7 +257,8 @@ class Nymph extends Enemy
         });
         addTween(scatterShotTimer);
 
-        isEnraged = GameScene.isNightmare ? true : false;
+        //isEnraged = GameScene.isNightmare ? true : false;
+        isEnraged = false;
         enrageNextPhase = false;
         isDying = false;
         stopActing = false;
@@ -271,7 +272,8 @@ class Nymph extends Enemy
         //currentPhase = HXP.choose("lunge");
         //currentPhase = HXP.choose("walls");
         //currentPhase = HXP.choose("seeder");
-        currentPhase = HXP.choose("chaserings");
+        //currentPhase = HXP.choose("chaserings");
+        currentPhase = HXP.choose("circle");
         betweenPhases = true;
         phaseTimer = new Alarm(PHASE_DURATION);
         phaseTimer.onComplete.bind(function() {
@@ -324,6 +326,7 @@ class Nymph extends Enemy
             (startCount + pointCount) % perimeterPoints.length
         ];
         phaseLocations["chaserings"] = new Vector2(startPoint.x, startPoint.y);
+        phaseLocations["circle"] = new Vector2(startPoint.x, startPoint.y);
         while(pointCount < 5) {
             var point = perimeterPoints[
                 (startCount + pointCount) % perimeterPoints.length
@@ -332,8 +335,7 @@ class Nymph extends Enemy
             pointCount++;
         }
         circlePerimeter.onComplete.bind(function() {
-            scatterShotTimer.active = false;
-
+            preAdvancePhase();
         });
         addTween(circlePerimeter);
     }
@@ -508,6 +510,25 @@ class Nymph extends Enemy
             //if(circlePerimeter.active && circlePerimeter.x != 0) {
                 //moveTo(circlePerimeter.x, circlePerimeter.y);
             //}
+        }
+        else if(currentPhase == "circle") {
+            if(!circlePerimeter.active) {
+                if(isEnraged) {
+                    scatterShotTimer.reset(ENRAGED_SCATTER_SHOT_INTERVAL);
+                }
+                else {
+                    scatterShotTimer.start();
+                }
+                circlePerimeter.setMotion(
+                    isEnraged ?
+                    ENRAGED_CIRCLE_PERIMETER_TIME : CIRCLE_PERIMETER_TIME,
+                    Ease.sineInOut
+                );
+                circlePerimeter.start();
+            }
+            if(circlePerimeter.active && circlePerimeter.x != 0) {
+                moveTo(circlePerimeter.x, circlePerimeter.y);
+            }
         }
         else if(currentPhase == "enrage") {
             //if(
@@ -689,7 +710,7 @@ class Nymph extends Enemy
         );
         for(i in 0...numBullets) {
             scene.add(new Spit(
-                this, shotVector, SCATTER_SHOT_SPEED + i * 4
+                this, shotVector, SCATTER_SHOT_SPEED + i * 2
             ));
         }
         sfx['scattershot${HXP.choose(1, 2, 3)}'].play();
